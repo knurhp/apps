@@ -82,7 +82,7 @@ function processData() {
         var year = formattedDate.getFullYear();
         console.log(year)
 
-        const col121 = "Month: " + month;
+        const col121 = String(month);
         const col12 = String(year);
 
         const col131 = dateOT;
