@@ -6,5 +6,18 @@
     <title>Document</title>
 </head>
 <body> 
-    
+    <h2>date converter v0.1</h2>
+
+    <p>converts CSV separated by newline from format MM/DD/YYYY HH:MM to format DD/MM/YYYY</p>
+
+    <textarea id="dataInput" rows="10" cols="50" placeholder="Paste here"></textarea>
+    <br>
+    <button onclick="convertDate()">Process</button>
+
+    <h3>Formatted Data</h3>
+    <button onclick="copyTableToClipboard()">Copy to Clipboard</button>
+    <table id="outputTable"></table>
+
+    <script src="gh_dateconv.js"></script>
+    <script src="helpers.js"></script>
 </body>
