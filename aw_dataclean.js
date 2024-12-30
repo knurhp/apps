@@ -148,7 +148,7 @@ function processData() {
     }
 }
 
-function copyTableToClipboard() {
+async function copyTableToClipboard() {
     // Get the table element
     const table = document.getElementById('outputTable');
     
@@ -160,10 +160,7 @@ function copyTableToClipboard() {
         showTemporaryMessage(button, 'Table not found!', 'red');
         return;
     }
-    
-    // Create a temporary textarea to hold the text
-    const tempTextArea = document.createElement('textarea');
-    
+
     // Convert table to text
     let tableText = '';
     
@@ -186,27 +183,16 @@ function copyTableToClipboard() {
         tableText += rowText + '\n';
     }
     
-    // Set the textarea value to the table text
-    tempTextArea.value = tableText;
-    
-    // Append to body (required for some browsers)
-    document.body.appendChild(tempTextArea);
-    
-    // Select the text
-    tempTextArea.select();
-    tempTextArea.setSelectionRange(0, 99999); // For mobile devices
-    
-    // Copy the text to clipboard
+    // Use Clipboard API to write the table text to the clipboard
     try {
-        document.execCommand('copy');
+        await navigator.clipboard.writeText(tableText);
         showTemporaryMessage(button, 'Copied!', 'green');
     } catch (err) {
         showTemporaryMessage(button, 'Copy failed', 'red');
+        console.error('Failed to copy table text: ', err);
     }
-    
-    // Remove the temporary textarea
-    document.body.removeChild(tempTextArea);
 }
+
 
 function showTemporaryMessage(referenceElement, message, color) {
     // Create message element
