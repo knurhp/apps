@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Cleanup Data</title>
+</head>
+<body>
+
+<!-- Text area for raw data -->
+<textarea id="rawDataInput" rows="15" cols="150">
+</textarea>
+
+<!-- Button to trigger the cleanup -->
+<button onclick="processData()">Process Data</button>
+
+<!-- Div to place the resulting cleaned-up table -->
+<div id="output"></div>
+
+<script>
+function processData() {
+  // 1. Grab raw data from the textarea
+  const rawData = document.getElementById("rawDataInput").value.trim();
+  if (!rawData) return;
+
+  // 2. Split into lines
+  const lines = rawData.split(/\r?\n/).filter(line => line.trim() !== "");
+
+  // 3. The first line should be headers
+  const headerLine = lines[0];
+  const headers = headerLine.split(/\t/);
+
+  // We'll find indices for the columns we care about:
+  const colIndex = {};
+  headers.forEach((h, i) => {
+    colIndex[h.trim()] = i;
+  });
+
+  // 4. Parse rows (excluding the header line)
+  const dataRows = lines.slice(1);
+
+  // We'll group by CASE_NUMBER. But if a row's CASE_NUMBER is empty,
+  // we attach that row to the previous case.
+  let casesMap = {};    // { caseNumber: [ { rowData }, { rowData }, ... ] }
+  let orderedCases = []; // To preserve insertion order
+
+  let lastCaseNumber = null;
+
+  dataRows.forEach(line => {
+    const cols = line.split(/\t/);
+    // Grab the case number
+    let caseNum = cols[colIndex["CASE_NUMBER"]] || "";
+    caseNum = caseNum.trim();
+
+    // If there's no case number, use the last known one
+    if (!caseNum) {
+      caseNum = lastCaseNumber;
+    } else {
+      lastCaseNumber = caseNum;
+    }
+    if (!caseNum) return; // If still empty, skip
+
+    if (!casesMap[caseNum]) {
+      casesMap[caseNum] = [];
+      orderedCases.push(caseNum);
+    }
+    // Store this row in the group
+    casesMap[caseNum].push(cols);
+  });
+
+  // 5. Now, for each caseNumber, we want to produce exactly one output row
+  //    that merges all procedure-related data into distinct columns
+  const cleanedData = [];
+  
+  // Identify the columns that define "procedure data" vs "shared" data
+  // Typically, the shared data are: CASE_NUMBER, MRN, SURNAME, GIVEN NAME(S), SEX, DOB, etc.
+  // The "per-procedure" columns are: PROCEDURE, PROCEDURE START TIME, PROCEDURE END TIME, 
+  // SURGICAL CONSULTANT, SURGEON - ASSISTING, etc.
+  //
+  // But let's just handle them systematically: we know that each row might 
+  // contain some "shared" fields that are identical across rows, plus 
+  // the procedure-specific fields.
+
+  // We’ll explicitly separate "sharedCols" from "procedureCols" so we can build them properly.
+  const sharedCols = [
+    "CASE_NUMBER",
+    "MRN",
+    "SURNAME",
+    "GIVEN NAME(S)",
+    "SEX",
+    "DOB",
+    "TYPE",
+    "WARD",
+    "OPERATING THEATRE",
+    "CONSULTANT",
+    "CLASSIFICATION",
+    "STARTED",
+    "FINISHED",
+    "SPECIALTY",
+    "IN ANAESTHETIC",
+    "IN OT",
+    "SURGICAL START TIME",
+    "SURGICAL END TIME",
+    "OUT ANAES",
+    "OUT THEATRE",
+    "NUMBER OF SPECIMENS USED",
+    "ANAESTHETICS USED",
+    "PROSTHESIS USED",
+    "DELAYS (MIN)"
+  ];
+
+  // We'll define the columns we expect for each procedure (just from your data)
+  const procedureCols = [
+    "PROCEDURE",
+    "PROCEDURE START TIME",
+    "PROCEDURE END TIME",
+    "SURGICAL CONSULTANT",
+    "SURGEON - PRINCIPAL",
+    "SURGEON - ASSISTING",
+    "ANAESTHETIST - PRINCIPAL",
+    "ANAESTHETIST - ASSISTING",
+    "NURSE - ANAESTHETIC",
+    "NURSE - PRIMARY INSTRUMENT",
+    "NURSE - CIRCULATING"
+  ];
+
+  // We'll also track the maximum # of procedures that appear for any one case
+  let maxProcedureCount = 0;
+
+  // First pass: just figure out how many procedures each case has
+  const caseProcedureCounts = {};
+  orderedCases.forEach(caseNum => {
+    // Each row in this case is considered a distinct "procedure row"
+    const rowCount = casesMap[caseNum].length;
+    caseProcedureCounts[caseNum] = rowCount;
+    if (rowCount > maxProcedureCount) {
+      maxProcedureCount = rowCount;
+    }
+  });
+
+  // Second pass: build the "cleaned" row for each case
+  orderedCases.forEach(caseNum => {
+    const rows = casesMap[caseNum];
+    // Start by copying the "shared" columns from the first row
+    const firstRow = rows[0];
+    const record = {};
+
+    // Fill shared columns from the first row
+    sharedCols.forEach(col => {
+      const idx = colIndex[col];
+      record[col] = (idx !== undefined && firstRow[idx] !== undefined) 
+                      ? firstRow[idx].trim() 
+                      : "";
+    });
+
+    // Now fill procedure columns
+    rows.forEach((cols, procIdx) => {
+      // procIdx is 0-based, let's call it 1-based in the output
+      const procedureNum = procIdx + 1;
+
+      procedureCols.forEach(pCol => {
+        const sourceVal = colIndex[pCol] !== undefined ? cols[colIndex[pCol]] : "";
+        record[`${pCol}_${procedureNum}`] = sourceVal ? sourceVal.trim() : "";
+      });
+    });
+
+    cleanedData.push(record);
+  });
+
+  // 6. Build an HTML table from the cleaned data
+  // Let’s define all output columns in the final table, 
+  // i.e. sharedCols plus repeated procedureCols up to maxProcedureCount
+  let finalHeaders = [...sharedCols];
+  for (let i = 1; i <= maxProcedureCount; i++) {
+    procedureCols.forEach(pCol => {
+      finalHeaders.push(`${pCol}_${i}`);
+    });
+  }
+
+  // Build the table HTML
+  let html = "<table border='1' cellspacing='0' cellpadding='4'>";
+
+  // Table header row
+  html += "<tr>";
+  finalHeaders.forEach(h => {
+    html += `<th>${h}</th>`;
+  });
+  html += "</tr>";
+
+  // Table body
+  cleanedData.forEach(rowObj => {
+    html += "<tr>";
+    finalHeaders.forEach(h => {
+      const val = rowObj[h] !== undefined ? rowObj[h] : "";
+      html += `<td>${val}</td>`;
+    });
+    html += "</tr>";
+  });
+
+  html += "</table>";
+
+  // 7. Place the resulting table into #output div
+  document.getElementById("output").innerHTML = html;
+}
+</script>
+
+</body>
+</html>
