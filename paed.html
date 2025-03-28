@@ -6,16 +6,17 @@
 </head>
 <body>
 
-<!-- Text area for raw data -->
+<h1>Paediatric Data Cleaner v0.1</h1>
 <textarea id="rawDataInput" rows="15" cols="150">
 </textarea>
-
-<!-- Button to trigger the cleanup -->
+<div></div>
 <button onclick="processData()">Process Data</button>
 
-<!-- Div to place the resulting cleaned-up table -->
-<div id="output"></div>
+<h3>Formatted Data</h3>
+<button onclick="copyTableToClipboard()">Copy to Clipboard</button>
+<table id="outputTable"></table>
 
 <script src="paed.js"></script>
+<script src="helpers.js"></script>
 </body>
 </html>

@@ -92,22 +92,26 @@ function processData() {
     });
   }
 
-  let html = "<table border='1' cellspacing='0' cellpadding='4'>";
-  html += "<tr>";
+  const table = document.getElementById("outputTable");
+  table.innerHTML = ""; // Clear existing content
+
+  // Create table header
+  const headerRow = document.createElement("tr");
   finalHeaders.forEach(h => {
-    html += `<th>${h}</th>`;
+    const th = document.createElement("th");
+    th.textContent = h;
+    headerRow.appendChild(th);
   });
-  html += "</tr>";
+  table.appendChild(headerRow);
 
+  // Create table rows
   cleanedData.forEach(rowObj => {
-    html += "<tr>";
+    const tr = document.createElement("tr");
     finalHeaders.forEach(h => {
-      const val = rowObj[h] !== undefined ? rowObj[h] : "";
-      html += `<td>${val}</td>`;
+      const td = document.createElement("td");
+      td.textContent = rowObj[h] !== undefined ? rowObj[h] : "";
+      tr.appendChild(td);
     });
-    html += "</tr>";
+    table.appendChild(tr);
   });
-
-  html += "</table>";
-  document.getElementById("output").innerHTML = html;
 }
