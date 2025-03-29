@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>notRANZCO MMI</title>
+  <link rel="stylesheet" href="mmi.css" />
+</head>
+<body>
+
+<div class=""container">
+<h2>notRANZCO.exe</h2>
+</div>
+
+  <div class="container">
+    <!-- Start Screen -->
+    <div id="start-screen">
+      <h1>MMI</h1>
+      <label for="scenario-count">Number of scenarios to practice:</label>
+      <input type="number" id="scenario-count" min="1" max="10" value="1" />
+      <div>
+        <label>
+          <input type="checkbox" id="include-extra" />
+          Include AI generated scenarios (WIP)
+        </label>
+      </div>
+      <br>
+      <button id="start-button">Start</button>
+    </div>
+
+    <!-- Practice Screen -->
+    <div id="practice-screen" class="hidden">
+      <div id="progress-text"></div>
+      <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+      </div>
+      <div id="content"></div>
+      <div id="timer">Time left: 02:00</div>
+      <div id="controls">
+        <button id="next-button">Skip</button>
+        <button id="pause-resume">Pause</button>
+        <button id="end-practice">End Practice</button>
+      </div>
+    </div>
+
+    <!-- Completion Screen -->
+    <div id="complete-screen" class="hidden">
+      <h2>Practice Complete!</h2>
+      <button id="restart-button">Restart</button>
+    </div>
+  </div>
+
+  <script src="mmi.js"></script>
+</body>
+</html>

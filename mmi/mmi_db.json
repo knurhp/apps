@@ -1,0 +1,452 @@
+[
+  {
+    "id": "2019.1",
+    "scenario": "You have 500k to donate to one of three charities:\n- Homeless charity\n- Disabled children’s charity\n- Charity for people in a 3rd world developing nation",
+    "questions": [
+      "What charity would you choose and why?",
+      "How do you balance disadvantage in communities locally versus internationally?",
+      "Apart from donating, how else can you contribute to charities?",
+      "Discuss your charity/volunteer work."
+    ]
+  },
+  {
+    "id": "2019.2",
+    "scenario": "Importance of teamwork in medicine.",
+    "questions": [
+      "How does bad teamwork impact patient care?",
+      "What are attributes of a good team?",
+      "Who is an example of individual excellence/good leader?"
+    ]
+  },
+  {
+    "id": "2019.3",
+    "scenario": "Fatigue and burnout in junior doctors.",
+    "questions": [
+      "How does fatigue impact on patient care?",
+      "How would you address this issue if you felt your hours were unsafe?",
+      "What is your approach to stress?"
+    ]
+  },
+  {
+    "id": "2019.4",
+    "scenario": "Brief synopsis of a study linking mobile phones and brain tumours, with stated bias and limitations (meaning the conclusions are not strong).",
+    "questions": [
+      "How would you explain this to a patient?",
+      "What would you think if you found out it was sponsored by a telecommunications company?",
+      "What more information is required about the study before you recommend the findings?",
+      "Do you think the public should be more concerned about the health impacts of technology?",
+      "What would happen if all phones, internet, and computers suddenly did not exist? How would that affect your life?"
+    ]
+  },
+  {
+    "id": "2019.5",
+    "scenario": "Australia and New Zealand are becoming more obese as nations, and there is some evidence that education about negative consequences may be counterproductive.",
+    "questions": [
+      "How much personal responsibility should be placed on overweight people?",
+      "What do you think the causes of obesity are?",
+      "What can be done in your community to address this?"
+    ]
+  },
+  {
+    "id": "2019.6",
+    "scenario": "A Non-English-Speaking Background (NESB) patient with severe pneumonia wants to leave; the family does not want her admitted because her husband died in the same hospital last year.",
+    "questions": [
+      "How do you go about discussing the situation with the patient?",
+      "She discharges against advice, and the next morning she is in ICU. How does this make you feel?",
+      "One situation when you had to deal with a difficult patient."
+    ]
+  },
+  {
+    "id": "2019.7",
+    "scenario": "An aspiring vet student is unable to get into the course despite best effort. An indigenous female student is able to get a place on the course, but James thinks she is less qualified.",
+    "questions": [
+      "Should he make a complaint/appeal?",
+      "What should he do in response to his failed applications?",
+      "Should the college give higher priority to ATSI applicants?"
+    ]
+  },
+  {
+    "id": "2019.8",
+    "scenario": "A registrar on call receives advice from an on-call consultant. The registrar is concerned enough that he calls another consultant (without informing the first consultant) who gives entirely separate advice. The next morning, the first consultant sees the patient and demands an explanation.",
+    "questions": [
+      "What are your thoughts on his actions?",
+      "How would you proceed?",
+      "What should have been done differently?",
+      "How does this affect the workplace?",
+      "One time you had conflict or disagreed with a consultant."
+    ]
+  },
+  {
+    "id": "2020.1",
+    "scenario": "A JMO (Sue) wants to do Orthopaedics. She is currently working with an unaccredited registrar who is dismissive of her and female nursing staff—but is normally very nice in front of the bosses. Her term supervisor is too busy to do her end-of-term assessment and tells her to ask the unaccredited registrar. She is reluctant to speak up.",
+    "questions": [
+      "Why does she say nothing?",
+      "What should Sue do in this situation?",
+      "At the end of term Sue still hasn’t done anything—what should she do now?",
+      "What would you do?",
+      "How can we address issues like this from a broader perspective in medicine?"
+    ]
+  },
+  {
+    "id": "2020.2",
+    "scenario": "A JMO (Pete) is putting a cannula into a patient he thought was stable. While he was there, the patient deteriorated and arrested; Pete called a code blue and tried to resuscitate, but the patient died. The patient had a terminal illness Pete didn’t know about. Pete is now withdrawn, worried about making mistakes, losing sleep, having panic attacks, and considering taking a year off medicine.",
+    "questions": [
+      "Why is he feeling this way?",
+      "Who can he turn to for help?",
+      "What would you say if he told you this?",
+      "What can we do to support doctors and get them to use resources available to them?",
+      "Tell me about a time that a patient deteriorated."
+    ]
+  },
+  {
+    "id": "2020.3",
+    "scenario": "Statistics about Aboriginal life expectancy vs other Australians. Aboriginals live 10 years less than non-indigenous Australians.",
+    "questions": [
+      "What is responsible for the difference?",
+      "What responsibilities do healthcare professionals have to address this?",
+      "Does the college have any responsibilities in this regard?",
+      "Do health practitioners have a responsibility to other minority groups?",
+      "What challenges are there in providing rural and remote healthcare?"
+    ]
+  },
+  {
+    "id": "2020.4",
+    "scenario": "A young female patient in clinic has lost sight in one eye and is going blind in the other due to a rare disorder. She works as an artist, has a partner, and a young child. She has had significant side effects from treatment, and there are issues with continuity of care in the public clinic. She was unhappy, canceled her last appointment, and is now permanently blind in one eye.",
+    "questions": [
+      "How is the patient feeling (why do you think she feels this way)?",
+      "What would you do in this situation?",
+      "What can be done to improve continuity of care?",
+      "What can the medical practice do to prevent this?",
+      "She wants to make a complaint. What do you do?"
+    ]
+  },
+  {
+    "id": "2020.5",
+    "scenario": "You are the senior registrar at a busy clinic. You hear a commotion and find a patient and nurse arguing in the waiting room. The patient is refusing to see the nurse first (which is protocol), and the nurse tells them they won’t see the doctor unless they see the nurse. The patient is yelling angrily, saying they waited three months to see the doctor. The patient has severe hypertension and diabetes.",
+    "questions": [
+      "What do you do when the patient demands to see a doctor and the nurse refuses?",
+      "The patient threatens to leave. What do you do?",
+      "You take the patient in yourself; the nurse is unhappy and wants to file an incident complaint. How do you handle this?",
+      "The patient thanks you but is disparaging about nurses. They do not want to see any nurse again. What do you tell them?"
+    ]
+  },
+  {
+    "id": "2020.6",
+    "scenario": "Three registrars on the term. Two are job-sharing due to parental leave. Matthew, the full-time registrar, notices errors he suspects are from poor communication/handover.",
+    "questions": [
+      "Is flexible training a good thing? What are the pros and cons?",
+      "Is there a role for parental leave in ophthalmology training?",
+      "What biases might Matthew have?",
+      "How could Matt address this situation?",
+      "Describe a communication challenge. Give me an example of a time your team used tools to ensure good communication."
+    ]
+  },
+  {
+    "id": "2020.7",
+    "scenario": "A post-op cataract patient comes in for a second opinion. She is dissatisfied because she still has to wear glasses despite expecting not to. She feels the surgeon “stuffed up” and says she would not have had the operation if she knew the risks.",
+    "questions": [
+      "How does she feel, and why does she feel this way?",
+      "Why do patients seek second opinions?",
+      "When should doctors refer for a second opinion?",
+      "What do you do if you have an underperforming colleague?",
+      "How do you prevent bad outcomes in the operating theatre?",
+      "How would you treat this patient?"
+    ]
+  },
+  {
+    "id": "2020.8",
+    "scenario": "Sue is a senior trainee. During an operation with her consultant, a decision was made that resulted in significant patient morbidity. At the audit meeting, the consultant blames her. Sue is upset but remains silent and takes the blame.",
+    "questions": [
+      "Why didn’t she speak up?",
+      "Who should she debrief with, and why?",
+      "How should she escalate this?",
+      "What would you do in this situation?",
+      "Have you been responsible for the deterioration of a patient?"
+    ]
+  },
+  {
+    "id": "2021.1",
+    "scenario": "The Australian government has restricted all operating so that non-urgent cases are cancelled. Aisha cancels her private cataract list. Later, the restriction deadline is extended, so she could operate. She is contemplating whether to proceed.",
+    "questions": [
+      "What are the risks and benefits of cancelling non-urgent operations?",
+      "Why do you think her patients would have felt relieved?",
+      "What do you think Aisha should do in this instance?",
+      "What are some reasons why Aisha should proceed with operating on Thursday and Saturday?",
+      "Describe a challenging professional situation you have encountered as a result of COVID-19."
+    ]
+  },
+  {
+    "id": "2021.2",
+    "scenario": "Several weeks ago, Maria saw a patient in the clinic and set up a management plan including medications. On review, the patient has deteriorated. They reveal they have not taken any of the prescribed medications and instead used “other natural therapies.” Maria says if they persist with natural therapies, she can no longer see them and offers to write a referral to another clinician.",
+    "questions": [
+      "Do you think Maria’s approach was appropriate?",
+      "What are the reasons for this patient refusing to take their medications?",
+      "What would you have done in this situation?",
+      "Why do you think patients go for Complementary and Alternative Medicine (CAM)?",
+      "Have you been in a situation where you had to work alongside CAM practitioners—how did you deal with it?"
+    ]
+  },
+  {
+    "id": "2021.3",
+    "scenario": "Alex is the on-call registrar. A complex patient presents, and Alex seeks advice from the on-call consultant but feels unsatisfied. Alex then seeks advice from his mentor consultant, without telling them about the first consultant’s plan, and implements that advice. The next day, the on-call consultant calls Alex to explain himself.",
+    "questions": [
+      "What do you think about Alex’s action?",
+      "How should Alex respond to his consultant’s inquiry?",
+      "What action should Alex take from here?",
+      "What are the potential consequences of Alex’s actions?",
+      "Tell us about a time you have disagreed with a colleague and what you did."
+    ]
+  },
+  {
+    "id": "2021.4",
+    "scenario": "Rita is the sole nurse practitioner in a remote community of ~1000 people. She feels burnt out and requests extra support from the Health Board, which is denied. She contemplates resigning.",
+    "questions": [
+      "What are the consequences of persisting as the sole HCW in this situation?",
+      "What approaches can the sole NP take in this situation?",
+      "What is the role of a health professional in advocating for a remote community?",
+      "In what situations would resigning be acceptable?",
+      "What are some of the risks of being a sole HCW in a remote community?"
+    ]
+  },
+  {
+    "id": "2021.5",
+    "scenario": "Tracey is the head waitress at a trendy restaurant. A booking was left under John Smith for Saturday 7 pm, but no one confirmed it. By 7:35, John hasn’t arrived. A walk-in group of 4 is seated at that table. John’s party then arrives 10 minutes later.",
+    "questions": [
+      "What should Tracey do in this situation?",
+      "How would John feel in this situation?",
+      "What are Tracey’s obligations here?",
+      "John becomes more aggressive—what should Tracey do?",
+      "How do you deal with aggressive behaviour?"
+    ]
+  },
+  {
+    "id": "2021.6",
+    "scenario": "You are Lee, a trainee. There are two unaccredited trainees and a senior trainee. The Head of Department has changed the rostering so unaccredited trainees do no after-hours on-call, leaving you overworked with busy clinics. You tell the senior trainee you plan to talk to the HoD, and the senior discourages you, saying the HoD might question your efficiency.",
+    "questions": [
+      "What are the issues in this situation?",
+      "What are the motivations for the senior trainee telling you not to say anything?",
+      "How would you approach this situation?",
+      "How could you engage the two unaccredited registrars in sharing the workload?",
+      "(Possible) What should Lee do?"
+    ]
+  },
+  {
+    "id": "2021.7",
+    "scenario": "Yew Ming is an ophthalmologist at a busy private practice she owns. She has asked all her staff to get a COVID-19 vaccine. Only 40% have done so; the remainder refuse for various reasons.",
+    "questions": [
+      "What are some of the reasons patients (or staff) refuse to take the COVID-19 vaccine?",
+      "What is the role of health professionals in encouraging people to take the vaccine?",
+      "How can Yew Ming support her staff to get vaccinated?",
+      "Do you think it should be compulsory for healthcare workers to get the COVID-19 vaccine?",
+      "How do you critically appraise the evidence base related to the COVID-19 vaccine?"
+    ]
+  },
+  {
+    "id": "2021.8",
+    "scenario": "Jarrah is a registrar in clinic. Mrs Smith is expecting cataract surgery soon; she has mild dementia. It appears the surgery was never booked, and now her vision no longer meets driving standards. She is distressed and demands the surgery happen within weeks, but there is a very long waitlist.",
+    "questions": [
+      "What are the main issues at hand?",
+      "Mrs Smith is getting more distressed. What should Jarrah do?",
+      "How do you approach the cataract surgery consent with Mrs Smith?",
+      "Mrs Smith says she doesn’t want a trainee to perform the surgery. What do you do?",
+      "Describe a situation where you disagreed with a patient—what did you do?"
+    ]
+  },
+  {
+    "id": "2022.1",
+    "scenario": "Maia is a sole practitioner in a rural area. She and her staff are all vaccinated against COVID-19. A patient is referred for a corneal foreign body, is unvaccinated, and has a mask exemption. By local rules, if Maia treats him without a mask, she must isolate for a week.",
+    "questions": [
+      "What are the issues in this scenario?",
+      "What should Maia do?",
+      "Why are people hesitant about vaccines?",
+      "What role do doctors play in encouraging vaccines?",
+      "How has COVID-19 impacted junior doctors?"
+    ]
+  },
+  {
+    "id": "2022.2",
+    "scenario": "Raj and Cam work in the same clinic and are close friends. Raj covers Cam’s patient who requests a repeat opiate prescription. There is no documentation of the previous consult or prescription.",
+    "questions": [
+      "What are the issues?",
+      "How should Raj approach this situation?",
+      "What further information does Raj need?",
+      "How should Raj approach Cam?",
+      "How do you approach personal and professional conflicts?"
+    ]
+  },
+  {
+    "id": "2022.3",
+    "scenario": "Climate change is contributing to global warming. A study shows a cataract surgery in New Zealand has a 150 kg CO2 footprint (similar to a short flight or 65 L of petrol). In India, the same surgery can have a 5 kg CO2 footprint with similar outcomes.",
+    "questions": [
+      "What impact does global warming have on health (or how does healthcare affect sustainability)?",
+      "What responsibility does the profession have regarding sustainability?",
+      "Why is there reluctance to address this in institutions?",
+      "What can be done in healthcare systems to address this?",
+      "What can you do personally to address this?",
+      "Why might there be comparable clinical outcomes in India despite fewer carbon emissions?"
+    ]
+  },
+  {
+    "id": "2022.4",
+    "scenario": "Rachel, Kate, and Peter are junior doctors on the same team. Over lunch, a heated geopolitical discussion arises between Kate and Peter; they storm off, and Kate is in tears. Rachel approaches Peter, who says Kate needs “thicker skin.”",
+    "questions": [
+      "What are the issues?",
+      "How should Rachel have handled this?",
+      "Rachel approaches Kate and tells her she raised the situation with Peter; how might Kate respond? (Or what are Kate’s options?)",
+      "What biases may have impacted this scenario?",
+      "Tell us about a time you disagreed with a colleague."
+    ]
+  },
+  {
+    "id": "2022.5",
+    "scenario": "Tiffany is a junior doctor living next to Peggy, an elderly lady who lives alone. They become friendly, and Peggy starts asking for help beyond normal neighborly tasks (e.g., computer help, then rubbing cream on her back).",
+    "questions": [
+      "What are the issues?",
+      "What should Tiffany do when Peggy asks her to put cream on her back?",
+      "Why would Peggy be taking advantage of Tiffany now?",
+      "Who could Tiffany speak to for help/advice?",
+      "Why is it important to maintain appropriate doctor-patient relationships (or what are the challenges in professional boundaries)?"
+    ]
+  },
+  {
+    "id": "2022.6",
+    "scenario": "Intern HMO Rose is new. Her registrar, Alex, goes to theatre and tells Rose to chart heparin “as per protocol,” but Rose is unsure. The patient then has a retroperitoneal bleed and ends up in ICU. The family is angry.",
+    "questions": [
+      "What are the issues here?",
+      "What should Rose have done?",
+      "What should Alex do?",
+      "What are the positives and negatives of protocols?",
+      "Tell us about a time you disagreed with how something was done clinically—what did you do?"
+    ]
+  },
+  {
+    "id": "2022.7",
+    "scenario": "Robert is a patient diagnosed with advanced cataracts. You inform him he can no longer drive legally. He becomes aggressive, saying he needs to pick up grandkids and will sue you.",
+    "questions": [
+      "What are the issues in this scenario?",
+      "What do you do next?",
+      "You contact Robert and his GP, and he agrees to return. How do you proceed now?",
+      "What if the patient is still verbally aggressive, and why might a patient act this way?",
+      "Tell us about a time you had to deal with an aggressive patient—what did you learn?"
+    ]
+  },
+  {
+    "id": "2023.1",
+    "scenario": "Amir and Depaal discuss whether a certain country should remain a democracy or be taken over. Rachel witnesses a seemingly civil conversation, but later Amir tells Rachel he was offended because of his ethnicity and can’t work with Depaal. Rachel brings this up with Depaal, who dismisses it and says Amir needs a thicker skin.",
+    "questions": [
+      "What are the issues?",
+      "What should Rachel and Depaal do?",
+      "What are the biases in this situation?",
+      "Tell me about a time you had conflict with a colleague and how you managed it."
+    ]
+  },
+  {
+    "id": "2023.2",
+    "scenario": "Adam is a PhD student doing a project funded by a technology company about a new mobile phone device. His preliminary results suggest a serious health risk from the new technology. The chief investigators say they don’t want to release results until the study concludes in 2 years.",
+    "questions": [
+      "What are the issues here?",
+      "What options does Adam have?",
+      "What impact will it have on the community if preliminary results are released?",
+      "What is your opinion on big pharma/tech companies funding research?"
+    ]
+  },
+  {
+    "id": "2023.3",
+    "scenario": "Maria is treating Charlie. She feels she has a good rapport and prescribes medication. On review, Charlie’s condition has worsened because he never took the medication, opting for natural therapies. Maria says she can’t keep seeing him if he refuses her recommended treatment and refers him on.",
+    "questions": [
+      "What do you think of Maria’s approach to the situation?",
+      "Why do patients seek alternative therapies?",
+      "Tell me about a time when a patient disagreed with their medical treatment."
+    ]
+  },
+  {
+    "id": "2023.4",
+    "scenario": "Sam is an Ophthalmology trainee. Ramon is referred with diabetes and cataracts. He speaks no English and is accompanied by his daughter Imogen. His vision is so poor he can’t self-administer insulin. You explain the need for cataract surgery, but Imogen says they’ll wait and do it overseas in 9 months.",
+    "questions": [
+      "What should Sam be concerned about with Ramon?",
+      "How should he approach Imogen?",
+      "How can he help Ramon’s care outside his ophthalmic issues?",
+      "How would you approach a patient that wants surgery overseas?"
+    ]
+  },
+  {
+    "id": "2023.5",
+    "scenario": "Ying is a junior doctor treating Ian for an eye infection. Ian is young, too, and they share common interests. He’ll need ongoing reviews. He asks if Ying wants to go cycling with him on Sunday.",
+    "questions": [
+      "What are the issues here?",
+      "Why might patients find doctors attractive?",
+      "Ying wants to pursue a friendship with Ian—what should she do?",
+      "Tell me about a time you were personally uncomfortable in a situation with a patient or colleague; what did you do?"
+    ]
+  },
+  {
+    "id": "2023.6",
+    "scenario": "You are an accredited ophthalmology trainee working alongside one senior trainee and two unaccredited registrars. The unit policy is that only accredited trainees do on-call. Post-COVID clinics are overbooked and run late. You are tired and overworked. You mention to the senior trainee that you plan to approach the unit head. The senior trainee advises not to, saying the HoD might think you can’t cope.",
+    "questions": [
+      "What are the issues?",
+      "Why would the senior trainee tell you not to say anything?",
+      "What are your options here?",
+      "How would you entice the unaccredited registrars to do on-call?",
+      "How can you prevent chronic stress in workplaces?"
+    ]
+  },
+  {
+    "id": "2024.1",
+    "scenario": "You’re a researcher conducting an RCT on an Alzheimer’s drug vs placebo. During recruitment, a patient with Alzheimer’s who cares for his wife insists on getting the study drug rather than placebo.",
+    "questions": [
+      "What are the ethical issues involved?",
+      "When have you had personal and professional obligations conflict?"
+    ]
+  },
+  {
+    "id": "2024.2",
+    "scenario": "PCT occurs during CE/IOL surgery operated by a senior registrar. You are the RMO, and the senior registrar asks you to see the patient afterward (although she could see the patient herself) and to say nothing about what happened during surgery. The patient’s family is unhappy with you and wants to complain.",
+    "questions": [
+      "What are the issues involved?",
+      "What should the senior registrar have done?",
+      "Can you still work with the registrar?",
+      "A complaint is put in—what do you do?",
+      "Give an example of a complaint (formal or informal)."
+    ]
+  },
+  {
+    "id": "2024.3",
+    "scenario": "You’re seeing a 5-year-old in a rural town who is not under the care of parents but under FACS/aunt. He was prescribed glasses but hasn’t received them for months. There is concern about amblyopia.",
+    "questions": [
+      "What are the issues?",
+      "How to improve adherence in this case?",
+      "Have you ever had a patient not willing to follow treatment prescribed?"
+    ]
+  },
+  {
+    "id": "2024.4",
+    "scenario": "A young patient with intellectual disability and behavioral issues needs eye surgery. He is from a group home with 24-hour care.",
+    "questions": [
+      "What are the issues?",
+      "How to optimize his stay in hospital/his surgery?",
+      "The anesthetics team suggests local/sedation.",
+      "Give an example of caring for complex patients."
+    ]
+  },
+  {
+    "id": "2024.5",
+    "scenario": "There are 3 JMOs on the same team. One is performing poorly and overhears the other two talking about him behind his back. He becomes upset and doesn’t show up to work.",
+    "questions": [
+      "What are the issues?",
+      "How could this have been done differently?",
+      "What could a third person do?",
+      "Give an example of conflict at work."
+    ]
+  },
+  {
+    "id": "2024.6",
+    "scenario": "An Aboriginal and Torres Strait Islander (ATSI) patient presents to the hospital but does not trust “white doctors.” Your consultant has previously made racist comments about ATSI people.",
+    "questions": [
+      "What are the issues?",
+      "How do you improve ATSI engagement with care?",
+      "If the consultant says the patient does not require treatment, what do you do?",
+      "If the patient self-discharges, what do you do?",
+      "Have you ever had a scenario where bias impacted patient care?"
+    ]
+  }
+]

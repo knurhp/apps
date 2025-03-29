@@ -1,0 +1,19 @@
+[
+    {
+      "id": 100,
+      "scenario": "You're mentoring a new hire who is struggling...",
+      "questions": [
+        "How do you support them without micromanaging?",
+        "What resources or strategies might help?"
+      ]
+    },
+    {
+      "id": 101,
+      "scenario": "A client asks for a feature that will delay your project...",
+      "questions": [
+        "How do you balance client satisfaction with scope control?",
+        "How would you communicate trade-offs to stakeholders?"
+      ]
+    }
+  ]
+  

@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    padding: 40px;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  #content {
+    margin: 20px auto;
+    max-width: 600px;
+    font-size: 1.2em;
+  }
+  
+  #timer {
+    font-size: 1.5em;
+    margin-top: 20px;
+    color: #333;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+  }
+  
+  /* Progress tracker text */
+  #progress-text {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #444;
+  }
+  
+  /* Visual progress bar container */
+  #progress-bar-container {
+    background-color: #ddd;
+    height: 20px;
+    width: 80%;
+    margin: 10px auto;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  /* Visual progress bar */
+  #progress-bar {
+    background-color: #4caf50;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+  }
+  
+  #controls {
+    margin-top: 20px;
+  }
+  
+  #controls button {
+    margin: 5px;
+  }
+  
+  /* Reading time message in red */
+  #reading-message {
+    color: red;
+    font-weight: bold;
+  }
+  
