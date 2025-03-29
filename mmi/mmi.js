@@ -13,6 +13,7 @@ const pauseResumeButton = document.getElementById("pause-resume");
 const progressText = document.getElementById("progress-text");
 const progressBar = document.getElementById("progress-bar");
 const includeExtraCheckbox = document.getElementById("include-extra");
+const summaryDiv = document.getElementById("summary");
 
 let data = [];
 let selectedScenarios = [];
@@ -108,7 +109,7 @@ function showCurrentStep() {
     // Scenario step: show scenario text and ID
     contentDiv.innerHTML = `<div>ID: ${currentScenario.id}</div>
                             <div>Scenario: ${currentScenario.scenario}</div>`;
-    // Ensure timer color resets (default color)
+    // Reset timer color to default
     timerDisplay.style.color = "#333";
     // Start the normal 2-minute timer immediately
     startTimer(DURATION, nextStep);
@@ -119,8 +120,7 @@ function showCurrentStep() {
     contentDiv.innerHTML = `<div>ID: ${currentScenario.id}</div>
                             <div>Question: ${questionText}</div>
                             <div id="reading-message"><br>Reading time...</div>`;
-    // During reading time, the "Reading time..." message will be red (via CSS)
-    // Set timer display to default color (or you can leave it as is)
+    // Timer color remains default until reading time ends
     timerDisplay.style.color = "#333";
     // Start 10-second reading timer first
     startReadingTimer(READING_DURATION, () => {
@@ -149,7 +149,9 @@ function nextStep() {
       currentStepIndex = 0;
       showCurrentStep();
     } else {
-      // Session complete
+      // Session complete; update the complete screen with summary
+      summaryDiv.textContent = "Tested scenario IDs: " + 
+        selectedScenarios.map(scenario => scenario.id).join(", ");
       practiceScreen.classList.add("hidden");
       completeScreen.classList.remove("hidden");
     }
