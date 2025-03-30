@@ -1,18 +1,302 @@
 [
     {
-      "id": 100,
-      "scenario": "You're mentoring a new hire who is struggling...",
+      "id": "2025.AI.1",
+      "scenario": "You are a registrar in a busy hospital ophthalmology department. A long-time patient with advanced cancer repeatedly refuses potentially sight-saving surgery, citing personal beliefs and distrust of traditional medicine. The patient’s family is begging you to persuade them otherwise.",
       "questions": [
-        "How do you support them without micromanaging?",
-        "What resources or strategies might help?"
+        "What ethical principles are at play when a patient refuses a recommended treatment?",
+        "How would you balance respecting the patient's autonomy with the family's concerns?",
+        "What steps could you take to ensure the patient’s decision is fully informed?",
+        "Have you experienced a situation where you disagreed with a patient’s choice, and how did you handle it?"
       ]
     },
     {
-      "id": 101,
-      "scenario": "A client asks for a feature that will delay your project...",
+      "id": "2025.AI.2",
+      "scenario": "A junior doctor in your team has posted clinical details of an interesting ophthalmology case on social media, without explicit identifiers but with enough detail that the patient could be recognized locally.",
       "questions": [
-        "How do you balance client satisfaction with scope control?",
-        "How would you communicate trade-offs to stakeholders?"
+        "What are the privacy and confidentiality issues raised by this scenario?",
+        "How would you address the junior doctor’s actions?",
+        "What hospital policies might guide your response?",
+        "What can be done to prevent such breaches on social media in the future?"
+      ]
+    },
+    {
+      "id": "2025.AI.3",
+      "scenario": "You receive a referral for an urgent cataract operation, only to find that the patient is your close friend’s parent. They specifically request you because they trust you more than other doctors.",
+      "questions": [
+        "What considerations arise when caring for friends or family?",
+        "Would you proceed with treating the patient? Why or why not?",
+        "How would you maintain professional boundaries in this situation?",
+        "Have you ever found it difficult to separate personal and professional roles?"
+      ]
+    },
+    {
+      "id": "2025.AI.4",
+      "scenario": "An unaccredited trainee in your department has been forging a consultant’s signature for minor paperwork in order to expedite patient flow. She justifies it by saying the consultant is too busy to sign every form.",
+      "questions": [
+        "What are the potential consequences of forging signatures, even for seemingly minor items?",
+        "How would you address this situation with the trainee?",
+        "Would you involve the consultant or administration immediately? Why or why not?",
+        "Describe a time you witnessed unprofessional behavior and what you did."
+      ]
+    },
+    {
+      "id": "2025.AI.5",
+      "scenario": "Your friend, who is on the selection committee for an ophthalmology training program, privately reveals that a candidate with strong family connections to a senior consultant might be chosen over more qualified applicants.",
+      "questions": [
+        "What ethical issues does this situation raise?",
+        "How might this affect team dynamics and patient care?",
+        "How would you respond to your friend’s disclosure?",
+        "What safeguards could be put in place to ensure a fair selection process?"
+      ]
+    },
+    {
+      "id": "2025.AI.6",
+      "scenario": "You discover that a colleague consistently uses outdated techniques during surgery, leading to higher complication rates. Other staff are aware but hesitate to speak up because of the colleague’s seniority.",
+      "questions": [
+        "How would you handle concerns about a colleague’s clinical competence?",
+        "What are the possible barriers to reporting or escalating this issue?",
+        "How does patient safety factor into your decision-making here?",
+        "Share a time when you had to address a safety concern in the workplace."
+      ]
+    },
+    {
+      "id": "2025.AI.7",
+      "scenario": "A major software developer offers your ophthalmology clinic a free trial of an AI-based diagnostic system for diabetic retinopathy. Early results are promising but not definitive. The company pressures you to adopt it more widely before formal validation.",
+      "questions": [
+        "What ethical considerations arise when using AI in clinical practice?",
+        "How would you ensure the diagnostic tool is used safely and ethically?",
+        "How would you respond to the company’s pressure?",
+        "Have you ever been in a situation where technology outpaced evidence, and how did you handle it?"
+      ]
+    },
+    {
+      "id": "2025.AI.8",
+      "scenario": "A 76-year-old patient with advanced glaucoma and multiple comorbidities has an outdated advance care directive that does not reflect his current treatment needs. The family insists on aggressive interventions, contradicting the directive.",
+      "questions": [
+        "How do you navigate conflicting wishes between a patient’s directive and the family’s requests?",
+        "What is your approach to revisiting an outdated advance care directive?",
+        "Who should be involved in decision-making in this scenario?",
+        "Describe a time you faced differing opinions about a patient’s treatment plan."
+      ]
+    },
+    {
+      "id": "2025.AI.9",
+      "scenario": "You are the ophthalmology registrar for a professional cycling team. One athlete reveals they are considering performance-enhancing drugs to keep their contract, despite potential serious side effects to vision and overall health.",
+      "questions": [
+        "What ethical issues does this situation pose for a treating doctor?",
+        "How should you address the athlete’s intention to use prohibited substances?",
+        "What is your duty of care, and how does it intersect with the athlete’s autonomy?",
+        "Have you encountered a situation where a patient’s actions conflicted with your professional advice?"
+      ]
+    },
+    {
+      "id": "2025.AI.10",
+      "scenario": "You are helping set up a telehealth clinic for rural patients with limited access to ophthalmology services. Internet connectivity is poor, and patients are often older and uncomfortable with technology.",
+      "questions": [
+        "What are the benefits and drawbacks of telehealth for such patients?",
+        "How can you address the digital divide and ensure equitable care?",
+        "What ethical considerations might arise regarding informed consent remotely?",
+        "Describe a time you had to adapt patient care to an unconventional setting."
+      ]
+    },
+    {
+      "id": "2025.AI.11",
+      "scenario": "Your department has a limited supply of an expensive anti-VEGF medication for macular degeneration. You must decide which patients get the medicine while others may face a long wait.",
+      "questions": [
+        "How would you prioritize who gets the medication first?",
+        "What role does cost vs benefit play in allocating scarce resources?",
+        "How might you communicate these limitations to patients?",
+        "Have you experienced a scenario involving difficult resource allocation?"
+      ]
+    },
+    {
+      "id": "2025.AI.12",
+      "scenario": "A private patient requests a costly, experimental treatment for age-related macular degeneration after reading about it online. The treatment has limited evidence and is not covered by insurance.",
+      "questions": [
+        "How do you balance respecting patient autonomy with providing evidence-based care?",
+        "What are the ethical implications of offering expensive, unproven treatments?",
+        "What information or counseling would you provide to this patient?",
+        "Have you faced a scenario where a patient demanded care outside standard practice?"
+      ]
+    },
+    {
+      "id": "2025.AI.13",
+      "scenario": "During a routine clinic, you see an elderly patient who lives alone and struggles to manage eye drops needed post-operatively. The home-care nurse visits only once a week. The patient’s family is overseas, and there’s no immediate local support.",
+      "questions": [
+        "What are your concerns about the patient’s post-operative care and adherence?",
+        "How would you address these concerns with limited community resources?",
+        "What steps can you take to ensure patient safety and follow-up?",
+        "Describe a time when you coordinated additional support for a vulnerable patient."
+      ]
+    },
+    {
+      "id": "2025.AI.14",
+      "scenario": "A patient in your clinic refuses to be examined by a female doctor due to personal beliefs. You are the only ophthalmologist available at the time, and the patient’s vision urgently needs assessment.",
+      "questions": [
+        "How would you handle a patient who refuses care based on the clinician’s gender?",
+        "What compromises or alternative solutions might you propose?",
+        "How do you balance respect for cultural or personal beliefs with the urgency of care?",
+        "Have you ever encountered a patient who refused treatment from you personally? What did you do?"
+      ]
+    },
+    {
+      "id": "2025.AI.15",
+      "scenario": "A patient with diabetes and severe retinopathy refuses to modify their lifestyle, despite clear warnings of possible blindness. They insist they can manage independently without further interventions.",
+      "questions": [
+        "What are your responsibilities if a patient refuses to make recommended changes?",
+        "How might you approach motivational interviewing in this scenario?",
+        "When does respect for autonomy intersect with potential paternalism?",
+        "Share a time when you helped a patient who resisted medical advice."
+      ]
+    },
+    {
+      "id": "2025.AI.16",
+      "scenario": "A pharmaceutical company funds a dinner talk you attend, promoting a new ocular medication. You notice a bias in the data presentation. They offer to sponsor your travel to a conference if you prescribe their product regularly.",
+      "questions": [
+        "What are the potential conflicts of interest in this scenario?",
+        "How would you respond to the company’s offer?",
+        "What role do guidelines or codes of conduct play here?",
+        "Describe a time you encountered a potential conflict of interest and how you managed it."
+      ]
+    },
+    {
+      "id": "2025.AI.17",
+      "scenario": "You suspect your colleague, another registrar, may be abusing alcohol. You’ve noticed them coming in late and appearing hungover, and others have raised concerns about patient safety.",
+      "questions": [
+        "How should you address suspicions of substance abuse in a colleague?",
+        "What barriers might prevent someone from seeking help?",
+        "Where can you seek guidance or support in this situation?",
+        "Can you recall an instance where you had to intervene for a colleague’s wellbeing?"
+      ]
+    },
+    {
+      "id": "2025.AI.18",
+      "scenario": "A medical student on rotation with your team consistently arrives unprepared for clinic, missing key learning opportunities. Your consultant asks you to mentor them and report on their performance.",
+      "questions": [
+        "What might be the reasons for the student’s lack of engagement?",
+        "How would you approach mentorship in this scenario?",
+        "What do you do if the student’s performance does not improve?",
+        "Describe a time you had to provide feedback to someone performing poorly."
+      ]
+    },
+    {
+      "id": "2025.AI.19",
+      "scenario": "A pathology lab error has led to the wrong results being appended to several patients’ files. You only discover the error when a patient questions a drastic change in their eye condition.",
+      "questions": [
+        "What are your immediate priorities upon discovering the error?",
+        "How do you communicate this mistake to the affected patients?",
+        "Who else should be informed, and how do you prevent recurrence?",
+        "Have you ever dealt with a clinical error that required open disclosure?"
+      ]
+    },
+    {
+      "id": "2025.AI.20",
+      "scenario": "You diagnose a patient with a rare corneal condition requiring a specific surgical intervention. Their insurance denies coverage, claiming the procedure is ‘experimental,’ leaving the patient unable to afford it.",
+      "questions": [
+        "How would you advocate for the patient in this situation?",
+        "What ethical dilemmas arise when recommended treatments are not covered by insurance?",
+        "How could systemic changes address these gaps in coverage?",
+        "Have you faced a scenario where financial barriers limited a patient’s care?"
+      ]
+    },
+    {
+      "id": "2025.AI.21",
+      "scenario": "You witness a car accident after hours. One victim appears to have severe facial trauma involving the orbit. You are off-duty and not carrying standard equipment, but you have some medical expertise.",
+      "questions": [
+        "What ethical and legal responsibilities do you have as an off-duty doctor?",
+        "How would you prioritize care in this emergency setting?",
+        "What potential challenges might arise from intervening without full resources?",
+        "Have you been in an urgent situation outside hospital settings, and how did you respond?"
+      ]
+    },
+    {
+      "id": "2025.AI.22",
+      "scenario": "Your hospital is considering purchasing a robotic surgical system for complex eye surgeries. This may improve precision but is extremely costly and may limit funds for other essential services.",
+      "questions": [
+        "What factors should be considered before adopting a high-cost new technology?",
+        "How do you balance innovation with cost-effectiveness?",
+        "What ethical considerations do you see in prioritizing robotic surgery over other needs?",
+        "Describe an instance where you had to evaluate cost vs benefit in a medical context."
+      ]
+    },
+    {
+      "id": "2025.AI.23",
+      "scenario": "A young child needs urgent surgery for a congenital eye issue. The parents refuse anesthesia, citing personal beliefs. This refusal jeopardizes the child’s long-term vision.",
+      "questions": [
+        "What ethical principles apply when parents refuse treatment for a minor?",
+        "How would you navigate consent and the child's best interests?",
+        "When is it appropriate to involve legal measures or child protection?",
+        "Can you share a time when you had to advocate for a vulnerable patient despite resistance?"
+      ]
+    },
+    {
+      "id": "2025.AI.24",
+      "scenario": "Misinformation spreads on social media about a new glaucoma vaccine trial, leading patients to worry it will cause blindness. Clinic attendance plummets, and worried calls flood the office.",
+      "questions": [
+        "What responsibilities do healthcare professionals have in counteracting medical misinformation?",
+        "How would you address patients’ fears and restore confidence?",
+        "What strategies could be used to educate the public about new therapies?",
+        "Discuss a time you encountered misinformation and how you responded."
+      ]
+    },
+    {
+      "id": "2025.AI.25",
+      "scenario": "A patient who has recently lost work benefits presents an insurance claim form with your forged signature. They say they needed to expedite the claim due to financial hardship.",
+      "questions": [
+        "What are the ethical and legal implications of this forgery?",
+        "How should you address the patient’s immediate situation?",
+        "Would you notify authorities or take another approach?",
+        "Has there been a time when you had to deal with unethical patient behavior?"
+      ]
+    },
+    {
+      "id": "2025.AI.26",
+      "scenario": "You’re a female registrar in a mostly male surgical department known for sexist remarks. You notice that female colleagues often receive fewer opportunities in theatre and informal teaching sessions.",
+      "questions": [
+        "What issues does a misogynistic environment create for patient care and staff well-being?",
+        "How would you approach addressing gender bias in the workplace?",
+        "What role do bystanders and leadership play in fostering an equitable workplace?",
+        "Share a time you dealt with discrimination or bias and what you learned."
+      ]
+    },
+    {
+      "id": "2025.AI.27",
+      "scenario": "A patient with HIV needs urgent eye surgery. Some staff express discomfort and request additional precautions or refuse to participate. The patient overhears this and feels discriminated against.",
+      "questions": [
+        "What are the ethical obligations of staff regarding infection control?",
+        "How do you handle staff who are reluctant to treat a patient with HIV?",
+        "What support can you offer to the patient, who feels stigmatized?",
+        "Describe a scenario where patient confidentiality and staff safety both needed careful balancing."
+      ]
+    },
+    {
+      "id": "2025.AI.28",
+      "scenario": "A patient with advanced cataracts refuses surgery locally due to cost and suggests traveling abroad for a cheaper procedure. They ask for your opinion and a letter supporting medical tourism.",
+      "questions": [
+        "What are the potential risks and benefits of seeking surgery abroad?",
+        "How do you balance patient autonomy with concerns about quality and follow-up care?",
+        "Would you provide a supportive letter, and under what conditions?",
+        "Tell us about a time you advised a patient who wanted care in a different setting."
+      ]
+    },
+    {
+      "id": "2025.AI.29",
+      "scenario": "You discover that a respected senior registrar has been claiming minor unworked shifts on their timesheet to earn extra income. They say they do it only because they feel underpaid for their actual hours worked.",
+      "questions": [
+        "What are the moral and professional implications of falsifying timesheets?",
+        "How would you approach your senior about this discovery?",
+        "Does workload justify unethical behavior, and how might you address root causes?",
+        "Share a time you faced a moral dilemma with a colleague’s actions."
+      ]
+    },
+    {
+      "id": "2025.AI.30",
+      "scenario": "A registrar in your ophthalmology department begins a romantic relationship with one of the nursing staff. Their interpersonal conflict occasionally spills over at work, affecting team morale.",
+      "questions": [
+        "What professional boundaries and potential conflicts arise in workplace relationships?",
+        "How would you handle the impact on patient care and team dynamics?",
+        "Would you involve a supervisor or HR, and at what point?",
+        "Describe how you’ve managed a situation where personal issues affected a team’s functioning."
       ]
     }
   ]
