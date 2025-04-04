@@ -20,9 +20,11 @@
   <textarea id="dataset2" rows="10" placeholder="Paste Dataset 2 here (tab separated)"></textarea>
   
   <button id="processButton">Process Datasets</button>
+  <button onclick="copyTableToClipboard()">Copy to Clipboard</button>
   
-  <div id="result"></div>
+  <table id="outputTable"></table>
   
+  <script src="helpers.js"></script>
   <script>
     // Utility function: Parse tab-separated text into an object array
     function parseTSV(rawText) {
@@ -124,8 +126,9 @@
       });
       
       // Create a table element
-      let table = document.createElement("table");
-      table.border = 1;
+        const table = document.getElementById("outputTable");
+        table.innerHTML = ""; // Clear existing content
+        table.border = 1;
       
       // Provided code to create the header row
       const headerRow = document.createElement("tr");
