@@ -390,63 +390,69 @@
       "How can you prevent chronic stress in workplaces?"
     ]
   },
-  {
-    "id": "2024.1",
-    "scenario": "You’re a researcher conducting an RCT on an Alzheimer’s drug vs placebo. During recruitment, a patient with Alzheimer’s who cares for his wife insists on getting the study drug rather than placebo.",
-    "questions": [
-      "What are the ethical issues involved?",
-      "When have you had personal and professional obligations conflict?"
-    ]
-  },
-  {
-    "id": "2024.2",
-    "scenario": "PCT occurs during CE/IOL surgery operated by a senior registrar. You are the RMO, and the senior registrar asks you to see the patient afterward (although she could see the patient herself) and to say nothing about what happened during surgery. The patient’s family is unhappy with you and wants to complain.",
-    "questions": [
-      "What are the issues involved?",
-      "What should the senior registrar have done?",
-      "Can you still work with the registrar?",
-      "A complaint is put in—what do you do?",
-      "Give an example of a complaint (formal or informal)."
-    ]
-  },
-  {
-    "id": "2024.3",
-    "scenario": "You’re seeing a 5-year-old in a rural town who is not under the care of parents but under FACS/aunt. He was prescribed glasses but hasn’t received them for months. There is concern about amblyopia.",
-    "questions": [
-      "What are the issues?",
-      "How to improve adherence in this case?",
-      "Have you ever had a patient not willing to follow treatment prescribed?"
-    ]
-  },
-  {
-    "id": "2024.4",
-    "scenario": "A young patient with intellectual disability and behavioral issues needs eye surgery. He is from a group home with 24-hour care.",
-    "questions": [
-      "What are the issues?",
-      "How to optimize his stay in hospital/his surgery?",
-      "The anesthetics team suggests local/sedation.",
-      "Give an example of caring for complex patients."
-    ]
-  },
-  {
-    "id": "2024.5",
-    "scenario": "There are 3 JMOs on the same team. One is performing poorly and overhears the other two talking about him behind his back. He becomes upset and doesn’t show up to work.",
-    "questions": [
-      "What are the issues?",
-      "How could this have been done differently?",
-      "What could a third person do?",
-      "Give an example of conflict at work."
-    ]
-  },
-  {
-    "id": "2024.6",
-    "scenario": "An Aboriginal and Torres Strait Islander (ATSI) patient presents to the hospital but does not trust “white doctors.” Your consultant has previously made racist comments about ATSI people.",
-    "questions": [
-      "What are the issues?",
-      "How do you improve ATSI engagement with care?",
-      "If the consultant says the patient does not require treatment, what do you do?",
-      "If the patient self-discharges, what do you do?",
-      "Have you ever had a scenario where bias impacted patient care?"
-    ]
-  }
+    {
+      "id": "2024.1",
+      "scenario": "Complicated cataract surgery by senior reg, assisted by RMO. Patient has high expectations and NESB/poor health literacy. Senior reg asked RMO to not tell patient about complication. Leanne was available but asked Jessica to see the patient. Reviewed D1 post-op. Patient and daughter are not happy with the responses and want to submit a complaint.",
+      "questions": [
+        "What are the issues",
+        "What should Jessica have done",
+        "Consultant shows Jessica the complaint letter, what should you do",
+        "When patient concerns are over, how should Jessica approach working relationship with Leanne",
+        "Tell us about a time you were involved in a complaint"
+      ]
+    },
+    {
+      "id": "2024.2",
+      "scenario": "Three busy doctors in a busy urban hospital. Long hours, complex cases, and a steep learning curve. Sophia is not coping—her mood and performance are reduced. Joel talked to Amaya about it behind Sophia’s back. Sophia hears this conversation, gets upset, and doesn’t turn up to work the next day.",
+      "questions": [
+        "What are the issues",
+        "How should Joel have handled the situation",
+        "What are Sophia’s options",
+        "Tell us about a time when you weren’t performing at your best"
+      ]
+    },
+    {
+      "id": "2024.3",
+      "scenario": "Xavier, an ophthalmologist working in a community outreach clinic, sees Luis (grandma), Ricardo (a 6-year-old boy patient), and a support worker. Ricardo is not cared for by his parents. He was seen a few months ago and treated with glasses, but the glasses were never ordered and the prescription was lost. There are concerns regarding the time window of opportunity to treat his condition.",
+      "questions": [
+        "What are the options for Xavier in the first instance",
+        "Why did they not pick up glasses/use glasses",
+        "How can Xavier approach Luis and the support worker to improve compliance?",
+        "What are the options for Xavier to facilitate improvement in treatment",
+        "Tell us about a time when your patient disagreed with your management, which could have led to a poor patient outcome"
+      ]
+    },
+    {
+      "id": "2024.4",
+      "scenario": "A senior registrar sees a young patient with intellectual disability and behavioural issues requiring 24-hour care. The patient has a history of hospital admissions with delirium and a complex medical history. The patient needs to have an elective procedure under general anesthesia. The carer and medical decision makers have provided consent.",
+      "questions": [
+        "What can you do pre-op other than addressing medical issues",
+        "How can you manage the behavioural challenges before, during, and after surgery",
+        "Anaesthetics say local anaesthesia and sedation, but surgery needs GA; what do you do?",
+        "What are the post-operative considerations at the time of discharge",
+        "Tell us about a time when you supported a patient with complex needs"
+      ]
+    },
+    {
+      "id": "2024.5",
+      "scenario": "Alex is a research coordinator recruiting potential participants for an RCT for Alzheimer’s disease. The intervention of choice has only been tested on animals overseas. Frank, who has mild dementia and is a full-time carer for his wife (who is wheelchair bound due to MS), wants to be involved in the research and asks Alex to give him the treatment.",
+      "questions": [
+        "What are the issues here",
+        "What further information does Alex need?",
+        "What should Alex say to Frank",
+        "Why are ethical parameters required in clinical research?",
+        "Tell us about a time when your personal and professional commitments/opinions clashed, either inside or outside of medicine"
+      ]
+    },
+    {
+      "id": "2024.6",
+      "scenario": "John, a young patient who identifies as Indigenous, is assessed by Ramesh—a registrar at a regional health centre. John has an urgent medical condition that requires immediate treatment. He tells Ramesh about his distrust in 'white doctors' and that his community’s feedback has been that negative outcomes have occurred when treated by white doctors. Ramesh believes a second opinion is best for John. The only clinician available is Sandra, a supervising consultant who has previously made disparaging remarks about Indigenous patients.",
+      "questions": [
+        "What are the issues",
+        "What should Ramesh do in this situation?",
+        "Sandra says minimal medical treatment is needed, what do you do?",
+        "John has left the hospital. What should Ramesh do?",
+        "Describe a time when a patient didn’t follow your suggested management plan and how you managed it"
+      ]
+    }  
 ]
