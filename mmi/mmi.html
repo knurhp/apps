@@ -28,10 +28,19 @@
         <option value="8">8</option>
       </select>
       <div>
-        <label>
-          <input type="checkbox" id="include-extra" />
-          Include AI generated scenarios (WIP)
-        </label>
+        <label>Select scenario source:</label>
+          <label>
+            <input type="radio" name="scenario-source" value="mmi_db" checked />
+            Previous
+          </label>
+          <label>
+            <input type="radio" name="scenario-source" value="mmi_gpt" />
+            AI
+          </label>
+          <label>
+            <input type="radio" name="scenario-source" value="combined" />
+            Combined
+          </label>
       </div>
       <br>
       <button id="start-button">Start</button>
@@ -69,7 +78,7 @@
     <br>
     <br>
     <br>
-    <p style="font-size: 0.6rem;">&copy;CL skibidi toilet 6/4</p>
+    <p style="font-size: 0.6rem;">&copy;CL skibidi toilet 6/.2</p>
 </div>
 
   <script src="mmi.js"></script>

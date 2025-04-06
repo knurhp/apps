@@ -26,12 +26,19 @@ let isPaused = false;
 const DURATION = 120; // seconds for answering
 const READING_DURATION = 10; // seconds for reading time
 
-// Load data from JSON files based on checkbox state
+// Load data from JSON files based on radio select input state
 async function loadData() {
-  const mainData = await fetch("mmi_db.json").then(res => res.json());
-  const extraData = includeExtraCheckbox.checked
-    ? await fetch("mmi_gpt.json").then(res => res.json())
-    : [];
+  const selectedSource = document.querySelector('input[name="scenario-source"]:checked').value;
+  let mainData = [];
+  let extraData = [];
+
+  if (selectedSource === "mmi_db" || selectedSource === "combined") {
+    mainData = await fetch("mmi_db.json").then(res => res.json());
+  }
+  if (selectedSource === "mmi_gpt" || selectedSource === "combined") {
+    extraData = await fetch("mmi_gpt.json").then(res => res.json());
+  }
+
   data = [...mainData, ...extraData];
 }
 
