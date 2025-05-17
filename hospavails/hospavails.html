@@ -34,7 +34,7 @@
             color: #e74c3c;
             font-weight: bold;
         }
-        .input-group, .controls-group, .filters-group {
+        .input-group, .controls-group, .filters-group, .roster-group-filter-container {
             margin-bottom: 20px;
             padding: 15px;
             background-color: #fff;
@@ -42,7 +42,7 @@
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .input-group label, .controls-group label, .filters-group label {
+        .input-group label, .controls-group label, .filters-group label, .roster-group-filter-container label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
@@ -50,7 +50,8 @@
         }
         .input-group input[type="text"],
         .input-group input[type="checkbox"],
-        .filters-group select {
+        .filters-group select,
+        .roster-group-filter-container select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -67,15 +68,19 @@
         .filters-group select[multiple] {
             min-height: 100px; /* Give some height for multi-select */
         }
-        .filters-group .filter-item {
+        .filters-group .filter-item, .roster-group-filter-container .filter-item {
             display: inline-block;
             vertical-align: top; /* Align items at the top */
             margin-right: 20px;
             margin-bottom: 10px;
             min-width: 200px; /* Give some width to filters */
         }
-        .filters-group .filter-item label {
+        .filters-group .filter-item label, .roster-group-filter-container .filter-item label {
              display: block;
+        }
+        .roster-group-filter-container select {
+            width: 100%;
+            max-width: 300px;
         }
         .controls-group button {
             background-color: #3498db;
@@ -115,9 +120,9 @@
             border-color: #f5c6cb;
         }
         #usersTableContainer {
-            /* max-height: 50vh;*/
-            overflow-y: auto;
-            border: 1px solid #ddd; /* Add border around scrollable area */
+            /* max-height: 60vh; Increased height for wider table */
+            overflow: auto;   /* Both vertical and horizontal scroll */
+            border: 1px solid #ddd;
             margin-top: 10px;
         }
         #usersTableContainer table {
@@ -125,6 +130,7 @@
             border-collapse: collapse;
             font-size: 0.9em;
             background-color: #fff;
+            min-width: 1200px; /* Encourage horizontal scroll if needed */
         }
         #usersTableContainer th, #usersTableContainer td {
             border: 1px solid #ddd;
@@ -160,7 +166,7 @@
             margin-bottom: 0;
             padding-bottom: 0;
         }
-                .date-filters-group {
+        .date-filters-group {
             margin-bottom: 20px;
             padding: 15px;
             background-color: #fff;
@@ -184,47 +190,6 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        #usersTableContainer {
-            max-height: 60vh; /* Increased height for wider table */
-            overflow: auto;   /* Both vertical and horizontal scroll */
-            border: 1px solid #ddd;
-            margin-top: 10px;
-        }
-        #usersTableContainer table {
-            min-width: 1200px; /* Encourage horizontal scroll if needed */
-        }
-        
-        .filters-group .filter-item, .date-filters-group .filter-item, .roster-group-filter .filter-item {
-            display: inline-block;
-            vertical-align: top;
-            margin-right: 20px;
-            margin-bottom: 10px;
-            min-width: 200px;
-        }
-
-        .roster-group-filter { /* New group for roster filter */
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-         .roster-group-filter label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #34495e;
-        }
-        .roster-group-filter select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            width: 100%;
-            max-width: 300px;
-        }
-
     </style>
 </head>
 <body>
@@ -273,16 +238,15 @@
         </div>
     </div>
 
-    <div class="roster-group-filter"> <!-- New Roster Group Filter Section -->
+    <!-- Roster Group Filter for filtering displayed data -->
+    <div class="roster-group-filter-container">
         <div class="filter-item">
-            <label for="rosterGroupFilter">Roster Group (for Unallocated API):</label>
+            <label for="rosterGroupFilter">Filter Table by Roster Group:</label>
             <select id="rosterGroupFilter">
-                <option value="75d5cc8d-4b0a-4392-88e1-c3b6bb37056f">RLH Allocations</option>
-                <option value="a40e918a-af4d-4cb9-bce6-99b5de1a0352">PA Allocations</option>
+                <!-- Options will be populated by JS -->
             </select>
         </div>
     </div>
-
 
     <div id="status">Enter token (if not using local files) and click a button.</div>
     <pre id="jsonData"></pre>
