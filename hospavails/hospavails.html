@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hosportal API Data Viewer</title>
+    <title>FosPortal Data Viewer</title>
     <style>
         body {
             font-family: sans-serif;
@@ -35,8 +35,8 @@
             font-weight: bold;
         }
         .input-group, .controls-group, .filters-group, .roster-group-filter-container {
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 10px;
+            padding: 10px;
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -120,7 +120,7 @@
             border-color: #f5c6cb;
         }
         #usersTableContainer {
-            /* max-height: 60vh; Increased height for wider table */
+            max-height: 80vh;
             overflow: auto;   /* Both vertical and horizontal scroll */
             border: 1px solid #ddd;
             margin-top: 10px;
@@ -131,6 +131,19 @@
             font-size: 0.9em;
             background-color: #fff;
             min-width: 1200px; /* Encourage horizontal scroll if needed */
+        }
+        #usersTableContainer th {
+            background-color: #3498db;
+            color: white;
+            position: sticky;
+            z-index: 1;
+        }
+        #usersTableContainer thead tr:first-child th {
+            top: 0;
+        }
+        #usersTableContainer thead tr:nth-child(2) th {
+            top: 38px; /* Adjust this value to match the height of your first header row */
+            z-index: 2;
         }
         #usersTableContainer th, #usersTableContainer td {
             border: 1px solid #ddd;
@@ -190,10 +203,14 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        
+        .unallocated-cell {
+            color: green;
+        }
     </style>
 </head>
 <body>
-    <h1>Hosportal API Data Viewer</h1>
+    <h1>FosPortal Data Viewer</h1>
 
     <div class="input-group">
         <label for="bearerTokenInput">Bearer Token:</label>

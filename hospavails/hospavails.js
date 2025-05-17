@@ -167,8 +167,9 @@ async function fetchCombinedUnallocatedDataForApi(apiStart, apiEnd) {
     const token = bearerTokenInput.value.trim();
     if (!token) throw new Error('Bearer token is required for API calls when fetching unallocated data.');
 
-    let combinedUnavailableUsers = [];
-    let firstResponseStructure = null;
+    let combinedUnallocatedUsersArray = []; // For type: "unallocated"
+    let combinedUnavailableUsersArray = []; // For type: "unavailable"
+    let firstResponseStructure = null; 
 
     statusElement.textContent = `Fetching unallocated data. Please wait...`;
     statusElement.className = '';
@@ -210,13 +211,17 @@ async function fetchCombinedUnallocatedDataForApi(apiStart, apiEnd) {
             console.log(`Data fetched for ${rosterGroup.name} (ID: ${rosterGroupId}):`, JSON.parse(JSON.stringify(result)));
 
             if (firstResponseStructure === null && result) {
-                const { unavailableUsers, ...rest } = result;
+                const { unallocatedUsers, unavailableUsers, ...rest } = result; // Exclude both arrays
                 firstResponseStructure = rest;
             }
 
-            if (result && result.unavailableUsers && Array.isArray(result.unavailableUsers)) {
-                combinedUnavailableUsers.push(...result.unavailableUsers);
+            if (result && result.unallocatedUsers && Array.isArray(result.unallocatedUsers)) {
+                combinedUnallocatedUsersArray.push(...result.unallocatedUsers);
             }
+            if (result && result.unavailableUsers && Array.isArray(result.unavailableUsers)) {
+                combinedUnavailableUsersArray.push(...result.unavailableUsers);
+            }
+
         } catch (fetchError) {
             console.error(`Fetch error for ${rosterGroup.name}:`, fetchError);
             statusElement.textContent = `Network error fetching for ${rosterGroup.name}. Trying next...`;
@@ -225,13 +230,14 @@ async function fetchCombinedUnallocatedDataForApi(apiStart, apiEnd) {
         }
     }
 
-    if (firstResponseStructure === null && combinedUnavailableUsers.length === 0) {
+    if (firstResponseStructure === null && combinedUnallocatedUsersArray.length === 0 && combinedUnavailableUsersArray.length === 0) {
         throw new Error("Failed to fetch unallocated data for all roster groups or no data returned.");
     }
     
     const finalCombinedResult = {
         ...(firstResponseStructure || {}),
-        unavailableUsers: combinedUnavailableUsers
+        unallocatedUsers: combinedUnallocatedUsersArray, // For GREEN "Unalloc."
+        unavailableUsers: combinedUnavailableUsersArray  // For RED "Unavail." (actual shifts)
     };
     return finalCombinedResult;
 }
@@ -393,7 +399,7 @@ function normalizeDate(dateObj) {
     return `${year}-${month}-${day}`;
 }
 
-function generateUsersTable(usersData, leavesData, unallocatedData, selectedRoleIds, selectedTeamIds) {
+function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedRoleIds, selectedTeamIds) {
     usersTableContainer.innerHTML = '';
 
     if (!usersData?.siteUsers?.length) { usersTableContainer.innerHTML = '<p class="error">No siteUsers data.</p>'; return; }
@@ -401,108 +407,127 @@ function generateUsersTable(usersData, leavesData, unallocatedData, selectedRole
     
     const selectedRosterGroupId = rosterGroupFilterDropdown.value;
 
-    let currentUnallocatedUsers = unallocatedData.unavailableUsers || [];
+    // Filter unallocatedApiData arrays based on selectedRosterGroupId
+    let currentUnallocatedShifts = (unallocatedApiData.unallocatedUsers || []).slice(); // Array for GREEN "Unalloc."
+    let currentUnavailableShifts = (unallocatedApiData.unavailableUsers || []).slice(); // Array for RED "Unavail." (actual shifts)
+
     if (selectedRosterGroupId && selectedRosterGroupId !== "All") {
-        currentUnallocatedUsers = currentUnallocatedUsers.filter(unavail => unavail.rosterGroupId === selectedRosterGroupId);
+        currentUnallocatedShifts = currentUnallocatedShifts.filter(entry => entry.rosterGroupId === selectedRosterGroupId);
+        currentUnavailableShifts = currentUnavailableShifts.filter(entry => entry.rosterGroupId === selectedRosterGroupId);
     }
-    const processedUnallocatedData = { ...unallocatedData, unavailableUsers: currentUnallocatedUsers };
-
-
-    if (!processedUnallocatedData || typeof processedUnallocatedData.unavailableUsers === 'undefined') {
-        usersTableContainer.innerHTML = `<p class="error">Unavailability data structure missing/invalid (or no unavailabilities for selected Roster Group '${selectedRosterGroupId === "All" ? "All" : ROSTER_GROUPS_CONFIG.find(rg => rg.id === selectedRosterGroupId)?.name || selectedRosterGroupId}').</p>`; return;
+    
+    // Check if the base unallocatedApiData structure is valid, even if filtered arrays are empty
+    if (!unallocatedApiData || (typeof unallocatedApiData.unallocatedUsers === 'undefined' && typeof unallocatedApiData.unavailableUsers === 'undefined')) {
+         usersTableContainer.innerHTML = `<p class="error">Unallocated/Unavailable data structure missing or invalid.</p>`;
+         return;
     }
 
     const fromDateStr = fromDateInput.value;
     const toDateStr = toDateInput.value;
-    if (!fromDateStr || !toDateStr) {
-        usersTableContainer.innerHTML = '<p class="error">Please select both "From" and "To" dates.</p>'; return;
-    }
+    if (!fromDateStr || !toDateStr) { usersTableContainer.innerHTML = '<p class="error">Please select both "From" and "To" dates.</p>'; return; }
     const fromDate = new Date(fromDateStr + "T00:00:00Z");
     const toDate = new Date(toDateStr + "T23:59:59Z");
-    if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime()) || fromDate > toDate) {
-        usersTableContainer.innerHTML = '<p class="error">Invalid date range selected.</p>'; return;
-    }
+    if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime()) || fromDate > toDate) { usersTableContainer.innerHTML = '<p class="error">Invalid date range selected.</p>'; return; }
 
     const dateRange = [];
     let currentDateIter = new Date(fromDate.toISOString().slice(0,10) + "T00:00:00Z");
     const toDateLimit = new Date(toDate.toISOString().slice(0,10) + "T00:00:00Z");
-
     while (currentDateIter <= toDateLimit) {
         dateRange.push(new Date(currentDateIter));
         currentDateIter.setUTCDate(currentDateIter.getUTCDate() + 1);
     }
 
-    const leavesByRoleInstanceAndDate = new Map();
+    // Consolidated daily info map
+    const userDailySlotInfo = new Map();
+
+    function getOrCreateDailySlotEntry(roleInstanceId, dateKey) {
+        if (!userDailySlotInfo.has(roleInstanceId)) {
+            userDailySlotInfo.set(roleInstanceId, new Map());
+        }
+        const userDateMap = userDailySlotInfo.get(roleInstanceId);
+        if (!userDateMap.has(dateKey)) {
+            userDateMap.set(dateKey, {
+                leaveTypes: new Set(),
+                isUnavailableAM: false, unavailableDetailsAM: new Set(),
+                isUnavailablePM: false, unavailableDetailsPM: new Set(),
+                isUnallocatedAM: false, unallocatedDetailsAM: new Set(),
+                isUnallocatedPM: false, unallocatedDetailsPM: new Set()
+            });
+        }
+        return userDateMap.get(dateKey);
+    }
+    
+    // Process Leaves
     (leavesData.leaves || []).forEach(leave => {
         const leaveStart = new Date(leave.start);
         const leaveEnd = new Date(leave.end);
         let currentLeaveDate = new Date(Date.UTC(leaveStart.getUTCFullYear(), leaveStart.getUTCMonth(), leaveStart.getUTCDate()));
-
         while(currentLeaveDate <= leaveEnd) {
             const dateKey = normalizeDate(currentLeaveDate);
-            if (!leavesByRoleInstanceAndDate.has(leave.roleInstanceId)) {
-                leavesByRoleInstanceAndDate.set(leave.roleInstanceId, new Map());
-            }
-            const userDateLeaveMap = leavesByRoleInstanceAndDate.get(leave.roleInstanceId);
-            if (!userDateLeaveMap.has(dateKey)) {
-                userDateLeaveMap.set(dateKey, new Set());
-            }
-            userDateLeaveMap.get(dateKey).add(leaveTypesMap.get(leave.leaveTypeId) || 'Leave');
+            const entry = getOrCreateDailySlotEntry(leave.roleInstanceId, dateKey);
+            entry.leaveTypes.add(leaveTypesMap.get(leave.leaveTypeId) || 'Leave');
             currentLeaveDate.setUTCDate(currentLeaveDate.getUTCDate() + 1);
         }
     });
 
-    const unavailabilityByRoleInstanceAndDate = new Map();
-    (processedUnallocatedData.unavailableUsers || []).forEach(unavail => {
-        const dateKey = unavail.calculatedDate;
+    const amSlotStartMinutes = 7 * 60 + 30; // 7:30 AM
+    const amSlotEndMinutes = 12 * 60 + 30; // 12:30 PM
+    const pmSlotStartMinutes = 13 * 60;    // 1:00 PM
+    const pmSlotEndMinutes = 17 * 60 + 30; // 5:30 PM
 
-        if (!unavailabilityByRoleInstanceAndDate.has(unavail.roleInstanceId)) {
-            unavailabilityByRoleInstanceAndDate.set(unavail.roleInstanceId, new Map());
-        }
-        const userDateUnavailMap = unavailabilityByRoleInstanceAndDate.get(unavail.roleInstanceId);
-        if (!userDateUnavailMap.has(dateKey)) {
-            userDateUnavailMap.set(dateKey, { AM: false, PM: false, details: [] });
-        }
-        const dayUnavailInfo = userDateUnavailMap.get(dateKey);
+    function processShiftArray(shiftArray, isUnallocatedType) {
+        (shiftArray || []).forEach(shift => {
+            const dateKey = shift.calculatedDate;
+            const entry = getOrCreateDailySlotEntry(shift.roleInstanceId, dateKey);
+            
+            const itemLocalStartHour = shift.startTime.hour;
+            const itemLocalStartMinute = shift.startTime.minute;
+            const itemLocalEndHour = shift.endTime.hour;
+            const itemLocalEndMinute = shift.endTime.minute;
+            
+            let itemStartTotalMinutes = itemLocalStartHour * 60 + itemLocalStartMinute;
+            let itemEndTotalMinutes = itemLocalEndHour * 60 + itemLocalEndMinute;
 
-        const itemLocalStartHour = unavail.startTime.hour;
-        const itemLocalStartMinute = unavail.startTime.minute;
-        const itemLocalEndHour = unavail.endTime.hour;
-        const itemLocalEndMinute = unavail.endTime.minute;
-        
-        let itemStartTotalMinutes = itemLocalStartHour * 60 + itemLocalStartMinute;
-        let itemEndTotalMinutes = itemLocalEndHour * 60 + itemLocalEndMinute;
+            if (shift.startTime.dayOffset && shift.startTime.dayOffset < 0) itemStartTotalMinutes = 0;
+            if (shift.endTime.dayOffset && shift.endTime.dayOffset > 0) {
+                itemEndTotalMinutes = 24 * 60;
+            } else if (itemLocalEndHour === 0 && itemLocalEndMinute === 0 && 
+                       (itemLocalStartHour !== 0 || itemLocalStartMinute !== 0) &&
+                       (!shift.endTime.dayOffset || shift.endTime.dayOffset === 0) ) {
+                 itemEndTotalMinutes = 24 * 60;
+            }
+            
+            const detailString = `Shift: ${String(itemLocalStartHour).padStart(2,'0')}:${String(itemLocalStartMinute).padStart(2,'0')} - ${String(itemLocalEndHour).padStart(2,'0')}:${String(itemLocalEndMinute).padStart(2,'0')}` +
+                                 (shift.startTime.dayOffset ? ` (Start DO:${shift.startTime.dayOffset})` : '') +
+                                 (shift.endTime.dayOffset ? ` (End DO:${shift.endTime.dayOffset})` : '') +
+                                 (shift.rosterGroupId ? ` (RG: ${ROSTER_GROUPS_CONFIG.find(rg => rg.id === shift.rosterGroupId)?.name || shift.rosterGroupId})` : '');
 
-        if (unavail.startTime.dayOffset && unavail.startTime.dayOffset < 0) {
-             itemStartTotalMinutes = 0;
-        }
-        if (unavail.endTime.dayOffset && unavail.endTime.dayOffset > 0) {
-            itemEndTotalMinutes = 24 * 60;
-        } else if (itemLocalEndHour === 0 && itemLocalEndMinute === 0 && 
-                   (itemLocalStartHour !== 0 || itemLocalStartMinute !== 0) &&
-                   (!unavail.endTime.dayOffset || unavail.endTime.dayOffset === 0) ) {
-             itemEndTotalMinutes = 24 * 60;
-        }
+            if (itemStartTotalMinutes < amSlotEndMinutes && itemEndTotalMinutes > amSlotStartMinutes) { // Overlaps AM
+                if (isUnallocatedType) {
+                    entry.isUnallocatedAM = true;
+                    entry.unallocatedDetailsAM.add(detailString);
+                } else {
+                    entry.isUnavailableAM = true;
+                    entry.unavailableDetailsAM.add(detailString);
+                }
+            }
+            if (itemStartTotalMinutes < pmSlotEndMinutes && itemEndTotalMinutes > pmSlotStartMinutes) { // Overlaps PM
+                if (isUnallocatedType) {
+                    entry.isUnallocatedPM = true;
+                    entry.unallocatedDetailsPM.add(detailString);
+                } else {
+                    entry.isUnavailablePM = true;
+                    entry.unavailableDetailsPM.add(detailString);
+                }
+            }
+        });
+    }
 
-        const amSlotStartMinutes = 7 * 60 + 30;
-        const amSlotEndMinutes = 12 * 60 + 30;
-        const pmSlotStartMinutes = 13 * 60;
-        const pmSlotEndMinutes = 17 * 60 + 30;
-
-        if (itemStartTotalMinutes < amSlotEndMinutes && itemEndTotalMinutes > amSlotStartMinutes) {
-            dayUnavailInfo.AM = true;
-        }
-        if (itemStartTotalMinutes < pmSlotEndMinutes && itemEndTotalMinutes > pmSlotStartMinutes) {
-            dayUnavailInfo.PM = true;
-        }
-        
-        dayUnavailInfo.details.push(
-            `Shift: ${String(unavail.startTime.hour).padStart(2,'0')}:${String(unavail.startTime.minute).padStart(2,'0')} - ${String(unavail.endTime.hour).padStart(2,'0')}:${String(unavail.endTime.minute).padStart(2,'0')}` +
-            (unavail.startTime.dayOffset ? ` (Start DO:${unavail.startTime.dayOffset})` : '') +
-            (unavail.endTime.dayOffset ? ` (End DO:${unavail.endTime.dayOffset})` : '') +
-            (unavail.rosterGroupId ? ` (RG: ${ROSTER_GROUPS_CONFIG.find(rg => rg.id === unavail.rosterGroupId)?.name || unavail.rosterGroupId})` : '')
-        );
-    });
+    // Process "unavailableUsers" (actual shifts, for red "Unavail.")
+    processShiftArray(currentUnavailableShifts, false);
+    
+    // Process "unallocatedUsers" (potential shifts, for green "Unalloc.")
+    processShiftArray(currentUnallocatedShifts, true);
 
     const filterByAllRoles = selectedRoleIds.includes("All");
     const filterByAllTeams = selectedTeamIds.includes("All");
@@ -526,8 +551,7 @@ function generateUsersTable(usersData, leavesData, unallocatedData, selectedRole
     const table = document.createElement('table');
     const thead = document.createElement('thead');
     const tbody = document.createElement('tbody');
-
-    const baseHeaders = ['First Name', 'Last Name', 'Role Instances & Teams']; // Removed 'Site User ID'
+    const baseHeaders = ['First Name', 'Last Name', 'Role & Teams']; // Removed 'Site User ID' from visible headers
     const headerRow1 = document.createElement('tr');
     baseHeaders.forEach(headerText => {
         const th = document.createElement('th');
@@ -564,6 +588,7 @@ function generateUsersTable(usersData, leavesData, unallocatedData, selectedRole
         const profile = siteUser.siteUserProfile || {};
         tr.appendChild(createCell(profile.firstName || 'N/A'));
         tr.appendChild(createCell(profile.lastName || 'N/A'));
+        // tr.appendChild(createCell(siteUser.id || 'N/A')); // HIDE Site User ID from table
 
         let roleInstancesHtmlContent = '';
         if (siteUser.roleInstances && siteUser.roleInstances.length > 0) {
@@ -582,7 +607,7 @@ function generateUsersTable(usersData, leavesData, unallocatedData, selectedRole
                             .filter(rit => filterByAllTeams || selectedTeamIds.includes(rit.teamId))
                             .map(rit => {
                                 const teamName = teamsMap.get(rit.teamId) || `TeamID: ${rit.teamId}`;
-                                return `Team: ${teamName}`;
+                                return teamName;
                             });
 
                         if (relevantTeamsForThisRI.length > 0) {
@@ -593,9 +618,9 @@ function generateUsersTable(usersData, leavesData, unallocatedData, selectedRole
                             teamsDisplayHtml = 'No teams assigned to this instance.';
                         }
                     }
-                    roleInstancesHtmlContent += `<li>
-                        <b>Role:</b> ${roleName}<br>
-                        <b>Teams:</b> ${teamsDisplayHtml}</li>`;
+                    // HIDE Role Inst. ID from visible table, but keep logic for processing
+                    roleInstancesHtmlContent += `<li><b>Role:</b> ${roleName}<br>
+                                                      <b>Teams:</b> ${teamsDisplayHtml}</li>`;
                 });
                 roleInstancesHtmlContent += '</ul>';
             } else {
@@ -608,65 +633,56 @@ function generateUsersTable(usersData, leavesData, unallocatedData, selectedRole
 
         dateRange.forEach(tableDay => {
             const dateKeyForLookup = normalizeDate(tableDay);
+            let amContent = '', pmContent = '';
+            let amClass = 'empty-slot-cell', pmClass = 'empty-slot-cell';
+            let amTitle = '', pmTitle = '';
 
-            let amContent = '';
-            let pmContent = '';
-            let amClass = 'empty-slot-cell';
-            let pmClass = 'empty-slot-cell';
-            let amTitle = '';
-            let pmTitle = '';
-
-            let leaveForDayAM = new Set();
-            let leaveForDayPM = new Set();
-            let unavailableAM = false;
-            let unavailablePM = false;
-            let unavailabilityDetails = [];
+            let combinedAmDetails = new Set();
+            let combinedPmDetails = new Set();
 
             if (siteUser.roleInstances && siteUser.roleInstances.length > 0) {
                 siteUser.roleInstances.forEach(ri => {
                     const roleMatches = filterByAllRoles || selectedRoleIds.includes(ri.roleId);
                     const teamMatches = filterByAllTeams || (ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId)));
 
-                    if (roleMatches && teamMatches) {
-                        if (leavesByRoleInstanceAndDate.has(ri.id) && leavesByRoleInstanceAndDate.get(ri.id).has(dateKeyForLookup)) {
-                            const leaveTypes = leavesByRoleInstanceAndDate.get(ri.id).get(dateKeyForLookup);
-                            leaveTypes.forEach(lt => {
-                                leaveForDayAM.add(lt);
-                                leaveForDayPM.add(lt);
-                            });
+                    if (roleMatches && teamMatches && userDailySlotInfo.has(ri.id) && userDailySlotInfo.get(ri.id).has(dateKeyForLookup)) {
+                        const dailyInfo = userDailySlotInfo.get(ri.id).get(dateKeyForLookup);
+
+                        // AM Slot
+                        if (dailyInfo.leaveTypes.size > 0) {
+                            amContent = Array.from(dailyInfo.leaveTypes).join(', ');
+                            amClass = 'leave-cell';
+                            dailyInfo.leaveTypes.forEach(d => combinedAmDetails.add(d));
+                        } else if (dailyInfo.isUnavailableAM) {
+                            amContent = 'Unavail.';
+                            amClass = 'unavailable-cell';
+                            dailyInfo.unavailableDetailsAM.forEach(d => combinedAmDetails.add(d));
+                        } else if (dailyInfo.isUnallocatedAM) {
+                            amContent = 'Unalloc.';
+                            amClass = 'unallocated-cell'; // Green
+                            dailyInfo.unallocatedDetailsAM.forEach(d => combinedAmDetails.add(d));
                         }
 
-                        if (unavailabilityByRoleInstanceAndDate.has(ri.id) && unavailabilityByRoleInstanceAndDate.get(ri.id).has(dateKeyForLookup)) {
-                            const unavailInfo = unavailabilityByRoleInstanceAndDate.get(ri.id).get(dateKeyForLookup);
-                            if (unavailInfo.AM) unavailableAM = true;
-                            if (unavailInfo.PM) unavailablePM = true;
-                            if (unavailInfo.details && unavailInfo.details.length > 0) {
-                                unavailabilityDetails.push(...unavailInfo.details);
-                            }
+                        // PM Slot
+                        if (dailyInfo.leaveTypes.size > 0) {
+                            pmContent = Array.from(dailyInfo.leaveTypes).join(', ');
+                            pmClass = 'leave-cell';
+                            dailyInfo.leaveTypes.forEach(d => combinedPmDetails.add(d));
+                        } else if (dailyInfo.isUnavailablePM) {
+                            pmContent = 'Unavail.';
+                            pmClass = 'unavailable-cell';
+                            dailyInfo.unavailableDetailsPM.forEach(d => combinedPmDetails.add(d));
+                        } else if (dailyInfo.isUnallocatedPM) {
+                            pmContent = 'Unalloc.';
+                            pmClass = 'unallocated-cell'; // Green
+                            dailyInfo.unallocatedDetailsPM.forEach(d => combinedPmDetails.add(d));
                         }
                     }
                 });
             }
-
-            if (leaveForDayAM.size > 0) {
-                amContent = Array.from(leaveForDayAM).join(', ');
-                amClass = 'leave-cell';
-                amTitle = amContent;
-            } else if (unavailableAM) {
-                amContent = 'Unavail.';
-                amClass = 'unavailable-cell';
-                amTitle = 'Unavailability details:\n' + [...new Set(unavailabilityDetails)].join('\n');
-            }
-
-            if (leaveForDayPM.size > 0) {
-                pmContent = Array.from(leaveForDayPM).join(', ');
-                pmClass = 'leave-cell';
-                pmTitle = pmContent;
-            } else if (unavailablePM) {
-                pmContent = 'Unavail.';
-                pmClass = 'unavailable-cell';
-                pmTitle = 'Unavailability details:\n' + [...new Set(unavailabilityDetails)].join('\n');
-            }
+            
+            amTitle = combinedAmDetails.size > 0 ? Array.from(combinedAmDetails).join('\n') : '';
+            pmTitle = combinedPmDetails.size > 0 ? Array.from(combinedPmDetails).join('\n') : '';
 
             const tdAM = createCell(amContent);
             tdAM.className = amClass;
