@@ -1,0 +1,2671 @@
+{
+    "roleInstances": [
+        {
+            "id": "9b496edb-2cba-4816-9bbc-155bdb82b403",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Adeel",
+                "lastName": "Aftab",
+                "shortName": "AftA"
+            }
+        },
+        {
+            "id": "d7e9843b-793d-41ae-9c8c-fe7de7765084",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Alexander",
+                "lastName": "Smithers",
+                "shortName": "SmiA"
+            }
+        },
+        {
+            "id": "f103f2c4-574d-47e1-8638-c7b7538da089",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Anastasia",
+                "lastName": "Pearce",
+                "shortName": "PeaA"
+            }
+        },
+        {
+            "id": "488ba90e-2347-46fa-9704-cffbc28cbc29",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Anuar",
+                "lastName": "Turgulov",
+                "shortName": "TurA"
+            }
+        },
+        {
+            "id": "1d12a38b-b6ad-4655-b51e-43def493176c",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Claire",
+                "lastName": "Rose",
+                "shortName": "RosC"
+            }
+        },
+        {
+            "id": "b8ee038f-c4d1-4865-ae2a-1e649eac46c4",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Dilip Raj",
+                "lastName": "Sunder Raj",
+                "shortName": "SunD"
+            }
+        },
+        {
+            "id": "870d39a6-2784-4575-a171-01496a7ce8a8",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Edward",
+                "lastName": "Thornely",
+                "shortName": "ThoE"
+            }
+        },
+        {
+            "id": "8f00a3ae-1c37-43b2-8ffd-3b52bde13915",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Erica",
+                "lastName": "Barton",
+                "shortName": "BarE"
+            }
+        },
+        {
+            "id": "9b711d8b-baa0-41c7-ba59-c364bb915d68",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Ethan",
+                "lastName": "Mar",
+                "shortName": "MarE"
+            }
+        },
+        {
+            "id": "df46585c-2b5d-45cd-8e1a-ac7a9cfc410d",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Jerome",
+                "lastName": "Tan",
+                "shortName": "TanJ"
+            }
+        },
+        {
+            "id": "9aa4587a-e05b-4a85-a125-6eb419400493",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Joel",
+                "lastName": "Kiburi",
+                "shortName": "KibJ"
+            }
+        },
+        {
+            "id": "fc43646c-3aff-434e-b6a3-fce332182c2e",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Kaushaliya",
+                "lastName": "Devandran",
+                "shortName": "DevK"
+            }
+        },
+        {
+            "id": "59159fef-d3f1-4854-83b3-8800da842928",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Kevin",
+                "lastName": "Chan",
+                "shortName": "ChaK"
+            }
+        },
+        {
+            "id": "1161b3d1-6cc8-4c96-af97-e47d9ad8434a",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Marissa",
+                "lastName": "Woodburn",
+                "shortName": "WooM"
+            }
+        },
+        {
+            "id": "fc9dcb52-2b65-4982-9d6e-e579518114a1",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Rafid",
+                "lastName": "Karim",
+                "shortName": "KarR"
+            }
+        },
+        {
+            "id": "825a2d3d-efa9-4d88-b172-40ad3880d209",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Rebecca",
+                "lastName": "Johnstone",
+                "shortName": "JohR"
+            }
+        },
+        {
+            "id": "32eebc57-dcaa-4761-99d3-469bdaecab77",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Rosie",
+                "lastName": "Herrmann",
+                "shortName": "HerR"
+            }
+        },
+        {
+            "id": "b9743ec6-0286-4d5d-8741-826dcfdc3511",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Susanna",
+                "lastName": "Van Haeringen",
+                "shortName": "VanS"
+            }
+        },
+        {
+            "id": "0dee36c1-a835-4135-98f3-4f6e910775f0",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "William",
+                "lastName": "Lindores",
+                "shortName": "LinW"
+            }
+        },
+        {
+            "id": "1e22a67c-3ca4-4fd5-9ebf-7674cd67c13b",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Kyle",
+                "lastName": "Dailey",
+                "shortName": "DaiK"
+            }
+        },
+        {
+            "id": "41b36932-e1f5-43e3-ad10-d77ae15665e4",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Abir",
+                "lastName": "Guha",
+                "shortName": "GuhA"
+            }
+        },
+        {
+            "id": "69135dc9-b526-485e-b702-bd858840612b",
+            "roleId": "7546e8bf-4b49-48ca-bf0b-47207297404a",
+            "siteUserProfile": {
+                "firstName": "Ashley",
+                "lastName": "Doyle",
+                "shortName": "DoyA"
+            }
+        },
+        {
+            "id": "1c74ff67-0ef5-479b-82a1-0d08c6b2e017",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Daniel",
+                "lastName": "Kim",
+                "shortName": "KimD"
+            }
+        },
+        {
+            "id": "67c846ca-679c-4179-9729-be69f6b0476f",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Robert",
+                "lastName": "Fanning",
+                "shortName": "FanningR"
+            }
+        },
+        {
+            "id": "daa237d9-e623-4902-aea8-10cdacee9b01",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Wenjie",
+                "lastName": "Pei",
+                "shortName": "PeiW"
+            }
+        },
+        {
+            "id": "bcebbd2c-d6f4-4186-8d09-d855470fedcb",
+            "roleId": "b37924b6-5e5e-4d6c-8383-7e295bbd7171",
+            "siteUserProfile": {
+                "firstName": "Angelica",
+                "lastName": "Aros Montano",
+                "shortName": "AroA"
+            }
+        },
+        {
+            "id": "6a5cdac3-4890-40dd-93d3-950d1ef5c299",
+            "roleId": "b37924b6-5e5e-4d6c-8383-7e295bbd7171",
+            "siteUserProfile": {
+                "firstName": "Jorja",
+                "lastName": "O'Meagher",
+                "shortName": "OMeJ"
+            }
+        },
+        {
+            "id": "3802386d-7c5a-4a34-90a1-f03aaf8f232c",
+            "roleId": "b37924b6-5e5e-4d6c-8383-7e295bbd7171",
+            "siteUserProfile": {
+                "firstName": "Shari",
+                "lastName": "Moffatt",
+                "shortName": "ShaS"
+            }
+        },
+        {
+            "id": "6f6d0cb0-6cda-4ce4-b1de-6878233a607e",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Adrian",
+                "lastName": "Feint",
+                "shortName": "FeinA"
+            }
+        },
+        {
+            "id": "d1848a0e-387f-404b-9219-8522b55f237d",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Adrian",
+                "lastName": "Hall",
+                "shortName": "HallA"
+            }
+        },
+        {
+            "id": "64edb5ea-1acf-40a9-b162-4282873d19cd",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Adrian",
+                "lastName": "Pregelj",
+                "shortName": "PregA"
+            }
+        },
+        {
+            "id": "37ef55e0-e784-477d-8575-879bcc1c2eb6",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Agustina",
+                "lastName": "Frankel",
+                "shortName": "FranA"
+            }
+        },
+        {
+            "id": "9dd72598-3cda-43b2-9fdb-cb4654bdd04a",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Akshay",
+                "lastName": "Hungenahally",
+                "shortName": "HungA"
+            }
+        },
+        {
+            "id": "91a1619f-a805-4bac-81f3-c441d6e0ce7c",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Amanda",
+                "lastName": "Marshall",
+                "shortName": "MarsA"
+            }
+        },
+        {
+            "id": "048dc49e-6ffc-48cd-a2c1-54b938c9a6a6",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Andrew",
+                "lastName": "Wilson",
+                "shortName": "WilsA"
+            }
+        },
+        {
+            "id": "604a04f8-46bc-42ed-b7f8-2aaf12e29262",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Anthony",
+                "lastName": "Brown",
+                "shortName": "BrowA"
+            }
+        },
+        {
+            "id": "26900566-304b-4ed4-8276-3ba9a3feafc4",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Behin",
+                "lastName": "Moser",
+                "shortName": "MoseB"
+            }
+        },
+        {
+            "id": "8b1122e0-b3eb-4919-9ab1-9584a464587f",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Ben",
+                "lastName": "Lloyd",
+                "shortName": "LloyB"
+            }
+        },
+        {
+            "id": "ef2dfd1c-f12a-4604-bb53-70e2acf28fec",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Tom",
+                "lastName": "Lam",
+                "shortName": "LamT"
+            }
+        },
+        {
+            "id": "b5d472ff-82ae-4511-997d-d3f1e3622121",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Alexandra",
+                "lastName": "Hickey",
+                "shortName": "HickA"
+            }
+        },
+        {
+            "id": "488d5815-c59f-4e77-9e9d-db1da937ad73",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Casey",
+                "lastName": "Steele",
+                "shortName": "SteeC"
+            }
+        },
+        {
+            "id": "66737d12-cc28-4d4e-ab81-028e435226d4",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "James",
+                "lastName": "Bradley",
+                "shortName": "BradJ"
+            }
+        },
+        {
+            "id": "42de1f7a-6ca2-4348-aeb9-c7eae888e7c6",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Elizabeth",
+                "lastName": "Forrest",
+                "shortName": "ForrE"
+            }
+        },
+        {
+            "id": "0de778f4-b809-48b9-a69b-556d89bfb10f",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Elizabeth",
+                "lastName": "Robinson",
+                "shortName": "RobiE"
+            }
+        },
+        {
+            "id": "edc78952-b060-486c-aa3f-139d69d767d2",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Fady",
+                "lastName": "Youssef",
+                "shortName": "YousF"
+            }
+        },
+        {
+            "id": "57ffaec1-9783-44d5-8780-7b065e8d8ef1",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Jasmin",
+                "lastName": "Ellenberger",
+                "shortName": "ElleJ"
+            }
+        },
+        {
+            "id": "d197088b-0c8d-411c-b728-44c5d41b4a4b",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Joshua",
+                "lastName": "Chew",
+                "shortName": "ChewJ"
+            }
+        },
+        {
+            "id": "f72806bb-8b2e-4c72-bbac-7f21dc09f7c5",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Kim",
+                "lastName": "Vidhani",
+                "shortName": "VidhK"
+            }
+        },
+        {
+            "id": "f8968282-8911-49b6-bd5c-36bc29b04c16",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Margo",
+                "lastName": "Blanco",
+                "shortName": "BlanM"
+            }
+        },
+        {
+            "id": "7d5cb88c-9265-46e1-980b-08ed4b6ce511",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Nathan",
+                "lastName": "James",
+                "shortName": "JameN"
+            }
+        },
+        {
+            "id": "cc64d34f-83ec-49cf-bcca-89fbbae9fe92",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Nicholas",
+                "lastName": "Trott",
+                "shortName": "TrotN"
+            }
+        },
+        {
+            "id": "261816fc-6f58-45d1-8ed5-455a7635fef7",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Nigel",
+                "lastName": "Akroyd",
+                "shortName": "AkroN"
+            }
+        },
+        {
+            "id": "0efa4ba6-076d-49ae-81fe-b4ed51d4f60b",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Phillip",
+                "lastName": "Lee",
+                "shortName": "LeePh"
+            }
+        },
+        {
+            "id": "0163f0b4-537c-4b0f-b2ca-7aa93b797876",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Rebekah",
+                "lastName": "Ferris",
+                "shortName": "FerrR"
+            }
+        },
+        {
+            "id": "01eb5372-37f8-4279-a24b-d19218f89d0f",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Sanchia",
+                "lastName": "Smith",
+                "shortName": "SmiSa"
+            }
+        },
+        {
+            "id": "511a1061-9fa4-440f-8270-d70d892dfd67",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Setarah",
+                "lastName": "Ghahreman",
+                "shortName": "GhahS"
+            }
+        },
+        {
+            "id": "8509e6c1-9219-4ede-a1d1-ca9885df03d6",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Sibi",
+                "lastName": "Mathew-Kurian",
+                "shortName": "MathS"
+            }
+        },
+        {
+            "id": "85af3042-c225-4cff-9e35-0be68abccc75",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Stewart",
+                "lastName": "Ure",
+                "shortName": "UreSt"
+            }
+        },
+        {
+            "id": "d7ca17c4-bdcf-427c-b7e3-d94fef655ed8",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Tyson",
+                "lastName": "Jones",
+                "shortName": "JoneT"
+            }
+        },
+        {
+            "id": "f5dfbcf8-a073-4139-a60e-47e3c8efd997",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Werner",
+                "lastName": "De Wilzem",
+                "shortName": "DeWiW"
+            }
+        },
+        {
+            "id": "7a8d8730-17a2-4481-a414-3badb0f622fc",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Chris",
+                "lastName": "Arnott",
+                "shortName": "ArnoC"
+            }
+        },
+        {
+            "id": "9d0410db-72e3-46c3-bcac-324a711738ee",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Benjamin",
+                "lastName": "Howes",
+                "shortName": "HoweB"
+            }
+        },
+        {
+            "id": "5334ecf2-6868-4b71-8fc8-a89101b4e018",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "ELEANOR",
+                "lastName": "Castle",
+                "shortName": "CastE"
+            }
+        },
+        {
+            "id": "ac477265-e9d4-43ae-af5b-fc01385efb5d",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Joyce",
+                "lastName": "Leung",
+                "shortName": "LeuJo"
+            }
+        },
+        {
+            "id": "81943477-20cc-48e4-953a-2aba63d55392",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Joanne",
+                "lastName": "Cummins",
+                "shortName": "CummJ"
+            }
+        },
+        {
+            "id": "306b96d1-3082-4ac9-af40-39873ab00285",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Larissa",
+                "lastName": "Cowley",
+                "shortName": "CowlL"
+            }
+        },
+        {
+            "id": "987b930c-0566-41d6-a604-9ad955ab4cbd",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Shital",
+                "lastName": "Patel",
+                "shortName": "PateS"
+            }
+        },
+        {
+            "id": "5d14a857-88c6-458b-8ce0-0339b6adb8f0",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Tyrone",
+                "lastName": "Paikin",
+                "shortName": "PaikT"
+            }
+        },
+        {
+            "id": "b8bcbce0-46a7-4ab5-aaed-683d45f20f90",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Cameron",
+                "lastName": "McAndrew",
+                "shortName": "McAnC"
+            }
+        },
+        {
+            "id": "41a319f8-f03c-492d-8e64-da5b9755f1cd",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Christine",
+                "lastName": "Rowe",
+                "shortName": "RoweC"
+            }
+        },
+        {
+            "id": "daf204ae-7206-4a62-a305-677cf95a8b03",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Eric",
+                "lastName": "Janes",
+                "shortName": "JaneE"
+            }
+        },
+        {
+            "id": "91c1cba2-c527-4d2e-ac25-9c7a38f819cb",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Kate",
+                "lastName": "Brunello",
+                "shortName": "BrunK"
+            }
+        },
+        {
+            "id": "3f9aa8c1-e4e3-4bae-969c-1cd9e9303e94",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Lorraine",
+                "lastName": "Robinson",
+                "shortName": "RobiL"
+            }
+        },
+        {
+            "id": "48bd5756-f044-4a5b-85d7-0a363dfc4301",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Rae",
+                "lastName": "Duffy",
+                "shortName": "DuffR"
+            }
+        },
+        {
+            "id": "62b47a77-dc12-4888-ae52-7f2079eb3e8e",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Timothy",
+                "lastName": "Sampson",
+                "shortName": "SampT"
+            }
+        },
+        {
+            "id": "5321a0c8-9791-4a79-ac75-09898a4b9552",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Vernon",
+                "lastName": "Moo",
+                "shortName": "MooVe"
+            }
+        },
+        {
+            "id": "59e0e6a8-cd85-410d-9cb7-f3fac0b268cc",
+            "roleId": "7546e8bf-4b49-48ca-bf0b-47207297404a",
+            "siteUserProfile": {
+                "firstName": "James",
+                "lastName": "Devin",
+                "shortName": "DevJ"
+            }
+        },
+        {
+            "id": "5641b8cc-fb5b-44df-bf79-5c2712433197",
+            "roleId": "edf8b806-e06f-4da5-80f8-51b54270bdbe",
+            "siteUserProfile": {
+                "firstName": "-",
+                "lastName": "-",
+                "shortName": "--"
+            }
+        },
+        {
+            "id": "89e8fe26-34e3-44cc-91e3-66cb5138471a",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Steven",
+                "lastName": "Cai",
+                "shortName": "CaiSt"
+            }
+        },
+        {
+            "id": "6952327e-0c21-433c-b53a-e11ed1cbb65e",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Jason",
+                "lastName": "Goh",
+                "shortName": "GohJa"
+            }
+        },
+        {
+            "id": "e5e61d09-a64e-4a87-9e58-2e3c07c303c7",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Fousia",
+                "lastName": "Manthodikulangara",
+                "shortName": "ManthodiF"
+            }
+        },
+        {
+            "id": "4b5175b9-4498-4467-b35a-e51a1460e5f3",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "John",
+                "lastName": "Ward",
+                "shortName": "WardJ"
+            }
+        },
+        {
+            "id": "745f2d3e-167f-46ec-b31e-02ebb1a11fc2",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Jayden",
+                "lastName": "Ball",
+                "shortName": "BallJ"
+            }
+        },
+        {
+            "id": "3c74bc1a-9117-4f33-b842-c6ddf6ec5bd5",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Matthew",
+                "lastName": "Taylor",
+                "shortName": "TaylorM"
+            }
+        },
+        {
+            "id": "86850744-2b44-4595-b975-0f7bb789a9a3",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Nirasha",
+                "lastName": "Dhanjee",
+                "shortName": "DhanjeeN"
+            }
+        },
+        {
+            "id": "ea8e7003-c113-41b2-bdc0-30ae34bb5e97",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Brady",
+                "lastName": "Thomas",
+                "shortName": "ThomasB"
+            }
+        },
+        {
+            "id": "8e485fee-8847-42e8-b345-c87559828c5d",
+            "roleId": "e97df9c0-1df5-481e-ab31-db2312a87380",
+            "siteUserProfile": {
+                "firstName": "Calum",
+                "lastName": "Watson",
+                "shortName": "WatsonC"
+            }
+        },
+        {
+            "id": "e7f5eafa-613b-40c1-b3f8-8e68b8ea4180",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Charles",
+                "lastName": "Halliday",
+                "shortName": "HallidayC"
+            }
+        },
+        {
+            "id": "847cf564-b440-4b93-a2a7-0ff27995ff41",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Chloe",
+                "lastName": "Jess",
+                "shortName": "JessC"
+            }
+        },
+        {
+            "id": "0322901b-1cd1-4e68-b95c-8bfaff9301b5",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Christopher",
+                "lastName": "Henry",
+                "shortName": "HenryC"
+            }
+        },
+        {
+            "id": "0ebd7105-e7cd-4a97-b714-01e2ba162e73",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Frank",
+                "lastName": "Huang",
+                "shortName": "HuangF"
+            }
+        },
+        {
+            "id": "eb82f90a-3f4d-477a-a4d8-81117bcefa09",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Hazel",
+                "lastName": "Peckham",
+                "shortName": "PeckhamH"
+            }
+        },
+        {
+            "id": "dad433ed-16b3-4a6c-af1d-dba318bb89f6",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Heather",
+                "lastName": "Ranson",
+                "shortName": "RansonH"
+            }
+        },
+        {
+            "id": "be59eedb-2d1a-42f5-910e-82726b5bbd09",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Joanne",
+                "lastName": "Vo",
+                "shortName": "VoJ"
+            }
+        },
+        {
+            "id": "7d6d427a-2643-4d88-b13f-e9246958b152",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Jonathan",
+                "lastName": "Gray",
+                "shortName": "GrayJ"
+            }
+        },
+        {
+            "id": "64828b57-443f-42cd-b0cc-6e0def4cc17f",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Liam",
+                "lastName": "Travers",
+                "shortName": "TraversL"
+            }
+        },
+        {
+            "id": "3937144e-9808-4e98-a16b-72c409376d91",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Zachary",
+                "lastName": "Ball",
+                "shortName": "BallZ"
+            }
+        },
+        {
+            "id": "d86216c0-3545-4c03-b903-82c2e72da4d6",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Rasmeet",
+                "lastName": "Dhaliwal",
+                "shortName": "DhaR"
+            }
+        },
+        {
+            "id": "9ac976a6-f3c1-42ed-9c0e-39fa8e3786e4",
+            "roleId": "e97df9c0-1df5-481e-ab31-db2312a87380",
+            "siteUserProfile": {
+                "firstName": "Lucy",
+                "lastName": "De Kantzow",
+                "shortName": "DeKL"
+            }
+        },
+        {
+            "id": "2c59bf3f-8027-4f67-acd6-03a022ed5fd6",
+            "roleId": "7546e8bf-4b49-48ca-bf0b-47207297404a",
+            "siteUserProfile": {
+                "firstName": "Bhanuka Ben",
+                "lastName": "Dissanayake",
+                "shortName": "DisB"
+            }
+        },
+        {
+            "id": "dc34618d-c849-4e0c-8379-ce6c7afa55ab",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Tim",
+                "lastName": "Egan",
+                "shortName": "EganT"
+            }
+        },
+        {
+            "id": "f6caa41f-eb6e-4c40-9def-d0421f6c8148",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Jonathan",
+                "lastName": "Emmerson",
+                "shortName": "EmmJ"
+            }
+        },
+        {
+            "id": "92068787-c0df-4fa9-a879-25870adade62",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Melissa",
+                "lastName": "Fry",
+                "shortName": "FryM"
+            }
+        },
+        {
+            "id": "91380557-affc-44a9-af01-9da3588c2dd7",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Jonathan",
+                "lastName": "Hartono",
+                "shortName": "HarJ"
+            }
+        },
+        {
+            "id": "b6064556-ea7b-4876-9b2c-347e35b273fd",
+            "roleId": "d0b10e8c-bcaf-479a-a3fb-63e532bfa962",
+            "siteUserProfile": {
+                "firstName": "Ariel",
+                "lastName": "Ho",
+                "shortName": "HoAr"
+            }
+        },
+        {
+            "id": "a668efe0-7703-43f4-a571-b5cbd660288d",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Robert",
+                "lastName": "Hoffman",
+                "shortName": "HofR"
+            }
+        },
+        {
+            "id": "7554e46d-7c0e-46cd-9319-46369b362fed",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Nicole",
+                "lastName": "Jacobs",
+                "shortName": "JacN"
+            }
+        },
+        {
+            "id": "814655c9-d4ee-4524-9efd-2a14fdb72873",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Timothy (Tim)",
+                "lastName": "Jones",
+                "shortName": "JonTi"
+            }
+        },
+        {
+            "id": "a691a6a0-23e5-44ca-ba73-d4716363393a",
+            "roleId": "4f1f1248-971b-466c-912d-81ecdb2c0a5b",
+            "siteUserProfile": {
+                "firstName": "Sean",
+                "lastName": "Kenworthy",
+                "shortName": "KenS"
+            }
+        },
+        {
+            "id": "ed379517-dfa8-45f8-b1ff-f0e307b2ec62",
+            "roleId": "e97df9c0-1df5-481e-ab31-db2312a87380",
+            "siteUserProfile": {
+                "firstName": "Benjamin",
+                "lastName": "King-Koi",
+                "shortName": "KinB"
+            }
+        },
+        {
+            "id": "7aa44f9c-bd5f-4519-8af8-b4d0fdf825a7",
+            "roleId": "ac383fad-7b5f-4cb9-9a2e-79b2a0325fcb",
+            "siteUserProfile": {
+                "firstName": "Andrew",
+                "lastName": "Hay",
+                "shortName": "HayA"
+            }
+        },
+        {
+            "id": "df3b1f2f-8ccf-4248-aeac-93a5000a8f6c",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Dickson",
+                "lastName": "Lee",
+                "shortName": "LeeD"
+            }
+        },
+        {
+            "id": "4fd5ad7e-fd80-4870-8167-a4c3e52dc778",
+            "roleId": "e97df9c0-1df5-481e-ab31-db2312a87380",
+            "siteUserProfile": {
+                "firstName": "Harry",
+                "lastName": "LeMass",
+                "shortName": "LeMH"
+            }
+        },
+        {
+            "id": "89a5810f-f618-4637-892a-bd7be9f31275",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Heidi",
+                "lastName": "Lui",
+                "shortName": "LuiH"
+            }
+        },
+        {
+            "id": "f951ae93-e50e-43dd-9296-0c666a78456b",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Linda",
+                "lastName": "Mai",
+                "shortName": "MaiL"
+            }
+        },
+        {
+            "id": "1d09a252-3027-4fc9-9fae-2cd41561dada",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Jillian",
+                "lastName": "McCool",
+                "shortName": "McCJ"
+            }
+        },
+        {
+            "id": "51575408-33d7-46a4-9df5-3983a6ff1f12",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Brydie",
+                "lastName": "Mockeridge",
+                "shortName": "MocB"
+            }
+        },
+        {
+            "id": "00fd68ac-2765-4a8e-80f0-df21ee02bffa",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Elizabeth",
+                "lastName": "Parkinson",
+                "shortName": "ParE"
+            }
+        },
+        {
+            "id": "d1f72ad9-70bc-4bd9-b4f1-fb76162e7a65",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "John",
+                "lastName": "Parr",
+                "shortName": "ParJ"
+            }
+        },
+        {
+            "id": "e8f46d4d-20fa-473a-a781-d8f53e99cdca",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Rochelle",
+                "lastName": "Patane",
+                "shortName": "PatR"
+            }
+        },
+        {
+            "id": "de74323e-8807-4bd6-af8d-d0b9c9787d7d",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Hamish",
+                "lastName": "Raniga",
+                "shortName": "RanH"
+            }
+        },
+        {
+            "id": "9e55fc8b-04fb-4bf5-a3ce-6b6bc416d679",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Tim",
+                "lastName": "Tran",
+                "shortName": "TraT"
+            }
+        },
+        {
+            "id": "dcf0e4f1-8df9-45e4-863d-7c1dd16a6594",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Mahmoud",
+                "lastName": "Ugool",
+                "shortName": "UgoM"
+            }
+        },
+        {
+            "id": "93c86ccb-a5c9-456a-b71f-b2780629eb02",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Jessie",
+                "lastName": "Wang",
+                "shortName": "WanJ"
+            }
+        },
+        {
+            "id": "705be785-2531-41b7-9852-2efc7323960e",
+            "roleId": "ac383fad-7b5f-4cb9-9a2e-79b2a0325fcb",
+            "siteUserProfile": {
+                "firstName": "Michael",
+                "lastName": "Horton",
+                "shortName": "HorM"
+            }
+        },
+        {
+            "id": "be744c97-2272-4133-aa0a-9ec9ec9bc4c1",
+            "roleId": "ac383fad-7b5f-4cb9-9a2e-79b2a0325fcb",
+            "siteUserProfile": {
+                "firstName": "Nicholas",
+                "lastName": "Ooi",
+                "shortName": "OoiN"
+            }
+        },
+        {
+            "id": "09522cab-64b7-4951-9885-e84a001443f7",
+            "roleId": "ac383fad-7b5f-4cb9-9a2e-79b2a0325fcb",
+            "siteUserProfile": {
+                "firstName": "Ben",
+                "lastName": "Rutherford",
+                "shortName": "RutB"
+            }
+        },
+        {
+            "id": "e627deb7-c68d-4ee1-a9c0-ff7d67eb32af",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Louise",
+                "lastName": "Rafter",
+                "shortName": "RafL"
+            }
+        },
+        {
+            "id": "61e3314e-6404-4288-bf42-212b44a0490d",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Laura",
+                "lastName": "Staples",
+                "shortName": "StapL"
+            }
+        },
+        {
+            "id": "114abf8d-5316-45cb-b158-354c74a28d34",
+            "roleId": "b37924b6-5e5e-4d6c-8383-7e295bbd7171",
+            "siteUserProfile": {
+                "firstName": "Jesse",
+                "lastName": "Whaitiri",
+                "shortName": "WhaitiriJ"
+            }
+        },
+        {
+            "id": "4494188d-921a-4528-8704-68acb07ca9e2",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Hamish (Charles)",
+                "lastName": "Grey",
+                "shortName": "GreC"
+            }
+        },
+        {
+            "id": "22cf3530-d114-4eb4-88da-57466d9e15a2",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Andrew",
+                "lastName": "Cook",
+                "shortName": "CooA"
+            }
+        },
+        {
+            "id": "c529214a-625e-44ec-a5ec-d9ce0df9d856",
+            "roleId": "b37924b6-5e5e-4d6c-8383-7e295bbd7171",
+            "siteUserProfile": {
+                "firstName": "Sheridan",
+                "lastName": "Choi",
+                "shortName": "ChoiS"
+            }
+        },
+        {
+            "id": "4bf2ce6e-c4b1-48e9-b847-2a962c6ecb11",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Owen",
+                "lastName": "Bourne",
+                "shortName": "BourO"
+            }
+        },
+        {
+            "id": "e8cc28fd-0797-4a3e-b5f2-228ee4b5625d",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Christine",
+                "lastName": "Lowe",
+                "shortName": "LowC"
+            }
+        },
+        {
+            "id": "a2afeac2-9417-457b-a98d-1139524a30fd",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Daniel",
+                "lastName": "Gillespie",
+                "shortName": "GilD"
+            }
+        },
+        {
+            "id": "0cd9a1e4-7c22-4636-876c-c9aac52b00a7",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Anne-Marie",
+                "lastName": "Dempster",
+                "shortName": "DempA"
+            }
+        },
+        {
+            "id": "0f9232fb-1f45-4bfc-9d4a-ebaa243eb74d",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Jonathan",
+                "lastName": "Samaan",
+                "shortName": "SamaJ"
+            }
+        },
+        {
+            "id": "2810e719-f7ec-4b1c-9352-f75841c92819",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Kristopher",
+                "lastName": "Skeggs",
+                "shortName": "SkegK"
+            }
+        },
+        {
+            "id": "326c4936-4c5e-4a1c-9b1d-a9c599bf8592",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Charles",
+                "lastName": "Noonan",
+                "shortName": "NoonC"
+            }
+        },
+        {
+            "id": "3396e672-bab9-4581-a0ca-649fa12708ba",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Edward",
+                "lastName": "Pilling",
+                "shortName": "PillE"
+            }
+        },
+        {
+            "id": "38664703-25b2-4d40-a2ef-6ec0a79a5324",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Henry",
+                "lastName": "Leung",
+                "shortName": "LeunH"
+            }
+        },
+        {
+            "id": "3ad460fa-6f45-414b-a121-102169b7dde2",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Kellie",
+                "lastName": "Bird",
+                "shortName": "BirdK"
+            }
+        },
+        {
+            "id": "420591fd-cf4d-444d-a958-c28175dc39fe",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Roland",
+                "lastName": "Bartholdy",
+                "shortName": "BartR"
+            }
+        },
+        {
+            "id": "44ff8825-16cf-4c3f-8cd2-03ce07390c38",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Ellen",
+                "lastName": "Coonan",
+                "shortName": "CooEl"
+            }
+        },
+        {
+            "id": "4b8bec45-5418-4c0e-b476-a3a03db39fac",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Kerryn",
+                "lastName": "Bunbury",
+                "shortName": "BunbK"
+            }
+        },
+        {
+            "id": "506205ee-96d9-440b-99a7-7264eda82c5e",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Eve",
+                "lastName": "O'Brien",
+                "shortName": "OBriE"
+            }
+        },
+        {
+            "id": "52d465d0-504b-4e08-be34-7c48a25f1c90",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Rachel",
+                "lastName": "Ng",
+                "shortName": "NgRac"
+            }
+        },
+        {
+            "id": "68b87264-002f-4674-bcaa-76fbfceaa03d",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Danielle",
+                "lastName": "Crimmins",
+                "shortName": "CrimD"
+            }
+        },
+        {
+            "id": "70f65f00-d45a-4521-aa33-84e180ae2eba",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Peta",
+                "lastName": "Lorraway",
+                "shortName": "LorrP"
+            }
+        },
+        {
+            "id": "7cce3065-e7e4-409e-bd8b-c602775d0047",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Jess",
+                "lastName": "Wu",
+                "shortName": "WuJes"
+            }
+        },
+        {
+            "id": "83417230-d45e-4fb6-86b8-06311305fe78",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Sian",
+                "lastName": "Sutherland",
+                "shortName": "SutherlandS"
+            }
+        },
+        {
+            "id": "87674783-78e8-442c-bba0-c65167825fe8",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Nicholas",
+                "lastName": "Pawula",
+                "shortName": "PawuN"
+            }
+        },
+        {
+            "id": "96f29fa0-89cd-44bd-93d2-775f73a2c07a",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Joseph",
+                "lastName": "Bauer",
+                "shortName": "BaueJ"
+            }
+        },
+        {
+            "id": "993070ca-548c-4075-9ea9-9fbd1c6dff73",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Esmond",
+                "lastName": "Hii",
+                "shortName": "HiiEs"
+            }
+        },
+        {
+            "id": "9e2d5f4b-2b26-4b4b-9795-a2a443e88ed8",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Grant",
+                "lastName": "Breadsell",
+                "shortName": "BreaG"
+            }
+        },
+        {
+            "id": "9ee4092d-8524-43d4-8980-d14ec408bfcb",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Jacqueline",
+                "lastName": "Yung",
+                "shortName": "YungJ"
+            }
+        },
+        {
+            "id": "a45c73e9-9268-4dd7-bbc7-505bcac86d0f",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "Timujin",
+                "lastName": "Wong",
+                "shortName": "WongT"
+            }
+        },
+        {
+            "id": "a85167d2-62d2-40b4-b4e8-5b4a08f68b34",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Jason",
+                "lastName": "Howard",
+                "shortName": "HowaJ"
+            }
+        },
+        {
+            "id": "aa2c6d0c-c97c-47bc-95b1-632c6772584f",
+            "roleId": "25499dd0-fa34-433b-ae22-ea223321763a",
+            "siteUserProfile": {
+                "firstName": "David",
+                "lastName": "Trappett",
+                "shortName": "TrapD"
+            }
+        },
+        {
+            "id": "bee69f64-317f-4d8e-8e2b-f4636c58fe3b",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Rohit",
+                "lastName": "Daswani",
+                "shortName": "DaswR"
+            }
+        },
+        {
+            "id": "c0514b94-9122-4908-8a94-5115845f8f22",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Sarah",
+                "lastName": "Bowman",
+                "shortName": "BowmS"
+            }
+        },
+        {
+            "id": "c116fc7a-cfbe-4022-98fa-0f343ace2a03",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Taryn",
+                "lastName": "Naggs",
+                "shortName": "NaggT"
+            }
+        },
+        {
+            "id": "c95e62fb-0acf-4ba1-bdf3-96c1edfc4c2a",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Martha",
+                "lastName": "Ghaly",
+                "shortName": "GhalM"
+            }
+        },
+        {
+            "id": "c9d38526-b2a5-4385-b21c-306faa416bd5",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Lauren",
+                "lastName": "Exelby",
+                "shortName": "ExelL"
+            }
+        },
+        {
+            "id": "cb6bc832-d5e7-40b9-bba1-952e8643a6d9",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Stephen",
+                "lastName": "Smith",
+                "shortName": "SmitS"
+            }
+        },
+        {
+            "id": "d1fb7ba3-da45-4fa7-84de-62862f60ebb4",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Ashwini",
+                "lastName": "Tambe",
+                "shortName": "TambA"
+            }
+        },
+        {
+            "id": "d626fe78-8d04-480c-8807-dc9d8cf51bdb",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Seetal",
+                "lastName": "Snoek",
+                "shortName": "SnoeS"
+            }
+        },
+        {
+            "id": "da706aa8-5aa3-4eeb-b730-23426dcbf40a",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Darryl",
+                "lastName": "Washbourne",
+                "shortName": "WashD"
+            }
+        },
+        {
+            "id": "e2cfb54b-540f-4927-8b8d-c15635a6ea33",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "David",
+                "lastName": "Highton",
+                "shortName": "HighD"
+            }
+        },
+        {
+            "id": "e2d127bb-8a96-4d84-8a44-e477526ba8c4",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Namy",
+                "lastName": "Jhummon-Mahadnac",
+                "shortName": "MahaN"
+            }
+        },
+        {
+            "id": "e35d1e9e-770a-4e42-956b-7ebc04f2c918",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Shaun",
+                "lastName": "Roberts",
+                "shortName": "RobeS"
+            }
+        },
+        {
+            "id": "e6a297ab-f523-43a8-8bd5-52067e08f73b",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Rebecca",
+                "lastName": "McBride",
+                "shortName": "McBrR"
+            }
+        },
+        {
+            "id": "e8abdf5e-61c8-4a37-b731-19419756ecb2",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Swaminath",
+                "lastName": "Sadam",
+                "shortName": "SadaS"
+            }
+        },
+        {
+            "id": "f4310a28-ddfd-4be8-8cfb-1e01278bb6e0",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Stephen",
+                "lastName": "Fung",
+                "shortName": "FungS"
+            }
+        },
+        {
+            "id": "f6195cea-61a0-4cd0-9e3f-941155b868be",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Vina",
+                "lastName": "Meliana",
+                "shortName": "MelianaV"
+            }
+        },
+        {
+            "id": "f9afc85a-49ed-45d8-8c57-e9c8c786c965",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Gemma",
+                "lastName": "Duncan",
+                "shortName": "DuncG"
+            }
+        },
+        {
+            "id": "fc7550a2-1c17-4997-9a28-952375e01f5e",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Thomas",
+                "lastName": "Druitt",
+                "shortName": "DruiT"
+            }
+        },
+        {
+            "id": "c022f573-767b-4ecb-8c69-596b859f4015",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Allan",
+                "lastName": "Hurley",
+                "shortName": "HurlA"
+            }
+        },
+        {
+            "id": "2525bd1c-2c57-448e-813d-99a726b1f04d",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Lillian",
+                "lastName": "King",
+                "shortName": "KinL"
+            }
+        },
+        {
+            "id": "fd597196-3e51-4153-b38e-1328ef5cb5cb",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Shaun",
+                "lastName": "De Cruz",
+                "shortName": "DeCrS"
+            }
+        },
+        {
+            "id": "fe35f2d6-b29b-4c25-9f0f-50de1e4c592c",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Kristin",
+                "lastName": "Hielscher",
+                "shortName": "HielK"
+            }
+        },
+        {
+            "id": "ffccc56b-56e9-48f4-b05d-2f0ef4064a03",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Wai Mee",
+                "lastName": "Foong",
+                "shortName": "FoonW"
+            }
+        },
+        {
+            "id": "ca2e0231-539b-4df5-98ee-0658fae95887",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Stuart",
+                "lastName": "McKnown",
+                "shortName": "McKnS"
+            }
+        },
+        {
+            "id": "8c8a08d9-297d-411a-876a-03dd78becd2e",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "David",
+                "lastName": "Sturgess",
+                "shortName": "SturD"
+            }
+        },
+        {
+            "id": "74592d79-03c0-497c-b755-efa12ca9c3b8",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Rachel",
+                "lastName": "Bell",
+                "shortName": "BellR"
+            }
+        },
+        {
+            "id": "afa50274-9ee2-47e9-a230-9d1bba063f2f",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Pal",
+                "lastName": "Sivalingam",
+                "shortName": "SivaP"
+            }
+        },
+        {
+            "id": "893d63e6-c329-4fa2-8eff-cb460dce88f8",
+            "roleId": "0763ee10-62f8-4d5b-808d-43dba8c8703b",
+            "siteUserProfile": {
+                "firstName": "Lachlan",
+                "lastName": "Young",
+                "shortName": "YouL"
+            }
+        },
+        {
+            "id": "0c0801e3-7853-42c5-8631-3c32d7b6f457",
+            "roleId": "8320e3cc-b280-4271-b7ed-9ee3c960de80",
+            "siteUserProfile": {
+                "firstName": "Shane",
+                "lastName": "Jayatillake",
+                "shortName": "JayS"
+            }
+        },
+        {
+            "id": "16361c44-d8fa-4ba5-ad79-b480264a7317",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Anthony",
+                "lastName": "Fajumi",
+                "shortName": "FajumiA"
+            }
+        },
+        {
+            "id": "20b1fd14-8273-4b3c-b73c-aa61dc3cb718",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Dash",
+                "lastName": "Newington",
+                "shortName": "NewingtonD"
+            }
+        },
+        {
+            "id": "e2e375dc-a964-4ade-b0d1-34fab3bed510",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "David",
+                "lastName": "Wood",
+                "shortName": "WoodD"
+            }
+        },
+        {
+            "id": "6e508c1e-0ce2-4f03-9126-20789b9ffbd0",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Matthew",
+                "lastName": "Devine",
+                "shortName": "DevineM"
+            }
+        },
+        {
+            "id": "c8548562-1d95-465f-a3f5-9f59f29adf9b",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "1",
+                "lastName": "Locum RLH",
+                "shortName": "Locum1-RLH"
+            }
+        },
+        {
+            "id": "596cf456-9680-4b5e-912d-967288e84afd",
+            "roleId": "8320e3cc-b280-4271-b7ed-9ee3c960de80",
+            "siteUserProfile": {
+                "firstName": "Madison",
+                "lastName": "Daniels",
+                "shortName": "DanielsM"
+            }
+        },
+        {
+            "id": "0cd409a9-8d3e-4959-ae45-90a8832ea373",
+            "roleId": "eae8f059-798b-46f4-be36-29bc692d3189",
+            "siteUserProfile": {
+                "firstName": "Abraham",
+                "lastName": "Petrus",
+                "shortName": "PetA"
+            }
+        },
+        {
+            "id": "07df18bc-644b-4852-ad02-c6d82642c4d9",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "2",
+                "lastName": "Locum RLH",
+                "shortName": "Locum2-RLH"
+            }
+        },
+        {
+            "id": "0fcc535f-db27-4cd4-aa10-2e5c1e61bbc9",
+            "roleId": "dbb2f70a-3b20-487f-a98d-88b1d0be3f2c",
+            "siteUserProfile": {
+                "firstName": "Marian",
+                "lastName": "Bray",
+                "shortName": "BrayM"
+            }
+        }
+    ],
+    "unallocatedUsers": [
+        {
+            "id": "9ae49ead-7406-406c-9935-4ec9bb7678c1",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "86850744-2b44-4595-b975-0f7bb789a9a3",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-17",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:11:27.668Z",
+            "updatedAt": "2025-03-21T04:11:27.668Z",
+            "shiftTemplateRefId": "9ae49ead-7406-406c-9935-4ec9bb7678c1",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-04T21:30:00.000Z",
+            "end": "2025-05-05T02:30:00.000Z"
+        },
+        {
+            "id": "ae97469c-f396-4f3d-9567-12205dcb7965",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "86850744-2b44-4595-b975-0f7bb789a9a3",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-17",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:11:27.668Z",
+            "updatedAt": "2025-03-21T04:11:27.668Z",
+            "shiftTemplateRefId": "ae97469c-f396-4f3d-9567-12205dcb7965",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-05T03:00:00.000Z",
+            "end": "2025-05-05T07:30:00.000Z"
+        },
+        {
+            "id": "d564138f-93e3-45ca-b4c5-34e6c3572538",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "86850744-2b44-4595-b975-0f7bb789a9a3",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    5
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-17",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:11:27.668Z",
+            "updatedAt": "2025-03-21T04:11:27.668Z",
+            "shiftTemplateRefId": "d564138f-93e3-45ca-b4c5-34e6c3572538",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-02",
+            "start": "2025-05-01T21:30:00.000Z",
+            "end": "2025-05-02T02:30:00.000Z"
+        },
+        {
+            "id": "65d2e7cd-9ea6-492f-952f-e520799f9d66",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "86850744-2b44-4595-b975-0f7bb789a9a3",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    5
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-17",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:11:27.668Z",
+            "updatedAt": "2025-03-21T04:11:27.668Z",
+            "shiftTemplateRefId": "65d2e7cd-9ea6-492f-952f-e520799f9d66",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-02",
+            "start": "2025-05-02T03:00:00.000Z",
+            "end": "2025-05-02T07:30:00.000Z"
+        },
+        {
+            "id": "270aee71-96ad-4a65-b493-826ca02ed611",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "3c74bc1a-9117-4f33-b842-c6ddf6ec5bd5",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-17",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:27:27.312Z",
+            "updatedAt": "2025-03-21T04:27:27.312Z",
+            "shiftTemplateRefId": "270aee71-96ad-4a65-b493-826ca02ed611",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-04T21:30:00.000Z",
+            "end": "2025-05-05T02:30:00.000Z"
+        },
+        {
+            "id": "81390f74-7e5d-48bd-ab6b-4430657062a9",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "3c74bc1a-9117-4f33-b842-c6ddf6ec5bd5",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-17",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:27:27.312Z",
+            "updatedAt": "2025-03-21T04:27:27.312Z",
+            "shiftTemplateRefId": "81390f74-7e5d-48bd-ab6b-4430657062a9",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-05T03:00:00.000Z",
+            "end": "2025-05-05T07:30:00.000Z"
+        },
+        {
+            "id": "9d7fa04c-2cfb-4c4a-869c-33218ed61034",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "3c74bc1a-9117-4f33-b842-c6ddf6ec5bd5",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    5
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-17",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:27:27.312Z",
+            "updatedAt": "2025-03-21T04:27:27.312Z",
+            "shiftTemplateRefId": "9d7fa04c-2cfb-4c4a-869c-33218ed61034",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-02",
+            "start": "2025-05-01T21:30:00.000Z",
+            "end": "2025-05-02T02:30:00.000Z"
+        },
+        {
+            "id": "269e6ce4-2ad0-47b4-b524-225a584be25b",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "3c74bc1a-9117-4f33-b842-c6ddf6ec5bd5",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    5
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-17",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:27:27.312Z",
+            "updatedAt": "2025-03-21T04:27:27.312Z",
+            "shiftTemplateRefId": "269e6ce4-2ad0-47b4-b524-225a584be25b",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-02",
+            "start": "2025-05-02T03:00:00.000Z",
+            "end": "2025-05-02T07:30:00.000Z"
+        },
+        {
+            "id": "414cc9d7-465a-4ff6-8eb9-e0da11043ea6",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "f6195cea-61a0-4cd0-9e3f-941155b868be",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    5
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-21",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:21:06.582Z",
+            "updatedAt": "2025-03-21T04:21:06.582Z",
+            "shiftTemplateRefId": "414cc9d7-465a-4ff6-8eb9-e0da11043ea6",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-02",
+            "start": "2025-05-01T21:30:00.000Z",
+            "end": "2025-05-02T02:30:00.000Z"
+        },
+        {
+            "id": "30b2d689-1988-4ae8-9f2e-e26da9e20c91",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "f6195cea-61a0-4cd0-9e3f-941155b868be",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    5
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-21",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T04:21:06.582Z",
+            "updatedAt": "2025-03-21T04:21:06.582Z",
+            "shiftTemplateRefId": "30b2d689-1988-4ae8-9f2e-e26da9e20c91",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-02",
+            "start": "2025-05-02T03:00:00.000Z",
+            "end": "2025-05-02T07:30:00.000Z"
+        },
+        {
+            "id": "0edd103f-5189-4abd-8b84-2c4560327b2c",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "4b5175b9-4498-4467-b35a-e51a1460e5f3",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-24",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T01:06:35.803Z",
+            "updatedAt": "2025-03-21T01:06:35.803Z",
+            "shiftTemplateRefId": "0edd103f-5189-4abd-8b84-2c4560327b2c",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-04T21:30:00.000Z",
+            "end": "2025-05-05T02:30:00.000Z"
+        },
+        {
+            "id": "3f1c9b81-b1a3-4b16-b0e0-9e57f01ace39",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "4b5175b9-4498-4467-b35a-e51a1460e5f3",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-24",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T01:06:35.803Z",
+            "updatedAt": "2025-03-21T01:06:35.803Z",
+            "shiftTemplateRefId": "3f1c9b81-b1a3-4b16-b0e0-9e57f01ace39",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-05T03:00:00.000Z",
+            "end": "2025-05-05T07:30:00.000Z"
+        },
+        {
+            "id": "9b202354-9f0b-4623-992b-b4d35900e76b",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "e5e61d09-a64e-4a87-9e58-2e3c07c303c7",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    5
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-24",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T01:09:12.151Z",
+            "updatedAt": "2025-03-21T01:09:12.151Z",
+            "shiftTemplateRefId": "9b202354-9f0b-4623-992b-b4d35900e76b",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-02",
+            "start": "2025-05-01T21:30:00.000Z",
+            "end": "2025-05-02T02:30:00.000Z"
+        },
+        {
+            "id": "de6b573e-10df-4e07-b037-621be1704e89",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "e5e61d09-a64e-4a87-9e58-2e3c07c303c7",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unallocated",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    5
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-03-24",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-03-21T01:09:12.151Z",
+            "updatedAt": "2025-03-21T01:09:12.151Z",
+            "shiftTemplateRefId": "de6b573e-10df-4e07-b037-621be1704e89",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-02",
+            "start": "2025-05-02T03:00:00.000Z",
+            "end": "2025-05-02T07:30:00.000Z"
+        }
+    ],
+    "availableUsers": [],
+    "unavailableUsers": [
+        {
+            "id": "b6247da7-55a1-4fc1-bb7c-ab8f60d07160",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "e2e375dc-a964-4ade-b0d1-34fab3bed510",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unavailable",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-05-05",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-05-07T00:15:31.123Z",
+            "updatedAt": "2025-05-07T00:15:31.123Z",
+            "shiftTemplateRefId": "b6247da7-55a1-4fc1-bb7c-ab8f60d07160",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-05T03:00:00.000Z",
+            "end": "2025-05-05T07:30:00.000Z"
+        },
+        {
+            "id": "8272d0c1-d801-437f-8451-ad3b100611a5",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "e2e375dc-a964-4ade-b0d1-34fab3bed510",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unavailable",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-05-05",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-05-07T00:15:31.123Z",
+            "updatedAt": "2025-05-07T00:15:31.123Z",
+            "shiftTemplateRefId": "8272d0c1-d801-437f-8451-ad3b100611a5",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-04T21:30:00.000Z",
+            "end": "2025-05-05T02:30:00.000Z"
+        },
+        {
+            "id": "8d5e3c4a-b392-4f11-ad17-6e48f44ea81a",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "e5e61d09-a64e-4a87-9e58-2e3c07c303c7",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unavailable",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-05-05",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-05-07T01:09:50.078Z",
+            "updatedAt": "2025-05-07T01:09:50.078Z",
+            "shiftTemplateRefId": "8d5e3c4a-b392-4f11-ad17-6e48f44ea81a",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-04T21:30:00.000Z",
+            "end": "2025-05-05T02:30:00.000Z"
+        },
+        {
+            "id": "f0c53029-69b3-4a19-b44b-737242947a78",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "e5e61d09-a64e-4a87-9e58-2e3c07c303c7",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unavailable",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-05-05",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-05-07T01:09:50.078Z",
+            "updatedAt": "2025-05-07T01:09:50.078Z",
+            "shiftTemplateRefId": "f0c53029-69b3-4a19-b44b-737242947a78",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-05T03:00:00.000Z",
+            "end": "2025-05-05T07:30:00.000Z"
+        },
+        {
+            "id": "f504b82e-3396-4836-85de-8d20c560b5b7",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "f6195cea-61a0-4cd0-9e3f-941155b868be",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unavailable",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-05-05",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-05-07T01:13:10.982Z",
+            "updatedAt": "2025-05-07T01:13:10.982Z",
+            "shiftTemplateRefId": "f504b82e-3396-4836-85de-8d20c560b5b7",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-04T21:30:00.000Z",
+            "end": "2025-05-05T02:30:00.000Z"
+        },
+        {
+            "id": "cdb44ffe-5ed0-4f68-835a-cf6679ab16d5",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "f6195cea-61a0-4cd0-9e3f-941155b868be",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unavailable",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-05-05",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-05-07T01:13:10.982Z",
+            "updatedAt": "2025-05-07T01:13:10.982Z",
+            "shiftTemplateRefId": "cdb44ffe-5ed0-4f68-835a-cf6679ab16d5",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-05T03:00:00.000Z",
+            "end": "2025-05-05T07:30:00.000Z"
+        },
+        {
+            "id": "f47b41cf-739f-4237-be9c-ac2ffc88aa59",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "83417230-d45e-4fb6-86b8-06311305fe78",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unavailable",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-05-05",
+            "startTime": {
+                "hour": 7,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 12,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-05-07T01:15:10.069Z",
+            "updatedAt": "2025-05-07T01:15:10.069Z",
+            "shiftTemplateRefId": "f47b41cf-739f-4237-be9c-ac2ffc88aa59",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-04T21:30:00.000Z",
+            "end": "2025-05-05T02:30:00.000Z"
+        },
+        {
+            "id": "8f06458a-9c5c-4350-b8df-1533951f5fd0",
+            "siteId": "a14c0405-4fb0-432b-9ce3-a5c460dffdf5",
+            "roleInstanceId": "83417230-d45e-4fb6-86b8-06311305fe78",
+            "rosterGroupId": "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f",
+            "shiftIds": [],
+            "type": "unavailable",
+            "interval": {
+                "type": "weekly",
+                "offset": 0,
+                "spacing": 1,
+                "version": "2.0",
+                "daysOfWeek": [
+                    1
+                ],
+                "startOfWeek": 1
+            },
+            "notIntervals": [],
+            "startDate": "2025-05-05",
+            "startTime": {
+                "hour": 13,
+                "minute": 0,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "endTime": {
+                "hour": 17,
+                "minute": 30,
+                "second": 0,
+                "dayOffset": 0
+            },
+            "tagIds": [],
+            "createdAt": "2025-05-07T01:15:10.069Z",
+            "updatedAt": "2025-05-07T01:15:10.069Z",
+            "shiftTemplateRefId": "8f06458a-9c5c-4350-b8df-1533951f5fd0",
+            "shiftTemplateRefType": "UserShiftTemplate",
+            "calculatedDate": "2025-05-05",
+            "start": "2025-05-05T03:00:00.000Z",
+            "end": "2025-05-05T07:30:00.000Z"
+        }
+    ]
+}

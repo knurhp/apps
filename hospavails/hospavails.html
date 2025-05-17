@@ -160,6 +160,71 @@
             margin-bottom: 0;
             padding-bottom: 0;
         }
+                .date-filters-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .date-filters-group .filter-item {
+            display: inline-block;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        .date-filters-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        .date-filters-group input[type="date"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #usersTableContainer {
+            max-height: 60vh; /* Increased height for wider table */
+            overflow: auto;   /* Both vertical and horizontal scroll */
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        #usersTableContainer table {
+            min-width: 1200px; /* Encourage horizontal scroll if needed */
+        }
+        
+        .filters-group .filter-item, .date-filters-group .filter-item, .roster-group-filter .filter-item {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            min-width: 200px;
+        }
+
+        .roster-group-filter { /* New group for roster filter */
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+         .roster-group-filter label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        .roster-group-filter select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 300px;
+        }
+
     </style>
 </head>
 <body>
@@ -176,25 +241,48 @@
     </div>
 
     <div class="controls-group">
-        <button id="fetchLeavesButton">Fetch Leaves Data</button>
+        <button id="fetchLeavesButton">Fetch Leaves Data (JSON)</button>
         <button id="fetchUsersButton">Fetch Users Data (JSON)</button>
+        <button id="fetchUnallocatedButton">Fetch Unallocated (JSON)</button> <!-- New Button -->
         <button id="generateUsersTableButton" class="secondary">Generate/Update Users Table</button>
     </div>
 
     <div class="filters-group">
         <div class="filter-item">
-            <label for="roleFilter">Filter by Role(s):</label>
+            <label for="roleFilter">Filter Table by Role(s) (Ctrl/Cmd-click for multiple):</label>
             <select id="roleFilter" multiple>
                 <option value="All">All Roles</option>
             </select>
         </div>
         <div class="filter-item">
-            <label for="teamFilter">Filter by Team(s):</label>
+            <label for="teamFilter">Filter Table by Team(s) (Ctrl/Cmd-click for multiple):</label>
             <select id="teamFilter" multiple>
                 <option value="All">All Teams</option>
             </select>
         </div>
     </div>
+
+    <div class="date-filters-group">
+        <div class="filter-item">
+            <label for="fromDate">From Date (for Table & Unallocated API):</label>
+            <input type="date" id="fromDate">
+        </div>
+        <div class="filter-item">
+            <label for="toDate">To Date (for Table & Unallocated API):</label>
+            <input type="date" id="toDate">
+        </div>
+    </div>
+
+    <div class="roster-group-filter"> <!-- New Roster Group Filter Section -->
+        <div class="filter-item">
+            <label for="rosterGroupFilter">Roster Group (for Unallocated API):</label>
+            <select id="rosterGroupFilter">
+                <option value="75d5cc8d-4b0a-4392-88e1-c3b6bb37056f">RLH Allocations</option>
+                <option value="a40e918a-af4d-4cb9-bce6-99b5de1a0352">PA Allocations</option>
+            </select>
+        </div>
+    </div>
+
 
     <div id="status">Enter token (if not using local files) and click a button.</div>
     <pre id="jsonData"></pre>
