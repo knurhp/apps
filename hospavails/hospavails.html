@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hosportal API Data Viewer</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        #jsonData {
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            padding: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 10vh; /* Adjusted height for table */
+            overflow-y: auto;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .input-group, .controls-group, .filters-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .input-group label, .controls-group label, .filters-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        .input-group input[type="text"],
+        .input-group input[type="checkbox"],
+        .filters-group select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .input-group input[type="text"] {
+            width: 100%;
+            max-width: 600px;
+        }
+        .input-group input[type="checkbox"] {
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        .filters-group select[multiple] {
+            min-height: 100px; /* Give some height for multi-select */
+        }
+        .filters-group .filter-item {
+            display: inline-block;
+            vertical-align: top; /* Align items at the top */
+            margin-right: 20px;
+            margin-bottom: 10px;
+            min-width: 200px; /* Give some width to filters */
+        }
+        .filters-group .filter-item label {
+             display: block;
+        }
+        .controls-group button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .controls-group button:hover {
+            background-color: #2980b9;
+        }
+        .controls-group button.secondary {
+            background-color: #2ecc71;
+        }
+        .controls-group button.secondary:hover {
+            background-color: #27ae60;
+        }
+        #status {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+        }
+        #status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        #usersTableContainer {
+            /* max-height: 50vh;*/
+            overflow-y: auto;
+            border: 1px solid #ddd; /* Add border around scrollable area */
+            margin-top: 10px;
+        }
+        #usersTableContainer table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            background-color: #fff;
+        }
+        #usersTableContainer th, #usersTableContainer td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        #usersTableContainer th {
+            background-color: #3498db;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        #usersTableContainer tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        #usersTableContainer tr:hover {
+            background-color: #e9ecef;
+        }
+        #usersTableContainer td ul {
+            margin: 0;
+            padding-left: 15px;
+            list-style-type: none;
+        }
+        #usersTableContainer td ul li {
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #eee;
+        }
+        #usersTableContainer td ul li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hosportal API Data Viewer</h1>
+
+    <div class="input-group">
+        <label for="bearerTokenInput">Bearer Token:</label>
+        <input type="text" id="bearerTokenInput" placeholder="Paste your Bearer token here">
+    </div>
+
+    <div class="input-group">
+        <input type="checkbox" id="useLocalFileCheckbox">
+        <label for="useLocalFileCheckbox" style="display: inline; font-weight: normal;">Use Local Test Files (instead of API)</label>
+    </div>
+
+    <div class="controls-group">
+        <button id="fetchLeavesButton">Fetch Leaves Data</button>
+        <button id="fetchUsersButton">Fetch Users Data (JSON)</button>
+        <button id="generateUsersTableButton" class="secondary">Generate/Update Users Table</button>
+    </div>
+
+    <div class="filters-group">
+        <div class="filter-item">
+            <label for="roleFilter">Filter by Role(s):</label>
+            <select id="roleFilter" multiple>
+                <option value="All">All Roles</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="teamFilter">Filter by Team(s):</label>
+            <select id="teamFilter" multiple>
+                <option value="All">All Teams</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="status">Enter token (if not using local files) and click a button.</div>
+    <pre id="jsonData"></pre>
+    <div id="usersTableContainer"></div>
+
+    <script src="hospavails.js"></script>
+</body>
+</html>
