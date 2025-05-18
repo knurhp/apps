@@ -257,8 +257,8 @@
     <div class="controls-group">
         <button id="fetchLeavesButton">Fetch Leaves Data</button>
         <button id="fetchUsersButton">Fetch Users Data</button>
-        <button id="fetchUnallocatedButton">Fetch Unallocated</button> <!-- New Button -->
-        <button id="fetchShiftTemplatesButton">Fetch Shift Templates</button> <!-- Added New Button -->
+        <!-- <button id="fetchUnallocatedButton">Fetch Unallocated</button> --> <!-- Hidden -->
+        <button id="fetchShiftTemplatesButton">Fetch Shift Templates</button>
         <button id="generateUsersTableButton" class="secondary">Generate/Update Users Table</button>
     </div>
 
@@ -278,6 +278,7 @@
         <div class="filter-item">
             <label for="rosterGroupFilter">Filter by Roster Group:</label>
             <select id="rosterGroupFilter">
+                <!-- Options populated by JS -->
             </select>
         </div>
     </div>
@@ -297,12 +298,15 @@
     <pre id="jsonData"></pre>
 
     <div class="input-group">
-        <input type="checkbox" id="showUnallocatedCheckbox">
+        <input type="checkbox" id="showUnallocatedCheckbox" checked> <!-- Default to checked -->
         <label for="showUnallocatedCheckbox" style="display: inline; font-weight: normal;">Show Unalloc.</label>
+
+        <input type="checkbox" id="showAllocatedCheckbox" checked style="margin-left: 20px;"> <!-- NEW CHECKBOX, default to checked -->
+        <label for="showAllocatedCheckbox" style="display: inline; font-weight: normal;">Show Alloc.</label>
     </div>
 
     <div id="usersTableContainer"></div>
 
-    <script src="hospavails.js"></script>
+    <script src="hospavails.js"></script> <!-- Assuming your JS is in this file -->
 </body>
 </html>

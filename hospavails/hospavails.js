@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const teamFilterDropdown = document.getElementById('teamFilter');
     const rosterGroupFilterDropdown = document.getElementById('rosterGroupFilter');
     const showUnallocatedCheckbox = document.getElementById('showUnallocatedCheckbox');
+    const showAllocatedCheckbox = document.getElementById('showAllocatedCheckbox'); // NEW
 
     const fromDateInput = document.getElementById('fromDate');
     const toDateInput = document.getElementById('toDate');
@@ -38,10 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const SITE_ID = "a14c0405-4fb0-432b-9ce3-a5c460dffdf5";
     const ROSTER_GROUPS_CONFIG = [
         { id: "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f", name: "RLH Allocations" },
-        { id: "a40e918a-af4d-4cb9-bce6-99b5de1a0352", name: "PA Allocations" },
-        { id: "b856d0ca-fc49-48f8-be65-b2418b804875", name: "Example RG 3 (from testshifts)"}
+        { id: "a40e918a-af4d-4cb9-bce6-99b5de1a0352", name: "PA Allocations" }
+        // { id: "b856d0ca-fc49-48f8-be65-b2418b804875", name: "Example RG 3 (from testshifts)"} // This ID is now in EXCLUDED_ROSTER_GROUP_IDS
     ];
-    const EXCLUDED_ROSTER_GROUP_IDS = ["b856d0ca-fc49-48f8-be65-b2418b804875"]; // ID for "Example RG 3"
+    const EXCLUDED_ROSTER_GROUP_IDS = ["b856d0ca-fc49-48f8-be65-b2418b804875"];
+    const DEFAULT_ROSTER_GROUP_ID = "a40e918a-af4d-4cb9-bce6-99b5de1a0352"; // PA Allocations ID
     // ---------------------
 
     function updateButtonTexts() {
@@ -284,15 +286,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const shouldShowUnallocated = showUnallocatedCheckbox.checked;
-        const selectedRosterGroupIdFromDropdown = rosterGroupFilterDropdown.value;
+        const shouldShowAllocated = showAllocatedCheckbox.checked; // NEW
+        const selectedRosterGroupIdFromDropdown = rosterGroupFilterDropdown.value; // This will be the ID of the selected group
 
         const fromDateStr = fromDateInput.value;
         const toDateStr = toDateInput.value;
         if (!fromDateStr || !toDateStr) { usersTableContainer.innerHTML = '<p class="error">Please select both "From" and "To" dates.</p>'; return; }
-
         const fromDate = new Date(fromDateStr + "T00:00:00Z");
         const toDate = new Date(toDateStr + "T23:59:59Z");
-
         if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime()) || fromDate > toDate) {
             usersTableContainer.innerHTML = '<p class="error">Invalid date range selected.</p>'; return;
         }
@@ -309,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const userDailySlotInfo = new Map();
-
         function getOrCreateDailySlotEntry(roleInstanceId, dateKey) {
             if (!userDailySlotInfo.has(roleInstanceId)) {
                 userDailySlotInfo.set(roleInstanceId, new Map());
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return userDateMap.get(dateKey);
         }
 
-        // 1. Process Leaves
+        // 1. Process Leaves (same as before)
         (leavesData.leaves || []).forEach(leave => {
             const leaveStart = new Date(leave.start.includes('T') ? leave.start : leave.start + 'T00:00:00Z');
             const leaveEnd = new Date(leave.end.includes('T') ? leave.end : leave.end + 'T23:59:59Z');
@@ -343,34 +343,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
 
-        // 2. Process Shift Templates with stricter filtering
-        const amSlotStartMinutes = 7 * 60 + 30;
-        const amSlotEndMinutes = 12 * 60 + 30;
-        const pmSlotStartMinutes = 13 * 60;
-        const pmSlotEndMinutes = 17 * 60 + 30;
+        // 2. Process Shift Templates
+        const amSlotStartMinutes = 7 * 60 + 30; // 7:30 AM
+        const amSlotEndMinutes = 12 * 60 + 30; // 12:30 PM
+        const pmSlotStartMinutes = 13 * 60;    // 1:00 PM
+        const pmSlotEndMinutes = 17 * 60 + 30; // 5:30 PM
 
         (shiftTemplatesData.userShiftTemplates || []).forEach(template => {
-            // STAGE 1 FILTERING: Hardcoded exclusion
             if (EXCLUDED_ROSTER_GROUP_IDS.includes(template.rosterGroupId)) {
-                return;
+                return; // Hard exclude
             }
-            // STAGE 2 FILTERING: Dropdown selection
-            if (selectedRosterGroupIdFromDropdown !== "All" && template.rosterGroupId !== selectedRosterGroupIdFromDropdown) {
-                return;
+
+            // Filter by the single selected Roster Group from the dropdown.
+            // Since "All" is removed, selectedRosterGroupIdFromDropdown will always be a specific ID.
+            if (template.rosterGroupId !== selectedRosterGroupIdFromDropdown) {
+                return; 
             }
+
             dateRange.forEach(currentDayInDateRange => {
                 const dateKey = normalizeDate(currentDayInDateRange);
                 if (templateAppliesToDate(template, dateKey, dateRange)) {
                     const entry = getOrCreateDailySlotEntry(template.roleInstanceId, dateKey);
+                    // ... (time calculation logic for effectiveStart/EndTotalMinutes - same as before)
                     let itemStartHour = template.startTime.hour;
                     let itemStartMinute = template.startTime.minute;
                     let itemEndHour = template.endTime.hour;
                     let itemEndMinute = template.endTime.minute;
                     let effectiveStartTotalMinutes = itemStartHour * 60 + itemStartMinute;
                     let effectiveEndTotalMinutes = itemEndHour * 60 + itemEndMinute;
-                    if (template.startTime.dayOffset && template.startTime.dayOffset < 0) {
-                        effectiveStartTotalMinutes = 0;
-                    }
+                    if (template.startTime.dayOffset && template.startTime.dayOffset < 0) effectiveStartTotalMinutes = 0;
                     if (template.endTime.dayOffset && template.endTime.dayOffset > 0) {
                         effectiveEndTotalMinutes = 24 * 60;
                     } else if (itemEndHour === 0 && itemEndMinute === 0 &&
@@ -378,11 +379,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                (itemStartHour !== 0 || itemStartMinute !== 0 || (template.startTime.dayOffset || 0) !== 0) ) {
                         effectiveEndTotalMinutes = 24 * 60;
                     }
+
                     const detailString = `${template.type.charAt(0).toUpperCase() + template.type.slice(1)}: ${String(itemStartHour).padStart(2,'0')}:${String(itemStartMinute).padStart(2,'0')} - ${String(itemEndHour).padStart(2,'0')}:${String(itemEndMinute).padStart(2,'0')}` +
                                          (template.startTime.dayOffset ? ` (Start DO:${template.startTime.dayOffset})` : '') +
                                          (template.endTime.dayOffset ? ` (End DO:${template.endTime.dayOffset})` : '') +
                                          (template.rosterGroupId ? ` (RG: ${ROSTER_GROUPS_CONFIG.find(rg => rg.id === template.rosterGroupId)?.name || template.rosterGroupId.slice(0,8)})` : '');
                     const statusObject = { type: template.type, details: detailString, updatedAt: template.updatedAt, rosterGroupId: template.rosterGroupId };
+
                     if (effectiveStartTotalMinutes < amSlotEndMinutes && effectiveEndTotalMinutes > amSlotStartMinutes) {
                         entry.amStatuses.push(statusObject);
                     }
@@ -394,11 +397,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
 
-        // 3. Filter and Sort Users
+        // 3. Filter and Sort Users (same as before)
         const filterByAllRoles = selectedRoleIds.includes("All");
         const filterByAllTeams = selectedTeamIds.includes("All");
         const filteredSiteUsers = (usersData.siteUsers || []).filter(siteUser => {
-             const matchesRole = filterByAllRoles ||
+            const matchesRole = filterByAllRoles ||
                 (siteUser.roleInstances && siteUser.roleInstances.some(ri => selectedRoleIds.includes(ri.roleId)));
             const matchesTeam = filterByAllTeams ||
                 (siteUser.roleInstances && siteUser.roleInstances.some(ri =>
@@ -419,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (filteredSiteUsers.length === 0) {
             usersTableContainer.innerHTML = '<p>No users match the current filter criteria.</p>';
-            const selectedRosterGroupName = selectedRosterGroupIdFromDropdown === "All" ? "All" : ROSTER_GROUPS_CONFIG.find(rg => rg.id === selectedRosterGroupIdFromDropdown)?.name || selectedRosterGroupIdFromDropdown;
+            const selectedRosterGroupName = ROSTER_GROUPS_CONFIG.find(rg => rg.id === selectedRosterGroupIdFromDropdown)?.name || selectedRosterGroupIdFromDropdown;
             statusElement.textContent = `Users table generated with 0 matching entries. Roster Group: ${selectedRosterGroupName}. Date range: ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}`;
             statusElement.className = '';
             return;
@@ -447,8 +450,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 userIsOnLeaveAMForTally = true;
                                 userIsOnLeavePMForTally = true;
                             } else {
-                                if (dailyInfo.amStatuses.some(s => s.type === 'unavailable')) userIsUnavailableAMForTally = true;
-                                if (dailyInfo.pmStatuses.some(s => s.type === 'unavailable')) userIsUnavailablePMForTally = true;
+                                if (dailyInfo.amStatuses.some(s => s.type === 'unavailable' && s.rosterGroupId === selectedRosterGroupIdFromDropdown)) userIsUnavailableAMForTally = true;
+                                if (dailyInfo.pmStatuses.some(s => s.type === 'unavailable' && s.rosterGroupId === selectedRosterGroupIdFromDropdown)) userIsUnavailablePMForTally = true;
                             }
                         }
                     }
@@ -515,10 +518,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Table Body Rows
         filteredSiteUsers.forEach(siteUser => {
             const tr = document.createElement('tr');
+            // ... (user profile cells and roleInstancesHtmlContent - same as before) ...
             const profile = siteUser.siteUserProfile || {};
             tr.appendChild(createCell(profile.lastName || 'N/A'));
             tr.appendChild(createCell(profile.firstName || 'N/A'));
-
             let roleInstancesHtmlContent = '';
             if (siteUser.roleInstances && siteUser.roleInstances.length > 0) {
                 const roleInstanceDetails = siteUser.roleInstances
@@ -541,8 +544,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             dateRange.forEach(tableDay => {
                 const dateKeyForLookup = normalizeDate(tableDay);
-                let amCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 4 };
-                let pmCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 4 };
+                let amCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 5 }; // 5 for empty
+                let pmCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 5 };
                 
                 let combinedAmDetailsSet = new Set();
                 let combinedPmDetailsSet = new Set();
@@ -552,40 +555,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 (siteUser.roleInstances || []).forEach(ri => {
                     const roleMatches = filterByAllRoles || selectedRoleIds.includes(ri.roleId);
-                    const teamMatches = filterByAllTeams || 
-                                        (ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId)));
+                    const teamMatches = filterByAllTeams || (ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId)));
 
                     if (roleMatches && teamMatches && userDailySlotInfo.has(ri.id) && userDailySlotInfo.get(ri.id).has(dateKeyForLookup)) {
                         const dailyInfo = userDailySlotInfo.get(ri.id).get(dateKeyForLookup);
 
-                        // AM Slot processing for this RoleInstance
                         if (dailyInfo.leaveTypes.size > 0) {
                             const leaveText = Array.from(dailyInfo.leaveTypes).join(', ');
+                            // SortKey: 0:Leave, 1:Unavail, 2:Alloc, 3:Unalloc
                             amDisplayStatuses.push({ label: leaveText, class: 'leave-cell', sortKey: 0, details: leaveText });
+                            pmDisplayStatuses.push({ label: leaveText, class: 'leave-cell', sortKey: 0, details: leaveText });
                         } else {
                             dailyInfo.amStatuses.forEach(status => {
-                                if (selectedRosterGroupIdFromDropdown === "All" || status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
+                                // Check if status's RG matches current dropdown selection (it should, due to earlier filtering)
+                                if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
                                     if (status.type === 'unavailable') {
                                         amDisplayStatuses.push({ label: 'Unavail.', class: 'unavailable-cell', sortKey: 1, details: status.details, rosterGroupId: status.rosterGroupId });
-                                    } else if (status.type === 'allocated') {
+                                    } else if (status.type === 'allocated' && shouldShowAllocated) { // Check showAllocatedCheckbox
                                         amDisplayStatuses.push({ label: 'Alloc.', class: 'allocated-cell', sortKey: 2, details: status.details, rosterGroupId: status.rosterGroupId });
                                     } else if (status.type === 'unallocated' && shouldShowUnallocated) {
                                         amDisplayStatuses.push({ label: 'Unalloc.', class: 'unallocated-cell', sortKey: 3, details: status.details, rosterGroupId: status.rosterGroupId });
                                     }
                                 }
                             });
-                        }
-
-                        // PM Slot processing for this RoleInstance
-                        if (dailyInfo.leaveTypes.size > 0) {
-                             const leaveText = Array.from(dailyInfo.leaveTypes).join(', ');
-                            pmDisplayStatuses.push({ label: leaveText, class: 'leave-cell', sortKey: 0, details: leaveText });
-                        } else {
                             dailyInfo.pmStatuses.forEach(status => {
-                                if (selectedRosterGroupIdFromDropdown === "All" || status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
+                                if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
                                     if (status.type === 'unavailable') {
                                         pmDisplayStatuses.push({ label: 'Unavail.', class: 'unavailable-cell', sortKey: 1, details: status.details, rosterGroupId: status.rosterGroupId });
-                                    } else if (status.type === 'allocated') {
+                                    } else if (status.type === 'allocated' && shouldShowAllocated) { // Check showAllocatedCheckbox
                                         pmDisplayStatuses.push({ label: 'Alloc.', class: 'allocated-cell', sortKey: 2, details: status.details, rosterGroupId: status.rosterGroupId });
                                     } else if (status.type === 'unallocated' && shouldShowUnallocated) {
                                         pmDisplayStatuses.push({ label: 'Unalloc.', class: 'unallocated-cell', sortKey: 3, details: status.details, rosterGroupId: status.rosterGroupId });
@@ -640,27 +637,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         table.appendChild(tbody);
         usersTableContainer.appendChild(table);
-        const selectedRosterGroupName = selectedRosterGroupIdFromDropdown === "All" ? "All" : ROSTER_GROUPS_CONFIG.find(rg => rg.id === selectedRosterGroupIdFromDropdown)?.name || selectedRosterGroupIdFromDropdown;
+        const selectedRosterGroupName = ROSTER_GROUPS_CONFIG.find(rg => rg.id === selectedRosterGroupIdFromDropdown)?.name || selectedRosterGroupIdFromDropdown;
         statusElement.textContent = `Users table generated with ${filteredSiteUsers.length} entries. Roster Group: ${selectedRosterGroupName}. Date range: ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}`;
         statusElement.className = '';
     }
 
-
     function handleFilterChange() {
-        // Only regenerate table if all necessary data is present
         if (lastFetchedUsersData && lastFetchedLeavesData && lastFetchedShiftTemplatesData) {
             const selectedRoleIds = getSelectedValues(roleFilterDropdown);
             const selectedTeamIds = getSelectedValues(teamFilterDropdown);
-            // Call the main generateUsersTable function
             generateUsersTable(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedShiftTemplatesData, selectedRoleIds, selectedTeamIds);
         } else {
             statusElement.textContent = 'Please fetch all required data (Users, Leaves, Shift Templates) before applying filters or changing dates.';
             statusElement.className = 'error';
-            // Optionally, clear the table if data is missing
-            // usersTableContainer.innerHTML = '<p class="error">Data missing, cannot apply filters.</p>';
         }
     }
-
 
     function populateFilterDropdowns(data) {
         const currentRoleSelections = getSelectedValues(roleFilterDropdown);
@@ -698,32 +689,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function populateRosterGroupFilterDropdown() {
         if (!rosterGroupFilterDropdown) return;
-        rosterGroupFilterDropdown.innerHTML = ''; // Clear existing options
-
-        // Add "All" option first
-        const allOption = document.createElement('option');
-        allOption.value = "All";
-        allOption.textContent = "All Roster Groups";
-        rosterGroupFilterDropdown.appendChild(allOption);
-
-        let paAllocationsId = null;
+        rosterGroupFilterDropdown.innerHTML = '';
         ROSTER_GROUPS_CONFIG.forEach(rg => {
-            if (rg.name === "PA Allocations") {
-                paAllocationsId = rg.id;
+            if (!EXCLUDED_ROSTER_GROUP_IDS.includes(rg.id)) {
+                const option = document.createElement('option');
+                option.value = rg.id;
+                option.textContent = rg.name;
+                if (rg.id === DEFAULT_ROSTER_GROUP_ID) {
+                    option.selected = true;
+                }
+                rosterGroupFilterDropdown.appendChild(option);
             }
         });
-
-        ROSTER_GROUPS_CONFIG.forEach(rg => {
-            const option = document.createElement('option');
-            option.value = rg.id;
-            option.textContent = rg.name;
-            if (rg.id === paAllocationsId) { // Default to PA Allocations if "All" is not desired as default
-                // option.selected = true; // Comment out if "All" should be default
-            }
-            rosterGroupFilterDropdown.appendChild(option);
-        });
-        // Default to "All"
-        allOption.selected = true;
+        if (rosterGroupFilterDropdown.options.length > 0 && rosterGroupFilterDropdown.selectedIndex === -1) {
+            rosterGroupFilterDropdown.options[0].selected = true;
+        }
     }
 
     function createCell(text, isHtml = false) {
@@ -736,6 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return td;
     }
 
+    // Event Listeners
     if (fetchLeavesButton) fetchLeavesButton.addEventListener('click', fetchLeavesDataAndDisplayJson);
     if (fetchUsersButton) fetchUsersButton.addEventListener('click', fetchUsersDataAndDisplayJson);
     if (fetchShiftTemplatesButton) fetchShiftTemplatesButton.addEventListener('click', fetchShiftTemplatesDataAndDisplayJson);
@@ -745,44 +726,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (roleFilterDropdown) roleFilterDropdown.addEventListener('change', handleFilterChange);
     if (teamFilterDropdown) teamFilterDropdown.addEventListener('change', handleFilterChange);
     if (rosterGroupFilterDropdown) rosterGroupFilterDropdown.addEventListener('change', handleFilterChange);
-    if (showUnallocatedCheckbox) showUnallocatedCheckbox.addEventListener('change', handleFilterChange); // Re-added listener
+    if (showUnallocatedCheckbox) showUnallocatedCheckbox.addEventListener('change', handleFilterChange);
+    if (showAllocatedCheckbox) showAllocatedCheckbox.addEventListener('change', handleFilterChange); // NEW
     if (fromDateInput) fromDateInput.addEventListener('change', handleFilterChange);
     if (toDateInput) toDateInput.addEventListener('change', handleFilterChange);
 
-    // Set default date range (today for 7 days)
+    // Initial Setup
     const today = new Date();
     const oneWeekFromToday = new Date();
     oneWeekFromToday.setDate(today.getDate() + 7);
-
-    // Format as YYYY-MM-DD for input type="date"
     const formatDateForInput = (date) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
-
     if (fromDateInput) fromDateInput.value = formatDateForInput(today);
     if (toDateInput) toDateInput.value = formatDateForInput(oneWeekFromToday);
-
 
     updateButtonTexts();
     populateRosterGroupFilterDropdown();
 
-    // Hide unneeded controls (already in your code, kept for consistency)
+    // Hide unneeded button (already done, kept for completeness)
     const unallocatedButtonElement = document.getElementById('fetchUnallocatedButton');
     if (unallocatedButtonElement) unallocatedButtonElement.style.display = 'none';
-    
-    // The parent of showUnallocatedCheckbox might not be what you expect if it's just a label after it.
-    // Assuming it's wrapped or its immediate previous sibling is the label.
-    // if (showUnallocatedCheckbox && showUnallocatedCheckbox.parentElement.tagName === 'LABEL') {
-    //     showUnallocatedCheckbox.parentElement.style.display = 'none'; // If checkbox is inside label
-    // } else if (showUnallocatedCheckbox && showUnallocatedCheckbox.previousElementSibling && showUnallocatedCheckbox.previousElementSibling.tagName === 'LABEL') {
-    //    // showUnallocatedCheckbox.previousElementSibling.style.display = 'none'; // Hides label
-    //    // showUnallocatedCheckbox.style.display = 'none'; // Hides checkbox
-    // }
-    // The `showUnallocatedCheckbox` is kept as its state is used. The button was removed.
-    // The UI elements for fetching "Unallocated" data directly are removed, but the concept
-    // of "unallocated" shifts from Shift Templates is still valid and controlled by the checkbox.
-
 });
