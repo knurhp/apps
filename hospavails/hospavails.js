@@ -7,6 +7,7 @@ const useLocalFileCheckbox = document.getElementById('useLocalFileCheckbox');
 const fetchLeavesButton = document.getElementById('fetchLeavesButton');
 const fetchUsersButton = document.getElementById('fetchUsersButton');
 const fetchUnallocatedButton = document.getElementById('fetchUnallocatedButton');
+const fetchShiftTemplatesButton = document.getElementById('fetchShiftTemplatesButton'); // Added this line
 const generateUsersTableButton = document.getElementById('generateUsersTableButton');
 
 const usersTableContainer = document.getElementById('usersTableContainer');
@@ -21,6 +22,7 @@ const toDateInput = document.getElementById('toDate');
 let lastFetchedUsersData = null;
 let lastFetchedLeavesData = null;
 let lastFetchedUnallocatedData = null;
+let lastFetchedShiftTemplatesData = null; // Added this line
 
 let rolesMap = new Map();
 let teamsMap = new Map();
@@ -30,10 +32,12 @@ let leaveTypesMap = new Map();
 const LEAVES_LOCAL_FILE_PATH = 'testleave.json';
 const USERS_LOCAL_FILE_PATH = 'testusers.json';
 const UNALLOCATED_LOCAL_FILE_PATH = 'testunalloc.json';
+const SHIFT_TEMPLATES_LOCAL_FILE_PATH = 'testshifts.json'; // Added this line
 
 const LEAVES_API_ENDPOINT = "https://api.hosportal.com/get-leaves-and-leave-requests";
 const USERS_API_ENDPOINT = "https://api.hosportal.com/get-site-users";
 const UNALLOCATED_API_ENDPOINT = "https://api.hosportal.com/get-unallocated-available-role-instances";
+const SHIFT_TEMPLATES_API_ENDPOINT = "https://api.hosportal.com/get-user-shift-templates"; // Added this line
 
 const SITE_ID = "a14c0405-4fb0-432b-9ce3-a5c460dffdf5";
 const ROSTER_GROUPS_CONFIG = [
@@ -52,6 +56,9 @@ function updateButtonTexts() {
     }
     if (fetchUnallocatedButton) {
         fetchUnallocatedButton.textContent = useLocal ? `Unallocated from ${UNALLOCATED_LOCAL_FILE_PATH}` : 'Unallocated from API';
+    }
+    if (fetchShiftTemplatesButton) { // Added this block
+        fetchShiftTemplatesButton.textContent = useLocal ? `Shift Templates from ${SHIFT_TEMPLATES_LOCAL_FILE_PATH}` : 'Shift Templates from API';
     }
     if (generateUsersTableButton) {
         generateUsersTableButton.textContent = useLocal ? `Table from Local Files` : 'Table from API Data';
@@ -117,6 +124,10 @@ async function performFetch(url, requestOptions = {}, isLocalFile = false, local
             lastFetchedUnallocatedData = result;
             jsonDataElement.textContent = JSON.stringify(result, null, 2);
             statusElement.textContent = `Unallocated data loaded successfully from ${dataSource}!`;
+        } else if (dataType === 'shift_templates') { // Added this block
+            lastFetchedShiftTemplatesData = result;
+            jsonDataElement.textContent = JSON.stringify(result, null, 2);
+            statusElement.textContent = `Shift Templates data loaded successfully from ${dataSource}!`;
         }
         return result;
 
@@ -128,6 +139,7 @@ async function performFetch(url, requestOptions = {}, isLocalFile = false, local
         if (dataType === 'users') lastFetchedUsersData = null;
         if (dataType === 'leaves') lastFetchedLeavesData = null;
         if (dataType === 'unallocated') lastFetchedUnallocatedData = null;
+        if (dataType === 'shift_templates') lastFetchedShiftTemplatesData = null; // Added this line
         throw error;
     }
 }
@@ -163,230 +175,181 @@ async function fetchUsersDataAndDisplayJson() {
     } catch (e) { /* Handled by performFetch */ }
 }
 
-
-async function fetchCombinedUnallocatedDataForApi(apiStart, apiEnd) {
-    const token = bearerTokenInput.value.trim();
-    if (!token) throw new Error('Bearer token is required for API calls when fetching unallocated data.');
-
-    let combinedUnallocatedUsersArray = []; // For type: "unallocated"
-    let combinedUnavailableUsersArray = []; // For type: "unavailable"
-    let firstResponseStructure = null; 
-
-    statusElement.textContent = `Fetching unallocated data. Please wait...`;
-    statusElement.className = '';
-
-    for (const rosterGroup of ROSTER_GROUPS_CONFIG) {
-        const rosterGroupId = rosterGroup.id;
-        const rawBody = JSON.stringify({
-            "siteId": SITE_ID,
-            "start": apiStart,
-            "end": apiEnd,
-            "roleIds": [],
-            "rosterGroupId": rosterGroupId
-        });
-
-        const headers = new Headers();
-        headers.set("Authorization", `Bearer ${token}`);
-        headers.set("Content-Type", "application/json");
-
-        const requestOptions = {
-            method: 'POST', headers: headers, body: rawBody, redirect: 'follow'
-        };
-        
-        statusElement.textContent = `Fetching unallocated data for ${rosterGroup.name}...`;
-
-        try {
-            const response = await fetch(UNALLOCATED_API_ENDPOINT, requestOptions);
-
-            if (!response.ok) {
-                let errorMsg = `HTTP error for unallocated data (${rosterGroup.name})! Status: ${response.status} ${response.statusText}`;
-                let errorBodyText = 'Could not read error body.';
-                try { errorBodyText = await response.text(); errorMsg += ` - Body: ${errorBodyText}`; } catch (e) { /* ignore */ }
-                console.error(errorMsg);
-                statusElement.textContent = `Error fetching for ${rosterGroup.name}. Trying next...`;
-                statusElement.className = 'error'; 
-                continue; 
-            }
-            const result = await response.json();
-
-            console.log(`Data fetched for ${rosterGroup.name} (ID: ${rosterGroupId}):`, JSON.parse(JSON.stringify(result)));
-
-            if (firstResponseStructure === null && result) {
-                const { unallocatedUsers, unavailableUsers, ...rest } = result; // Exclude both arrays
-                firstResponseStructure = rest;
-            }
-
-            if (result && result.unallocatedUsers && Array.isArray(result.unallocatedUsers)) {
-                combinedUnallocatedUsersArray.push(...result.unallocatedUsers);
-            }
-            if (result && result.unavailableUsers && Array.isArray(result.unavailableUsers)) {
-                combinedUnavailableUsersArray.push(...result.unavailableUsers);
-            }
-
-        } catch (fetchError) {
-            console.error(`Fetch error for ${rosterGroup.name}:`, fetchError);
-            statusElement.textContent = `Network error fetching for ${rosterGroup.name}. Trying next...`;
-            statusElement.className = 'error';
-            continue;
-        }
-    }
-
-    if (firstResponseStructure === null && combinedUnallocatedUsersArray.length === 0 && combinedUnavailableUsersArray.length === 0) {
-        throw new Error("Failed to fetch unallocated data for all roster groups or no data returned.");
-    }
-    
-    const finalCombinedResult = {
-        ...(firstResponseStructure || {}),
-        unallocatedUsers: combinedUnallocatedUsersArray, // For GREEN "Unalloc."
-        unavailableUsers: combinedUnavailableUsersArray  // For RED "Unavail." (actual shifts)
+async function fetchShiftTemplatesDataAndDisplayJson() { // Added this function
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const raw = JSON.stringify({
+      "siteId": SITE_ID
+    });
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
     };
-    return finalCombinedResult;
-}
-
-async function fetchUnallocatedDataAndDisplayJson() {
-    const useLocal = useLocalFileCheckbox.checked;
-
-    if (useLocal) {
-        try {
-            await performFetch(null, {}, true, UNALLOCATED_LOCAL_FILE_PATH, 'unallocated');
-        } catch (e) { /* Handled by performFetch */ }
-    } else {
-        const fromDateStr = fromDateInput.value;
-        const toDateStr = toDateInput.value;
-
-        if (!fromDateStr || !toDateStr) {
-            statusElement.textContent = 'Please select "From" and "To" dates for the Unallocated API call.';
-            statusElement.className = 'error';
-            jsonDataElement.textContent = '';
-            lastFetchedUnallocatedData = null;
-            return;
-        }
-
-        const apiStart = `${fromDateStr}T00:00:00.000Z`;
-        const apiEnd = `${toDateStr}T23:59:59.999Z`;
-
-        statusElement.textContent = `Fetching and combining unallocated data from API for ${ROSTER_GROUPS_CONFIG.length} roster groups...`;
-        statusElement.className = '';
-        jsonDataElement.textContent = 'Loading...';
-
-        try {
-            const combinedData = await fetchCombinedUnallocatedDataForApi(apiStart, apiEnd);
-            lastFetchedUnallocatedData = combinedData;
-            jsonDataElement.textContent = JSON.stringify(combinedData, null, 2);
-            statusElement.textContent = `Unallocated data loaded and combined successfully from API!`;
-            console.log(combinedData);
-            statusElement.className = '';
-        } catch (error) {
-            console.error(`Error in fetchUnallocatedDataAndDisplayJson for API:`, error);
-            jsonDataElement.textContent = `An error occurred fetching unallocated data:\n${error.message}`;
-            statusElement.textContent = `Failed to load unallocated data from API.`;
-            statusElement.className = 'error';
-            lastFetchedUnallocatedData = null;
-        }
-    }
+    try {
+        await performFetch(
+            SHIFT_TEMPLATES_API_ENDPOINT, requestOptions,
+            useLocalFileCheckbox.checked, SHIFT_TEMPLATES_LOCAL_FILE_PATH, 'shift_templates'
+        );
+    } catch (e) { /* Handled by performFetch */ }
 }
 
 async function triggerGenerateUsersTable() {
     usersTableContainer.innerHTML = 'Generating table, fetching data if needed...';
     try {
-        const dataFetchPromises = [];
         const isLocal = useLocalFileCheckbox.checked;
-        const hasToken = bearerTokenInput.value.trim() !== '';
+        // Fetch users, leaves, shift-templates if not already loaded
+        if (!lastFetchedUsersData) await fetchUsersDataAndDisplayJson();
+        if (!lastFetchedLeavesData) await fetchLeavesDataAndDisplayJson();
+        if (!lastFetchedShiftTemplatesData) await fetchShiftTemplatesDataAndDisplayJson();
 
-        if (!lastFetchedUsersData || isLocal || (!isLocal && hasToken)) {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-            const raw = JSON.stringify({
-                "siteId": SITE_ID,
-                "associations": ["Role", "Skill", "Team", "SiteUserProfile", "RoleInstanceInformation", "RoleInstanceFte"]
-            });
-            const requestOptions = { method: 'POST', headers: myHeaders, body: raw, redirect: 'follow' };
-            dataFetchPromises.push(
-                performFetch(USERS_API_ENDPOINT, requestOptions, isLocal, USERS_LOCAL_FILE_PATH, 'users')
-            );
-        }
-
-        if (!lastFetchedLeavesData || isLocal || (!isLocal && hasToken)) {
-            dataFetchPromises.push(
-                performFetch(LEAVES_API_ENDPOINT, {
-                    method: 'POST',
-                    body: JSON.stringify({ "siteId": SITE_ID, "statuses": ["waiting", "denied", "approved"], "associations": ["LeaveType", "RoleInstance"] }),
-                    redirect: 'follow'
-                }, isLocal, LEAVES_LOCAL_FILE_PATH, 'leaves')
-            );
-        }
-
-        if (dataFetchPromises.length > 0) {
-            await Promise.all(dataFetchPromises.map(p => p.catch(e => e)));
-        }
-
-        let unallocatedDataFetchError = null;
-        if (!lastFetchedUnallocatedData || isLocal || (!isLocal && hasToken)) {
-            const fromDateStr = fromDateInput.value;
-            const toDateStr = toDateInput.value;
-
-            if (isLocal) {
-                try {
-                    await performFetch(null, {}, true, UNALLOCATED_LOCAL_FILE_PATH, 'unallocated');
-                } catch (e) {
-                    unallocatedDataFetchError = e;
-                    console.error("Error fetching local unallocated data for table:", e);
-                }
-            } else if (hasToken && fromDateStr && toDateStr) {
-                const apiStart = `${fromDateStr}T00:00:00.000Z`;
-                const apiEnd = `${toDateStr}T23:59:59.999Z`;
-                try {
-                    statusElement.textContent = `Fetching combined unallocated data for table...`;
-                    const combinedData = await fetchCombinedUnallocatedDataForApi(apiStart, apiEnd);
-                    lastFetchedUnallocatedData = combinedData;
-                    statusElement.textContent = `Combined unallocated data fetched for table.`;
-                } catch (e) {
-                    unallocatedDataFetchError = e;
-                    console.error("Error fetching API unallocated data for table:", e);
-                    lastFetchedUnallocatedData = null;
-                    throw e; 
-                }
-            } else if (!isLocal && !hasToken) {
-                console.warn("Bearer token missing for Unallocated API data for table.");
-            } else if (!isLocal && (!fromDateStr || !toDateStr)) {
-                console.warn("Dates for Unallocated API data not set for table. Unavailability might not be accurate.");
-            }
-        }
-        
-        if (lastFetchedUsersData && lastFetchedLeavesData && lastFetchedUnallocatedData) {
-            const selectedRoleIds = getSelectedValues(roleFilterDropdown);
-            const selectedTeamIds = getSelectedValues(teamFilterDropdown);
-            generateUsersTable(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedUnallocatedData, selectedRoleIds, selectedTeamIds);
-        } else {
-            let missingData = [];
-            if (!lastFetchedUsersData) missingData.push("user");
-            if (!lastFetchedLeavesData) missingData.push("leave");
-            
-            const unallocatedExpected = isLocal || (hasToken && fromDateInput.value && toDateInput.value);
-            if (!lastFetchedUnallocatedData && unallocatedExpected) {
-                 missingData.push("unallocated availability");
-            }
-
-            if (!isLocal && !hasToken && (missingData.includes("user") || missingData.includes("leave") || (missingData.includes("unallocated availability") && unallocatedExpected))) {
-                statusElement.textContent = `Cannot generate table: Bearer token missing for API call to fetch ${missingData.join(', ')} data.`;
-            } else if (missingData.length > 0) {
-                statusElement.textContent = `Cannot generate table: Missing ${missingData.join(', ')} data. Fetch relevant data first.`;
-            } else if (!isLocal && unallocatedExpected && (!fromDateInput.value || !toDateInput.value) && !lastFetchedUnallocatedData) {
-                 statusElement.textContent = `Cannot generate table: Dates not set for unallocated data.`;
-            } else {
-                 statusElement.textContent = `Cannot generate table: Ensure all required data is fetched.`;
-            }
-            statusElement.className = 'error';
-            usersTableContainer.innerHTML = '';
-        }
+        // Now build the table using only these three sources
+        generateUsersTableFromData(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedShiftTemplatesData);
     } catch (error) {
-        console.error("Could not generate table due to fetch error(s):", error);
-        statusElement.textContent = 'Error fetching data or generating table. Check console.';
-        statusElement.className = 'error';
-        usersTableContainer.innerHTML = '<p class="error">Table generation failed due to data fetch errors.</p>';
+        usersTableContainer.innerHTML = `<span class='error'>Error generating table: ${error.message}</span>`;
     }
 }
 
+// Helper to build the table from users, leaves, and shift-templates
+function generateUsersTableFromData(usersData, leavesData, shiftTemplatesData) {
+    // 1. Get users
+    const users = (usersData && usersData.users) ? usersData.users : [];
+    if (!users.length) {
+        usersTableContainer.innerHTML = '<span class="error">No users found.</span>';
+        return;
+    }
+    // 2. Get leaves
+    const leaves = (leavesData && leavesData.leaves) ? leavesData.leaves : [];
+    // 3. Get shift templates
+    const shiftTemplates = (shiftTemplatesData && shiftTemplatesData.userShiftTemplates) ? shiftTemplatesData.userShiftTemplates : [];
+
+    // 4. Build date range from UI
+    const fromDateStr = fromDateInput.value;
+    const toDateStr = toDateInput.value;
+    if (!fromDateStr || !toDateStr) {
+        usersTableContainer.innerHTML = '<span class="error">Please select a date range.</span>';
+        return;
+    }
+    const fromDate = new Date(fromDateStr);
+    const toDate = new Date(toDateStr);
+    if (isNaN(fromDate) || isNaN(toDate)) {
+        usersTableContainer.innerHTML = '<span class="error">Invalid date range.</span>';
+        return;
+    }
+    // Build list of dates (no timezone conversion)
+    const dateList = [];
+    for (let d = new Date(fromDate); d <= toDate; d.setDate(d.getDate() + 1)) {
+        dateList.push(d.toISOString().slice(0, 10));
+    }
+
+    // 5. Build leaves map: userId -> date -> AM/PM -> leaveType
+    const leavesMap = new Map();
+    for (const leave of leaves) {
+        const userId = leave.siteUserId;
+        const leaveDate = leave.date;
+        const am = leave.am;
+        const pm = leave.pm;
+        if (!leavesMap.has(userId)) leavesMap.set(userId, {});
+        if (!leavesMap.get(userId)[leaveDate]) leavesMap.get(userId)[leaveDate] = {};
+        if (am) leavesMap.get(userId)[leaveDate]['AM'] = leave.leaveTypeId;
+        if (pm) leavesMap.get(userId)[leaveDate]['PM'] = leave.leaveTypeId;
+    }
+
+    // 6. Build shift map: userId -> date -> AM/PM -> status (from shift templates)
+    const shiftMap = new Map();
+    // Helper: get AM/PM for a template
+    function getAMPMForTemplate(st) {
+        // AM: start hour < 13, PM: start hour >= 13
+        if (!st.startTime || typeof st.startTime.hour !== 'number') return ['AM', 'PM'];
+        if (st.startTime.hour < 13) return ['AM'];
+        return ['PM'];
+    }
+    // Helper: does template apply to date?
+    function templateAppliesToDate(st, dateStr) {
+        // Only handle 'none' (one-off) and 'weekly' for now
+        if (!st.interval || !st.startDate) return false;
+        if (st.interval.type === 'none') {
+            // One-off: applies if date matches startDate (or in range startDate-endDate)
+            if (st.endDate) {
+                return dateStr >= st.startDate && dateStr <= st.endDate;
+            } else {
+                return dateStr === st.startDate;
+            }
+        }
+        if (st.interval.type === 'weekly') {
+            // Weekly recurrence
+            const start = new Date(st.startDate);
+            const current = new Date(dateStr);
+            if (current < start) return false;
+            // Check day of week
+            const jsDay = current.getDay(); // 0=Sun, 1=Mon, ...
+            const isoDay = jsDay === 0 ? 7 : jsDay; // 1=Mon, 7=Sun
+            if (!st.interval.daysOfWeek || !st.interval.daysOfWeek.includes(isoDay)) return false;
+            // Check spacing/offset
+            const diffDays = Math.floor((current - start) / (1000*60*60*24));
+            const weeksSinceStart = Math.floor(diffDays / 7);
+            const spacing = st.interval.spacing || 1;
+            const offset = st.interval.offset || 0;
+            if ((weeksSinceStart - offset) % spacing !== 0) return false;
+            return true;
+        }
+        // TODO: handle other interval types if needed
+        return false;
+    }
+    // Build map
+    for (const st of shiftTemplates) {
+        const userId = st.roleInstanceId;
+        if (!userId) continue;
+        for (const date of dateList) {
+            if (!templateAppliesToDate(st, date)) continue;
+            const ampmList = getAMPMForTemplate(st);
+            if (!shiftMap.has(userId)) shiftMap.set(userId, {});
+            if (!shiftMap.get(userId)[date]) shiftMap.get(userId)[date] = {};
+            for (const ampm of ampmList) {
+                shiftMap.get(userId)[date][ampm] = { status: st.type, updatedAt: st.updatedAt };
+            }
+        }
+    }
+
+    // 7. Build table header
+    let html = '<table><thead><tr><th>User</th>';
+    for (const date of dateList) {
+        html += `<th colspan='2'>${date}</th>`;
+    }
+    html += '</tr><tr><th></th>';
+    for (const date of dateList) {
+        html += '<th>AM</th><th>PM</th>';
+    }
+    html += '</tr></thead><tbody>';
+
+    // 8. Build table rows
+    for (const user of users) {
+        html += `<tr><td>${user.displayName || user.name || user.email}</td>`;
+        for (const date of dateList) {
+            for (const ampm of ['AM', 'PM']) {
+                // Priority: leave > shiftMap > blank
+                let cell = '';
+                if (leavesMap.has(user.id) && leavesMap.get(user.id)[date] && leavesMap.get(user.id)[date][ampm]) {
+                    cell = `<span class='allocated-cell'>On Leave (${leavesMap.get(user.id)[date][ampm]})</span>`;
+                } else if (shiftMap.has(user.id) && shiftMap.get(user.id)[date] && shiftMap.get(user.id)[date][ampm]) {
+                    const s = shiftMap.get(user.id)[date][ampm];
+                    let colorClass = s.status === 'unallocated' ? 'unallocated-cell' : 'allocated-cell';
+                    cell = `<span class='${colorClass}'>${s.status.charAt(0).toUpperCase() + s.status.slice(1)}<br><small>${s.updatedAt}</small></span>`;
+                } else {
+                    cell = '';
+                }
+                html += `<td>${cell}</td>`;
+            }
+        }
+        html += '</tr>';
+    }
+    html += '</tbody></table>';
+    usersTableContainer.innerHTML = html;
+}
+
+// Remove fetchUnallocatedDataAndDisplayJson, fetchCombinedUnallocatedDataForApi, and all unallocated logic
+// ...existing code...
 
 function getDayOfWeek(dateObj) {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -400,12 +363,13 @@ function normalizeDate(dateObj) {
     return `${year}-${month}-${day}`;
 }
 
-function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedRoleIds, selectedTeamIds) {
+function generateUsersTable(usersData, leavesData, unallocatedApiData, shiftTemplatesData, selectedRoleIds, selectedTeamIds) { // Added shiftTemplatesData parameter
     usersTableContainer.innerHTML = '';
 
     if (!usersData?.siteUsers?.length) { usersTableContainer.innerHTML = '<p class="error">No siteUsers data.</p>'; return; }
     if (!leavesData?.leaves) { usersTableContainer.innerHTML = '<p class="error">Leave data missing/invalid.</p>'; return; }
-    
+    if (!shiftTemplatesData) { usersTableContainer.innerHTML = '<p class="error">Shift templates data missing/invalid.</p>'; return; } // Added this check
+
     const shouldShowUnallocated = showUnallocatedCheckbox.checked;
 
     const selectedRosterGroupId = rosterGroupFilterDropdown.value;
@@ -529,6 +493,58 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
     
     // Process "unallocatedUsers" (potential shifts, for green "Unalloc.")
     processShiftArray(currentUnallocatedShifts, true);
+
+    // --- NEW: Process Allocated Shifts from shiftTemplatesData ---
+    if (shiftTemplatesData && Array.isArray(shiftTemplatesData.userShiftTemplates)) {
+        shiftTemplatesData.userShiftTemplates.forEach(template => {
+            if (template.type === 'allocated') {
+                // Only process allocated templates
+                const roleInstanceId = template.roleInstanceId;
+                // Calculate all dates this template applies to in the dateRange
+                dateRange.forEach(dateObj => {
+                    const dateKey = normalizeDate(dateObj);
+                    // Check if this template applies to this date
+                    // (Assume allocated templates have startDate, endDate, startTime, endTime)
+                    const templateStart = new Date(template.startDate + 'T00:00:00Z');
+                    const templateEnd = template.endDate ? new Date(template.endDate + 'T23:59:59Z') : templateStart;
+                    if (dateObj >= templateStart && dateObj <= templateEnd) {
+                        // Check if day of week matches if interval is weekly
+                        let applies = true;
+                        if (template.interval && template.interval.type === 'weekly' && Array.isArray(template.interval.daysOfWeek)) {
+                            const jsDay = dateObj.getUTCDay();
+                            applies = template.interval.daysOfWeek.includes(jsDay);
+                        }
+                        if (applies) {
+                            // Calculate slot times
+                            const amSlotStartMinutes = 7 * 60 + 30;
+                            const amSlotEndMinutes = 12 * 60 + 30;
+                            const pmSlotStartMinutes = 13 * 60;
+                            const pmSlotEndMinutes = 17 * 60 + 30;
+                            const startHour = template.startTime.hour;
+                            const startMinute = template.startTime.minute;
+                            const endHour = template.endTime.hour;
+                            const endMinute = template.endTime.minute;
+                            const startTotalMinutes = startHour * 60 + startMinute;
+                            const endTotalMinutes = endHour * 60 + endMinute;
+                            const entry = getOrCreateDailySlotEntry(roleInstanceId, dateKey);
+                            const detailString = `Allocated: ${String(startHour).padStart(2,'0')}:${String(startMinute).padStart(2,'0')} - ${String(endHour).padStart(2,'0')}:${String(endMinute).padStart(2,'0')}`;
+                            // Only set allocated if not already leave or unavailable
+                            if (!entry.leaveTypes.size && !entry.isUnavailableAM && startTotalMinutes < amSlotEndMinutes && endTotalMinutes > amSlotStartMinutes) {
+                                entry.isAllocatedAM = true;
+                                if (!entry.allocatedDetailsAM) entry.allocatedDetailsAM = new Set();
+                                entry.allocatedDetailsAM.add(detailString);
+                            }
+                            if (!entry.leaveTypes.size && !entry.isUnavailablePM && startTotalMinutes < pmSlotEndMinutes && endTotalMinutes > pmSlotStartMinutes) {
+                                entry.isAllocatedPM = true;
+                                if (!entry.allocatedDetailsPM) entry.allocatedDetailsPM = new Set();
+                                entry.allocatedDetailsPM.add(detailString);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     const filterByAllRoles = selectedRoleIds.includes("All");
     const filterByAllTeams = selectedTeamIds.includes("All");
@@ -722,6 +738,12 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
             let combinedAmDetails = new Set();
             let combinedPmDetails = new Set();
 
+            // --- NEW: Collect all statuses for AM/PM, not just highest priority ---
+            let amStatusLabels = [];
+            let pmStatusLabels = [];
+            let amStatusClasses = [];
+            let pmStatusClasses = [];
+
             if (siteUser.roleInstances && siteUser.roleInstances.length > 0) {
                 siteUser.roleInstances.forEach(ri => {
                     const roleMatches = filterByAllRoles || selectedRoleIds.includes(ri.roleId);
@@ -729,49 +751,92 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
 
                     if (roleMatches && teamMatches && userDailySlotInfo.has(ri.id) && userDailySlotInfo.get(ri.id).has(dateKeyForLookup)) {
                         const dailyInfo = userDailySlotInfo.get(ri.id).get(dateKeyForLookup);
-
                         // AM Slot
+                        // Collect all that apply
                         if (dailyInfo.leaveTypes.size > 0) {
-                            amContent = Array.from(dailyInfo.leaveTypes).join(', ');
-                            amClass = 'leave-cell';
+                            amStatusLabels.push(Array.from(dailyInfo.leaveTypes).join(', '));
+                            amStatusClasses.push('leave-cell');
                             dailyInfo.leaveTypes.forEach(d => combinedAmDetails.add(d));
-                        } else if (dailyInfo.isUnavailableAM) {
-                            amContent = 'Unavail.';
-                            amClass = 'unavailable-cell';
+                        }
+                        if (dailyInfo.isUnavailableAM) {
+                            amStatusLabels.push('Unavail.');
+                            amStatusClasses.push('unavailable-cell');
                             dailyInfo.unavailableDetailsAM.forEach(d => combinedAmDetails.add(d));
-                        } else if (shouldShowUnallocated && dailyInfo.isUnallocatedAM) { // Modified this line
-                            amContent = 'Unalloc.';
-                            amClass = 'unallocated-cell'; // Green
+                        }
+                        if (dailyInfo.isAllocatedAM) {
+                            amStatusLabels.push('Alloc.');
+                            amStatusClasses.push('allocated-cell');
+                            if (dailyInfo.allocatedDetailsAM) dailyInfo.allocatedDetailsAM.forEach(d => combinedAmDetails.add(d));
+                        }
+                        if (shouldShowUnallocated && dailyInfo.isUnallocatedAM) {
+                            amStatusLabels.push('Unalloc.');
+                            amStatusClasses.push('unallocated-cell');
                             dailyInfo.unallocatedDetailsAM.forEach(d => combinedAmDetails.add(d));
                         }
-
                         // PM Slot
                         if (dailyInfo.leaveTypes.size > 0) {
-                            pmContent = Array.from(dailyInfo.leaveTypes).join(', ');
-                            pmClass = 'leave-cell';
+                            pmStatusLabels.push(Array.from(dailyInfo.leaveTypes).join(', '));
+                            pmStatusClasses.push('leave-cell');
                             dailyInfo.leaveTypes.forEach(d => combinedPmDetails.add(d));
-                        } else if (dailyInfo.isUnavailablePM) {
-                            pmContent = 'Unavail.';
-                            pmClass = 'unavailable-cell';
+                        }
+                        if (dailyInfo.isUnavailablePM) {
+                            pmStatusLabels.push('Unavail.');
+                            pmStatusClasses.push('unavailable-cell');
                             dailyInfo.unavailableDetailsPM.forEach(d => combinedPmDetails.add(d));
-                        } else if (shouldShowUnallocated && dailyInfo.isUnallocatedPM) { // Modified this line
-                            pmContent = 'Unalloc.';
-                            pmClass = 'unallocated-cell'; // Green
+                        }
+                        if (dailyInfo.isAllocatedPM) {
+                            pmStatusLabels.push('Alloc.');
+                            pmStatusClasses.push('allocated-cell');
+                            if (dailyInfo.allocatedDetailsPM) dailyInfo.allocatedDetailsPM.forEach(d => combinedPmDetails.add(d));
+                        }
+                        if (shouldShowUnallocated && dailyInfo.isUnallocatedPM) {
+                            pmStatusLabels.push('Unalloc.');
+                            pmStatusClasses.push('unallocated-cell');
                             dailyInfo.unallocatedDetailsPM.forEach(d => combinedPmDetails.add(d));
                         }
                     }
                 });
             }
-            
+
+            // Remove duplicates and preserve order for status labels and classes
+            function uniqueLabelsAndClasses(labels, classes) {
+                const seen = new Set();
+                const resultLabels = [];
+                const resultClasses = [];
+                for (let i = 0; i < labels.length; ++i) {
+                    const key = labels[i] + '|' + (classes[i] || '');
+                    if (!seen.has(key)) {
+                        seen.add(key);
+                        resultLabels.push(labels[i]);
+                        resultClasses.push(classes[i]);
+                    }
+                }
+                return { resultLabels, resultClasses };
+            }
+            const amUnique = uniqueLabelsAndClasses(amStatusLabels, amStatusClasses);
+            const pmUnique = uniqueLabelsAndClasses(pmStatusLabels, pmStatusClasses);
+
+            // Compose HTML for AM/PM cell with spans for each status
+            function composeStatusCellHtml(labels, classes) {
+                if (!labels.length) return '';
+                return labels.map((label, idx) => `<span class="${classes[idx]}">${label}</span>`).join(', ');
+            }
+            amContent = composeStatusCellHtml(amUnique.resultLabels, amUnique.resultClasses);
+            pmContent = composeStatusCellHtml(pmUnique.resultLabels, pmUnique.resultClasses);
+
+            // Set class for cell: if multiple, use 'multi-status-cell', else use the single status class or empty
+            amClass = amUnique.resultClasses.length > 1 ? 'multi-status-cell' : (amUnique.resultClasses[0] || 'empty-slot-cell');
+            pmClass = pmUnique.resultClasses.length > 1 ? 'multi-status-cell' : (pmUnique.resultClasses[0] || 'empty-slot-cell');
+
             amTitle = combinedAmDetails.size > 0 ? Array.from(combinedAmDetails).join('\n') : '';
             pmTitle = combinedPmDetails.size > 0 ? Array.from(combinedPmDetails).join('\n') : '';
 
-            const tdAM = createCell(amContent);
+            const tdAM = createCell(amContent, true);
             tdAM.className = amClass;
             if (amTitle) tdAM.title = amTitle;
             tr.appendChild(tdAM);
 
-            const tdPM = createCell(pmContent);
+            const tdPM = createCell(pmContent, true);
             tdPM.className = pmClass;
             if (pmTitle) tdPM.title = pmTitle;
             tr.appendChild(tdPM);
@@ -787,12 +852,12 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
 }
 
 function handleFilterChange() {
-    if (lastFetchedUsersData && lastFetchedLeavesData && lastFetchedUnallocatedData) {
+    if (lastFetchedUsersData && lastFetchedLeavesData && lastFetchedShiftTemplatesData) { // Added lastFetchedShiftTemplatesData
         const selectedRoleIds = getSelectedValues(roleFilterDropdown);
         const selectedTeamIds = getSelectedValues(teamFilterDropdown);
-        generateUsersTable(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedUnallocatedData, selectedRoleIds, selectedTeamIds);
+        generateUsersTable(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedShiftTemplatesData, selectedRoleIds, selectedTeamIds); // Added shiftTemplatesData
     } else {
-        statusElement.textContent = 'Please fetch/generate all required data first (Users, Leaves, Unallocated) to apply filters or change dates.';
+        statusElement.textContent = 'Please fetch/generate all required data first (Users, Leaves, Unallocated, Shift Templates) to apply filters or change dates.'; // Updated message
          statusElement.className = 'error';
     }
 }
@@ -871,13 +936,14 @@ function createCell(text, isHtml = false) {
 if (fetchLeavesButton) fetchLeavesButton.addEventListener('click', fetchLeavesDataAndDisplayJson);
 if (fetchUsersButton) fetchUsersButton.addEventListener('click', fetchUsersDataAndDisplayJson);
 if (fetchUnallocatedButton) fetchUnallocatedButton.addEventListener('click', fetchUnallocatedDataAndDisplayJson);
+if (fetchShiftTemplatesButton) fetchShiftTemplatesButton.addEventListener('click', fetchShiftTemplatesDataAndDisplayJson); // Added this line
 if (generateUsersTableButton) generateUsersTableButton.addEventListener('click', triggerGenerateUsersTable);
 
 if (useLocalFileCheckbox) useLocalFileCheckbox.addEventListener('change', updateButtonTexts);
 if (roleFilterDropdown) roleFilterDropdown.addEventListener('change', handleFilterChange);
 if (teamFilterDropdown) teamFilterDropdown.addEventListener('change', handleFilterChange);
 if (rosterGroupFilterDropdown) rosterGroupFilterDropdown.addEventListener('change', handleFilterChange);
-if (showUnallocatedCheckbox) showUnallocatedCheckbox.addEventListener('change', handleFilterChange); // Added this line
+// if (showUnallocatedCheckbox) showUnallocatedCheckbox.addEventListener('change', handleFilterChange); // Removed this line
 if (fromDateInput) fromDateInput.addEventListener('change', handleFilterChange);
 if (toDateInput) toDateInput.addEventListener('change', handleFilterChange);
 
@@ -889,4 +955,12 @@ if (toDateInput) toDateInput.valueAsDate = oneWeekFromToday;
 
 updateButtonTexts();
 populateRosterGroupFilterDropdown();
+
+// Remove/hide unallocated controls from UI
+if (fetchUnallocatedButton) fetchUnallocatedButton.style.display = 'none';
+if (showUnallocatedCheckbox) showUnallocatedCheckbox.parentElement.style.display = 'none';
+// Also hide the button in the controls group in the HTML if present
+const unallocatedButtonControlGroup = document.getElementById('unallocatedButtonControlGroup');
+if (unallocatedButtonControlGroup) unallocatedButtonControlGroup.style.display = 'none';
+
 });
