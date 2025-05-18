@@ -276,7 +276,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Main table generation function, refactored for stricter filtering and slotting
     function generateUsersTable(usersData, leavesData, shiftTemplatesData, selectedRoleIds, selectedTeamIds) {
         usersTableContainer.innerHTML = '';
-
         if (!usersData?.siteUsers?.length) { usersTableContainer.innerHTML = '<p class="error">No siteUsers data.</p>'; return; }
         if (leavesData && !leavesData.leaves && !Array.isArray(leavesData.leaveTypes)) {
              usersTableContainer.innerHTML = '<p class="error">Leave data structure invalid.</p>'; return;
@@ -286,8 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const shouldShowUnallocated = showUnallocatedCheckbox.checked;
-        const shouldShowAllocated = showAllocatedCheckbox.checked; // NEW
-        const selectedRosterGroupIdFromDropdown = rosterGroupFilterDropdown.value; // This will be the ID of the selected group
+        const shouldShowAllocated = showAllocatedCheckbox.checked;
+        const selectedRosterGroupIdFromDropdown = rosterGroupFilterDropdown.value;
 
         const fromDateStr = fromDateInput.value;
         const toDateStr = toDateInput.value;
@@ -325,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return userDateMap.get(dateKey);
         }
 
-        // 1. Process Leaves (same as before)
+        // 1. Process Leaves
         (leavesData.leaves || []).forEach(leave => {
             const leaveStart = new Date(leave.start.includes('T') ? leave.start : leave.start + 'T00:00:00Z');
             const leaveEnd = new Date(leave.end.includes('T') ? leave.end : leave.end + 'T23:59:59Z');
@@ -342,29 +341,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-
         // 2. Process Shift Templates
-        const amSlotStartMinutes = 7 * 60 + 30; // 7:30 AM
-        const amSlotEndMinutes = 12 * 60 + 30; // 12:30 PM
-        const pmSlotStartMinutes = 13 * 60;    // 1:00 PM
-        const pmSlotEndMinutes = 17 * 60 + 30; // 5:30 PM
+        const amSlotStartMinutes = 7 * 60 + 30;
+        const amSlotEndMinutes = 12 * 60 + 30;
+        const pmSlotStartMinutes = 13 * 60;
+        const pmSlotEndMinutes = 17 * 60 + 30;
 
         (shiftTemplatesData.userShiftTemplates || []).forEach(template => {
             if (EXCLUDED_ROSTER_GROUP_IDS.includes(template.rosterGroupId)) {
-                return; // Hard exclude
+                return;
             }
-
-            // Filter by the single selected Roster Group from the dropdown.
-            // Since "All" is removed, selectedRosterGroupIdFromDropdown will always be a specific ID.
             if (template.rosterGroupId !== selectedRosterGroupIdFromDropdown) {
-                return; 
+                return;
             }
-
             dateRange.forEach(currentDayInDateRange => {
                 const dateKey = normalizeDate(currentDayInDateRange);
                 if (templateAppliesToDate(template, dateKey, dateRange)) {
                     const entry = getOrCreateDailySlotEntry(template.roleInstanceId, dateKey);
-                    // ... (time calculation logic for effectiveStart/EndTotalMinutes - same as before)
                     let itemStartHour = template.startTime.hour;
                     let itemStartMinute = template.startTime.minute;
                     let itemEndHour = template.endTime.hour;
@@ -396,8 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-
-        // 3. Filter and Sort Users (same as before)
+        // 3. Filter and Sort Users
         const filterByAllRoles = selectedRoleIds.includes("All");
         const filterByAllTeams = selectedTeamIds.includes("All");
         const filteredSiteUsers = (usersData.siteUsers || []).filter(siteUser => {
@@ -427,43 +419,84 @@ document.addEventListener('DOMContentLoaded', () => {
             statusElement.className = '';
             return;
         }
-        // 4. Calculate Daily Tallies
-         const dailyTallies = {};
+
+        // 4. Calculate Daily Tallies (MODIFIED for correct "Available" count)
+        const dailyTallies = {};
         dateRange.forEach(tableDay => {
             const dateKey = normalizeDate(tableDay);
             dailyTallies[dateKey] = {
-                amLeave: new Set(), amUnavailable: new Set(),
-                pmLeave: new Set(), pmUnavailable: new Set()
+                amLeave: new Set(), amUnavailable: new Set(), amAvailable: new Set(),
+                pmLeave: new Set(), pmUnavailable: new Set(), pmAvailable: new Set()
             };
+
             filteredSiteUsers.forEach(siteUser => {
-                let userIsOnLeaveAMForTally = false;
-                let userIsOnLeavePMForTally = false;
-                let userIsUnavailableAMForTally = false;
-                let userIsUnavailablePMForTally = false;
+                let userIsOnLeaveAM = false;
+                let userIsOnLeavePM = false;
+                let userIsUnavailableAM = false;
+                let userIsUnavailablePM = false;
+                let userWouldBeAllocatedAM = false;
+                let userWouldBeAllocatedPM = false;
+                let userWouldBeUnallocatedAM = false;
+                let userWouldBeUnallocatedPM = false;
+
                 (siteUser.roleInstances || []).forEach(ri => {
                     const roleInstanceMatchesRoleFilter = filterByAllRoles || selectedRoleIds.includes(ri.roleId);
                     const roleInstanceMatchesTeamFilter = filterByAllTeams || (ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId)));
+
                     if (roleInstanceMatchesRoleFilter && roleInstanceMatchesTeamFilter) {
                         if (userDailySlotInfo.has(ri.id) && userDailySlotInfo.get(ri.id).has(dateKey)) {
                             const dailyInfo = userDailySlotInfo.get(ri.id).get(dateKey);
+
                             if (dailyInfo.leaveTypes.size > 0) {
-                                userIsOnLeaveAMForTally = true;
-                                userIsOnLeavePMForTally = true;
+                                userIsOnLeaveAM = true;
+                                userIsOnLeavePM = true;
                             } else {
-                                if (dailyInfo.amStatuses.some(s => s.type === 'unavailable' && s.rosterGroupId === selectedRosterGroupIdFromDropdown)) userIsUnavailableAMForTally = true;
-                                if (dailyInfo.pmStatuses.some(s => s.type === 'unavailable' && s.rosterGroupId === selectedRosterGroupIdFromDropdown)) userIsUnavailablePMForTally = true;
+                                dailyInfo.amStatuses.forEach(status => {
+                                    if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
+                                        if (status.type === 'unavailable') userIsUnavailableAM = true;
+                                        if (status.type === 'allocated') userWouldBeAllocatedAM = true;
+                                        if (status.type === 'unallocated') userWouldBeUnallocatedAM = true;
+                                    }
+                                });
+                                dailyInfo.pmStatuses.forEach(status => {
+                                    if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
+                                        if (status.type === 'unavailable') userIsUnavailablePM = true;
+                                        if (status.type === 'allocated') userWouldBeAllocatedPM = true;
+                                        if (status.type === 'unallocated') userWouldBeUnallocatedPM = true;
+                                    }
+                                });
                             }
                         }
                     }
                 });
-                if (userIsOnLeaveAMForTally) dailyTallies[dateKey].amLeave.add(siteUser.id);
-                else if (userIsUnavailableAMForTally) dailyTallies[dateKey].amUnavailable.add(siteUser.id);
 
-                if (userIsOnLeavePMForTally) dailyTallies[dateKey].pmLeave.add(siteUser.id);
-                else if (userIsUnavailablePMForTally) dailyTallies[dateKey].pmUnavailable.add(siteUser.id);
+                // AM Slot Tallying
+                if (userIsOnLeaveAM) {
+                    dailyTallies[dateKey].amLeave.add(siteUser.id);
+                } else if (userIsUnavailableAM) {
+                    dailyTallies[dateKey].amUnavailable.add(siteUser.id);
+                } else {
+                    const isVisiblyAllocatedAM = userWouldBeAllocatedAM && shouldShowAllocated;
+                    const isVisiblyUnallocatedAM = userWouldBeUnallocatedAM && shouldShowUnallocated;
+                    if (isVisiblyAllocatedAM || isVisiblyUnallocatedAM) {
+                        dailyTallies[dateKey].amAvailable.add(siteUser.id);
+                    }
+                }
+
+                // PM Slot Tallying
+                if (userIsOnLeavePM) {
+                    dailyTallies[dateKey].pmLeave.add(siteUser.id);
+                } else if (userIsUnavailablePM) {
+                    dailyTallies[dateKey].pmUnavailable.add(siteUser.id);
+                } else {
+                    const isVisiblyAllocatedPM = userWouldBeAllocatedPM && shouldShowAllocated;
+                    const isVisiblyUnallocatedPM = userWouldBeUnallocatedPM && shouldShowUnallocated;
+                    if (isVisiblyAllocatedPM || isVisiblyUnallocatedPM) {
+                        dailyTallies[dateKey].pmAvailable.add(siteUser.id);
+                    }
+                }
             });
         });
-
 
         // 5. Build Table HTML
         const table = document.createElement('table');
@@ -471,37 +504,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const tbody = document.createElement('tbody');
         const baseHeaders = ['Last Name', 'First Name', 'Role & Teams'];
 
-        // Tally Header Row
+        // Tally Header Row (MODIFIED to use amAvailable.size)
         const tallyHeaderRow = document.createElement('tr');
         tallyHeaderRow.className = 'tally-header-row';
         baseHeaders.forEach(() => {
             const th = document.createElement('th');
-            th.className = 'tally-spacer-cell'; // To align with main headers
+            th.className = 'tally-spacer-cell';
             tallyHeaderRow.appendChild(th);
         });
         dateRange.forEach(date => {
             const dateKey = normalizeDate(date);
             const talliesForDay = dailyTallies[dateKey];
+
             const thAM = document.createElement('th');
             thAM.className = 'tally-data-cell';
-            thAM.textContent = `L:${talliesForDay.amLeave.size} U:${talliesForDay.amUnavailable.size}`;
+            thAM.textContent = `L:${talliesForDay.amLeave.size} U:${talliesForDay.amUnavailable.size} A:${talliesForDay.amAvailable.size}`;
             tallyHeaderRow.appendChild(thAM);
+
             const thPM = document.createElement('th');
             thPM.className = 'tally-data-cell';
-            thPM.textContent = `L:${talliesForDay.pmLeave.size} U:${talliesForDay.pmUnavailable.size}`;
+            thPM.textContent = `L:${talliesForDay.pmLeave.size} U:${talliesForDay.pmUnavailable.size} A:${talliesForDay.pmAvailable.size}`;
             tallyHeaderRow.appendChild(thPM);
         });
         thead.appendChild(tallyHeaderRow);
 
         // Main Header Rows
         const headerRow1 = document.createElement('tr');
-        baseHeaders.forEach(headerText => {
-            const th = document.createElement('th');
-            th.rowSpan = 2; th.textContent = headerText; headerRow1.appendChild(th);
-        });
+        baseHeaders.forEach(headerText => { const th = document.createElement('th'); th.rowSpan = 2; th.textContent = headerText; headerRow1.appendChild(th); });
         dateRange.forEach(date => {
-            const th = document.createElement('th');
-            th.colSpan = 2; th.className = 'date-header';
+            const th = document.createElement('th'); th.colSpan = 2; th.className = 'date-header';
             th.textContent = `${getDayOfWeek(date)} ${date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`;
             headerRow1.appendChild(th);
         });
@@ -518,7 +549,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Table Body Rows
         filteredSiteUsers.forEach(siteUser => {
             const tr = document.createElement('tr');
-            // ... (user profile cells and roleInstancesHtmlContent - same as before) ...
             const profile = siteUser.siteUserProfile || {};
             tr.appendChild(createCell(profile.lastName || 'N/A'));
             tr.appendChild(createCell(profile.firstName || 'N/A'));
@@ -541,12 +571,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             tr.appendChild(createCell(roleInstancesHtmlContent, true));
 
-
             dateRange.forEach(tableDay => {
                 const dateKeyForLookup = normalizeDate(tableDay);
-                let amCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 5 }; // 5 for empty
+                let amCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 5 };
                 let pmCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 5 };
-                
                 let combinedAmDetailsSet = new Set();
                 let combinedPmDetailsSet = new Set();
                 let amDisplayStatuses = [];
@@ -562,13 +590,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if (dailyInfo.leaveTypes.size > 0) {
                             const leaveText = Array.from(dailyInfo.leaveTypes).join(', ');
-                            // SortKey: 0:Leave, 1:Unavail, 2:Alloc, 3:Unalloc
                             amDisplayStatuses.push({ label: leaveText, class: 'leave-cell', sortKey: 0, details: leaveText });
                             pmDisplayStatuses.push({ label: leaveText, class: 'leave-cell', sortKey: 0, details: leaveText });
                         } else {
                             dailyInfo.amStatuses.forEach(status => {
-                                // Check if status's RG matches current dropdown selection (it should, due to earlier filtering)
-                                if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
+                                if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) { // Redundant check, but safe
                                     if (status.type === 'unavailable') {
                                         amDisplayStatuses.push({ label: 'Unavail.', class: 'unavailable-cell', sortKey: 1, details: status.details, rosterGroupId: status.rosterGroupId });
                                     } else if (status.type === 'allocated' && shouldShowAllocated) { // Check showAllocatedCheckbox
@@ -579,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }
                             });
                             dailyInfo.pmStatuses.forEach(status => {
-                                if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
+                                 if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) { // Redundant check
                                     if (status.type === 'unavailable') {
                                         pmDisplayStatuses.push({ label: 'Unavail.', class: 'unavailable-cell', sortKey: 1, details: status.details, rosterGroupId: status.rosterGroupId });
                                     } else if (status.type === 'allocated' && shouldShowAllocated) { // Check showAllocatedCheckbox
@@ -593,20 +619,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
 
+                // ... (getUniqueDisplayStatuses and cell content consolidation - same) ...
                 function getUniqueDisplayStatuses(statuses) {
-                    const unique = [];
-                    const seen = new Set();
+                    const unique = []; const seen = new Set();
                     statuses.forEach(s => {
-                        const key = `${s.label}|${s.class}|${s.rosterGroupId || ''}`;
-                        if (!seen.has(key)) {
-                            seen.add(key);
-                            unique.push(s);
-                        }
+                        const key = `${s.label}|${s.class}|${s.rosterGroupId || ''}`; // Make key more specific if needed
+                        if (!seen.has(key)) { seen.add(key); unique.push(s); }
                     });
                     return unique;
                 }
                 amDisplayStatuses = getUniqueDisplayStatuses(amDisplayStatuses);
                 pmDisplayStatuses = getUniqueDisplayStatuses(pmDisplayStatuses);
+
                 if (amDisplayStatuses.length > 0) {
                     amDisplayStatuses.sort((a,b) => a.sortKey - b.sortKey);
                     amCellData.content = amDisplayStatuses.map(s => `<span class="${s.class}">${s.label}</span>`).join(', ');
@@ -622,15 +646,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     pmCellData.title = Array.from(combinedPmDetailsSet).join('\n');
                 }
                 
-                const tdAM = createCell(amCellData.content, true);
-                tdAM.className = amCellData.class;
-                if (amCellData.title) tdAM.title = amCellData.title;
-                tr.appendChild(tdAM);
+                const tdAM = createCell(amCellData.content, true); tdAM.className = amCellData.class; if (amCellData.title) tdAM.title = amCellData.title; tr.appendChild(tdAM);
+                const tdPM = createCell(pmCellData.content, true); tdPM.className = pmCellData.class; if (pmCellData.title) tdPM.title = pmCellData.title; tr.appendChild(tdPM);
 
-                const tdPM = createCell(pmCellData.content, true);
-                tdPM.className = pmCellData.class;
-                if (pmCellData.title) tdPM.title = pmCellData.title;
-                tr.appendChild(tdPM);
             });
             tbody.appendChild(tr);
         });
