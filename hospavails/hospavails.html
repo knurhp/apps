@@ -142,7 +142,7 @@
             top: 0;
         }
         #usersTableContainer thead tr:nth-child(2) th {
-            top: 36px; /* Adjust this value to match the height of your first header row */
+            top: 35px; /* Adjust this value to match the height of your first header row */
             z-index: 2;
         }
         #usersTableContainer th, #usersTableContainer td {
@@ -178,6 +178,9 @@
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
+        }
+        #usersTableContainer td:nth-child(3) span { /* Target spans within the third column */
+            white-space: nowrap;
         }
         .date-filters-group {
             margin-bottom: 20px;
@@ -223,21 +226,21 @@
     </div>
 
     <div class="controls-group">
-        <button id="fetchLeavesButton">Fetch Leaves Data (JSON)</button>
-        <button id="fetchUsersButton">Fetch Users Data (JSON)</button>
-        <button id="fetchUnallocatedButton">Fetch Unallocated (JSON)</button> <!-- New Button -->
+        <button id="fetchLeavesButton">Fetch Leaves Data</button>
+        <button id="fetchUsersButton">Fetch Users Data</button>
+        <button id="fetchUnallocatedButton">Fetch Unallocated</button> <!-- New Button -->
         <button id="generateUsersTableButton" class="secondary">Generate/Update Users Table</button>
     </div>
 
     <div class="filters-group">
         <div class="filter-item">
-            <label for="roleFilter">Filter Table by Role(s) (Ctrl/Cmd-click for multiple):</label>
+            <label for="roleFilter">Filter by Role(s):</label>
             <select id="roleFilter" multiple>
                 <option value="All">All Roles</option>
             </select>
         </div>
         <div class="filter-item">
-            <label for="teamFilter">Filter Table by Team(s) (Ctrl/Cmd-click for multiple):</label>
+            <label for="teamFilter">Filter by Team(s):</label>
             <select id="teamFilter" multiple>
                 <option value="All">All Teams</option>
             </select>
@@ -246,11 +249,11 @@
 
     <div class="date-filters-group">
         <div class="filter-item">
-            <label for="fromDate">From Date (for Table & Unallocated API):</label>
+            <label for="fromDate">From Date:</label>
             <input type="date" id="fromDate">
         </div>
         <div class="filter-item">
-            <label for="toDate">To Date (for Table & Unallocated API):</label>
+            <label for="toDate">To Date:</label>
             <input type="date" id="toDate">
         </div>
     </div>
@@ -267,6 +270,12 @@
 
     <div id="status">Enter token (if not using local files) and click a button.</div>
     <pre id="jsonData"></pre>
+
+    <div class="input-group">
+        <input type="checkbox" id="showUnallocatedCheckbox">
+        <label for="showUnallocatedCheckbox" style="display: inline; font-weight: normal;">Show Unalloc.</label>
+    </div>
+
     <div id="usersTableContainer"></div>
 
     <script src="hospavails.js"></script>

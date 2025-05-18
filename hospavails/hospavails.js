@@ -13,6 +13,7 @@ const usersTableContainer = document.getElementById('usersTableContainer');
 const roleFilterDropdown = document.getElementById('roleFilter');
 const teamFilterDropdown = document.getElementById('teamFilter');
 const rosterGroupFilterDropdown = document.getElementById('rosterGroupFilter'); // RESTORED
+const showUnallocatedCheckbox = document.getElementById('showUnallocatedCheckbox'); // Added this line
 
 const fromDateInput = document.getElementById('fromDate');
 const toDateInput = document.getElementById('toDate');
@@ -44,13 +45,13 @@ const ROSTER_GROUPS_CONFIG = [
 function updateButtonTexts() {
     const useLocal = useLocalFileCheckbox.checked;
     if (fetchLeavesButton) {
-        fetchLeavesButton.textContent = useLocal ? `Fetch Leaves from ${LEAVES_LOCAL_FILE_PATH} (JSON)` : 'Fetch Leaves from API (JSON)';
+        fetchLeavesButton.textContent = useLocal ? `Leaves from ${LEAVES_LOCAL_FILE_PATH}` : 'Leaves from API';
     }
     if (fetchUsersButton) {
-        fetchUsersButton.textContent = useLocal ? `Fetch Users from ${USERS_LOCAL_FILE_PATH} (JSON)` : 'Fetch Users from API (JSON)';
+        fetchUsersButton.textContent = useLocal ? `Users from ${USERS_LOCAL_FILE_PATH}` : 'Users from API';
     }
     if (fetchUnallocatedButton) {
-        fetchUnallocatedButton.textContent = useLocal ? `Fetch Unallocated from ${UNALLOCATED_LOCAL_FILE_PATH} (JSON)` : 'Fetch Unallocated from API (Combined)';
+        fetchUnallocatedButton.textContent = useLocal ? `Unallocated from ${UNALLOCATED_LOCAL_FILE_PATH}` : 'Unallocated from API';
     }
     if (generateUsersTableButton) {
         generateUsersTableButton.textContent = useLocal ? `Table from Local Files` : 'Table from API Data';
@@ -405,6 +406,8 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
     if (!usersData?.siteUsers?.length) { usersTableContainer.innerHTML = '<p class="error">No siteUsers data.</p>'; return; }
     if (!leavesData?.leaves) { usersTableContainer.innerHTML = '<p class="error">Leave data missing/invalid.</p>'; return; }
     
+    const shouldShowUnallocated = showUnallocatedCheckbox.checked; // Added this line
+
     const selectedRosterGroupId = rosterGroupFilterDropdown.value;
 
     // Filter unallocatedApiData arrays based on selectedRosterGroupId
@@ -541,9 +544,23 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
         return matchesRole && matchesTeam;
     });
 
+    // Sort by Last Name
+    filteredSiteUsers.sort((a, b) => {
+        const lastNameA = (a.siteUserProfile?.lastName || '').toLowerCase();
+        const lastNameB = (b.siteUserProfile?.lastName || '').toLowerCase();
+        if (lastNameA < lastNameB) return -1;
+        if (lastNameA > lastNameB) return 1;
+        // If last names are the same, sort by first name
+        const firstNameA = (a.siteUserProfile?.firstName || '').toLowerCase();
+        const firstNameB = (b.siteUserProfile?.firstName || '').toLowerCase();
+        if (firstNameA < firstNameB) return -1;
+        if (firstNameA > firstNameB) return 1;
+        return 0;
+    });
+
     if (filteredSiteUsers.length === 0) {
         usersTableContainer.innerHTML = '<p>No users match the current filter criteria.</p>';
-        statusElement.textContent = `Users table generated with 0 matching entries.`;
+        statusElement.textContent = `Users table generated with 0 matching entries. Roster Group: ${selectedRosterGroupName}. Date range: ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}`;
         statusElement.className = '';
         return;
     }
@@ -551,7 +568,7 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
     const table = document.createElement('table');
     const thead = document.createElement('thead');
     const tbody = document.createElement('tbody');
-    const baseHeaders = ['First Name', 'Last Name', 'Role & Teams']; // Removed 'Site User ID' from visible headers
+    const baseHeaders = ['Last Name', 'First Name', 'Role & Teams']; // Reordered headers
     const headerRow1 = document.createElement('tr');
     baseHeaders.forEach(headerText => {
         const th = document.createElement('th');
@@ -586,8 +603,8 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
     filteredSiteUsers.forEach(siteUser => {
         const tr = document.createElement('tr');
         const profile = siteUser.siteUserProfile || {};
-        tr.appendChild(createCell(profile.firstName || 'N/A'));
-        tr.appendChild(createCell(profile.lastName || 'N/A'));
+        tr.appendChild(createCell(profile.lastName || 'N/A')); // Last Name first
+        tr.appendChild(createCell(profile.firstName || 'N/A')); // First Name second
         // tr.appendChild(createCell(siteUser.id || 'N/A')); // HIDE Site User ID from table
 
         let roleInstancesHtmlContent = '';
@@ -597,37 +614,34 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
             );
 
             if (visibleRoleInstances.length > 0) {
-                roleInstancesHtmlContent = '<ul>';
+                const roleInstanceDetails = []; // Array to hold "RoleName: TeamName" strings
                 visibleRoleInstances.forEach(ri => {
                     const roleName = rolesMap.get(ri.roleId) || `RoleID: ${ri.roleId}`;
-                    let teamsDisplayHtml = 'No relevant teams';
 
                     if (ri.roleInstanceTeams && ri.roleInstanceTeams.length > 0) {
-                        const relevantTeamsForThisRI = ri.roleInstanceTeams
+                        const teamNames = ri.roleInstanceTeams
                             .filter(rit => filterByAllTeams || selectedTeamIds.includes(rit.teamId))
-                            .map(rit => {
-                                const teamName = teamsMap.get(rit.teamId) || `TeamID: ${rit.teamId}`;
-                                return teamName;
-                            });
+                            .map(rit => teamsMap.get(rit.teamId) || `TeamID: ${rit.teamId}`);
 
-                        if (relevantTeamsForThisRI.length > 0) {
-                            teamsDisplayHtml = relevantTeamsForThisRI.join('; ');
-                        } else if (!filterByAllTeams) {
-                            teamsDisplayHtml = 'No teams match filter for this instance.';
+                        if (teamNames.length > 0) {
+                            teamNames.forEach(teamName => {
+                                roleInstanceDetails.push(`<span>${roleName}: ${teamName}</span>`);
+                            });
                         } else {
-                            teamsDisplayHtml = 'No teams assigned to this instance.';
+                            // Original teams existed, but filter removed them all.
+                            roleInstanceDetails.push(`<span>${roleName}: (No teams match filter)</span>`);
                         }
+                    } else {
+                        // No teams assigned to this role instance originally.
+                        roleInstanceDetails.push(`<span>${roleName}: (No teams)</span>`);
                     }
-                    // HIDE Role Inst. ID from visible table, but keep logic for processing
-                    roleInstancesHtmlContent += `<li><b>Role:</b> ${roleName}<br>
-                                                      <b>Teams:</b> ${teamsDisplayHtml}</li>`;
                 });
-                roleInstancesHtmlContent += '</ul>';
+                roleInstancesHtmlContent = roleInstanceDetails.join('<br>'); // Join multiple role instances with <br> for new lines
             } else {
                 roleInstancesHtmlContent = 'No role instances match current role filter.';
             }
         } else {
-            roleInstancesHtmlContent = 'No role instances';
+            roleInstancesHtmlContent = 'No role ID';
         }
         tr.appendChild(createCell(roleInstancesHtmlContent, true));
 
@@ -657,7 +671,7 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
                             amContent = 'Unavail.';
                             amClass = 'unavailable-cell';
                             dailyInfo.unavailableDetailsAM.forEach(d => combinedAmDetails.add(d));
-                        } else if (dailyInfo.isUnallocatedAM) {
+                        } else if (shouldShowUnallocated && dailyInfo.isUnallocatedAM) { // Modified this line
                             amContent = 'Unalloc.';
                             amClass = 'unallocated-cell'; // Green
                             dailyInfo.unallocatedDetailsAM.forEach(d => combinedAmDetails.add(d));
@@ -672,7 +686,7 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
                             pmContent = 'Unavail.';
                             pmClass = 'unavailable-cell';
                             dailyInfo.unavailableDetailsPM.forEach(d => combinedPmDetails.add(d));
-                        } else if (dailyInfo.isUnallocatedPM) {
+                        } else if (shouldShowUnallocated && dailyInfo.isUnallocatedPM) { // Modified this line
                             pmContent = 'Unalloc.';
                             pmClass = 'unallocated-cell'; // Green
                             dailyInfo.unallocatedDetailsPM.forEach(d => combinedPmDetails.add(d));
@@ -779,6 +793,7 @@ if (useLocalFileCheckbox) useLocalFileCheckbox.addEventListener('change', update
 if (roleFilterDropdown) roleFilterDropdown.addEventListener('change', handleFilterChange);
 if (teamFilterDropdown) teamFilterDropdown.addEventListener('change', handleFilterChange);
 if (rosterGroupFilterDropdown) rosterGroupFilterDropdown.addEventListener('change', handleFilterChange);
+if (showUnallocatedCheckbox) showUnallocatedCheckbox.addEventListener('change', handleFilterChange); // Added this line
 if (fromDateInput) fromDateInput.addEventListener('change', handleFilterChange);
 if (toDateInput) toDateInput.addEventListener('change', handleFilterChange);
 
