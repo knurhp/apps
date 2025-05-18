@@ -136,14 +136,22 @@
             background-color: #3498db;
             color: white;
             position: sticky;
-            z-index: 1;
+            z-index: 1; /* Default z-index for th */
         }
-        #usersTableContainer thead tr:first-child th {
+        /* Tally Header Row - 1st row */
+        #usersTableContainer thead tr.tally-header-row th {
             top: 0;
+            z-index: 3; /* Highest z-index */
         }
-        #usersTableContainer thead tr:nth-child(2) th {
-            top: 35px; /* Adjust this value to match the height of your first header row */
+        /* Date Header Row - 2nd row */
+        #usersTableContainer thead tr:nth-child(2) th { /* This is now headerRow1 (Dates) */
+            top: 35px; /* Adjust this value to match the height of your tally-header-row */
             z-index: 2;
+        }
+        /* AM/PM Sub-Header Row - 3rd row */
+        #usersTableContainer thead tr:nth-child(3) th { /* This is now headerRow2 (AM/PM) */
+            top: 70px; /* Adjust this value to match the combined height of the first two header rows */
+            z-index: 1; /* Can be same as default or lower than row above */
         }
         #usersTableContainer th, #usersTableContainer td {
             border: 1px solid #ddd;
@@ -213,7 +221,7 @@
     </style>
 </head>
 <body>
-    <h1>FosPortal Data Viewer</h1>
+    <h1>FosPortal Data Viewer v0.1</h1>
 
     <div class="input-group">
         <label for="bearerTokenInput">Bearer Token:</label>
@@ -245,6 +253,11 @@
                 <option value="All">All Teams</option>
             </select>
         </div>
+        <div class="filter-item">
+            <label for="rosterGroupFilter">Filter by Roster Group:</label>
+            <select id="rosterGroupFilter">
+            </select>
+        </div>
     </div>
 
     <div class="date-filters-group">
@@ -255,16 +268,6 @@
         <div class="filter-item">
             <label for="toDate">To Date:</label>
             <input type="date" id="toDate">
-        </div>
-    </div>
-
-    <!-- Roster Group Filter for filtering displayed data -->
-    <div class="roster-group-filter-container">
-        <div class="filter-item">
-            <label for="rosterGroupFilter">Filter Table by Roster Group:</label>
-            <select id="rosterGroupFilter">
-                <!-- Options will be populated by JS -->
-            </select>
         </div>
     </div>
 

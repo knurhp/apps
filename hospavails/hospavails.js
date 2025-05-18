@@ -406,7 +406,7 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
     if (!usersData?.siteUsers?.length) { usersTableContainer.innerHTML = '<p class="error">No siteUsers data.</p>'; return; }
     if (!leavesData?.leaves) { usersTableContainer.innerHTML = '<p class="error">Leave data missing/invalid.</p>'; return; }
     
-    const shouldShowUnallocated = showUnallocatedCheckbox.checked; // Added this line
+    const shouldShowUnallocated = showUnallocatedCheckbox.checked;
 
     const selectedRosterGroupId = rosterGroupFilterDropdown.value;
 
@@ -419,7 +419,6 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
         currentUnavailableShifts = currentUnavailableShifts.filter(entry => entry.rosterGroupId === selectedRosterGroupId);
     }
     
-    // Check if the base unallocatedApiData structure is valid, even if filtered arrays are empty
     if (!unallocatedApiData || (typeof unallocatedApiData.unallocatedUsers === 'undefined' && typeof unallocatedApiData.unavailableUsers === 'undefined')) {
          usersTableContainer.innerHTML = `<p class="error">Unallocated/Unavailable data structure missing or invalid.</p>`;
          return;
@@ -440,7 +439,6 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
         currentDateIter.setUTCDate(currentDateIter.getUTCDate() + 1);
     }
 
-    // Consolidated daily info map
     const userDailySlotInfo = new Map();
 
     function getOrCreateDailySlotEntry(roleInstanceId, dateKey) {
@@ -565,10 +563,80 @@ function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedR
         return;
     }
 
+    // --- START: Calculate Daily Tallies ---
+    const dailyTallies = {};
+    dateRange.forEach(tableDay => {
+        const dateKey = normalizeDate(tableDay);
+        dailyTallies[dateKey] = {
+            amLeave: new Set(), amUnavailable: new Set(),
+            pmLeave: new Set(), pmUnavailable: new Set()
+        };
+
+        filteredSiteUsers.forEach(siteUser => {
+            let userIsOnLeaveAM = false;
+            let userIsOnLeavePM = false;
+            let userIsUnavailableAM = false;
+            let userIsUnavailablePM = false;
+
+            (siteUser.roleInstances || []).forEach(ri => {
+                // Ensure this RI itself matches the role/team filters for tallying
+                const roleInstanceMatchesRoleFilter = filterByAllRoles || selectedRoleIds.includes(ri.roleId);
+                const roleInstanceMatchesTeamFilter = filterByAllTeams || (ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId)));
+
+                if (roleInstanceMatchesRoleFilter && roleInstanceMatchesTeamFilter) {
+                    if (userDailySlotInfo.has(ri.id) && userDailySlotInfo.get(ri.id).has(dateKey)) {
+                        const dailyInfo = userDailySlotInfo.get(ri.id).get(dateKey);
+
+                        if (dailyInfo.leaveTypes.size > 0) {
+                            userIsOnLeaveAM = true;
+                            userIsOnLeavePM = true; // Leave applies to whole day for tally
+                        } else { // Only consider unavailability if not on leave via this RI
+                            if (dailyInfo.isUnavailableAM) userIsUnavailableAM = true;
+                            if (dailyInfo.isUnavailablePM) userIsUnavailablePM = true;
+                        }
+                    }
+                }
+            });
+
+            if (userIsOnLeaveAM) dailyTallies[dateKey].amLeave.add(siteUser.id);
+            else if (userIsUnavailableAM) dailyTallies[dateKey].amUnavailable.add(siteUser.id);
+
+            if (userIsOnLeavePM) dailyTallies[dateKey].pmLeave.add(siteUser.id);
+            else if (userIsUnavailablePM) dailyTallies[dateKey].pmUnavailable.add(siteUser.id);
+        });
+    });
+    // --- END: Calculate Daily Tallies ---
+
     const table = document.createElement('table');
     const thead = document.createElement('thead');
     const tbody = document.createElement('tbody');
-    const baseHeaders = ['Last Name', 'First Name', 'Role & Teams']; // Reordered headers
+    const baseHeaders = ['Last Name', 'First Name', 'Role & Teams'];
+
+    // --- START: Create Tally Header Row ---
+    const tallyHeaderRow = document.createElement('tr');
+    tallyHeaderRow.className = 'tally-header-row';
+    baseHeaders.forEach(() => { // Add spacer cells for base headers
+        const th = document.createElement('th');
+        th.className = 'tally-spacer-cell';
+        tallyHeaderRow.appendChild(th);
+    });
+    dateRange.forEach(date => {
+        const dateKey = normalizeDate(date);
+        const talliesForDay = dailyTallies[dateKey];
+
+        const thAM = document.createElement('th');
+        thAM.className = 'tally-data-cell';
+        thAM.textContent = `L:${talliesForDay.amLeave.size} U:${talliesForDay.amUnavailable.size}`;
+        tallyHeaderRow.appendChild(thAM);
+
+        const thPM = document.createElement('th');
+        thPM.className = 'tally-data-cell';
+        thPM.textContent = `L:${talliesForDay.pmLeave.size} U:${talliesForDay.pmUnavailable.size}`;
+        tallyHeaderRow.appendChild(thPM);
+    });
+    thead.appendChild(tallyHeaderRow); // Add tally row first
+    // --- END: Create Tally Header Row ---
+
     const headerRow1 = document.createElement('tr');
     baseHeaders.forEach(headerText => {
         const th = document.createElement('th');
@@ -765,13 +833,29 @@ function populateFilterDropdowns(data) {
 
 function populateRosterGroupFilterDropdown() {
     if (!rosterGroupFilterDropdown) return;
-    rosterGroupFilterDropdown.innerHTML = '<option value="All">All Roster Groups</option>';
+
+    rosterGroupFilterDropdown.innerHTML = ''; // Clear existing options
+
+    let paAllocationsId = null;
+    ROSTER_GROUPS_CONFIG.forEach(rg => {
+        if (rg.name === "PA Allocations") {
+            paAllocationsId = rg.id;
+        }
+    });
+
     ROSTER_GROUPS_CONFIG.forEach(rg => {
         const option = document.createElement('option');
         option.value = rg.id;
         option.textContent = rg.name;
+        if (rg.id === paAllocationsId) {
+            option.selected = true;
+        }
         rosterGroupFilterDropdown.appendChild(option);
     });
+
+    // Since the default is now set, if a filter change needs to be triggered on load,
+    // it should be handled after this function is called and data is potentially loaded.
+    // For example, by calling handleFilterChange() if initial data is present.
 }
 
 function createCell(text, isHtml = false) {
