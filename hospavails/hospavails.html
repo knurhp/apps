@@ -219,8 +219,25 @@
             color: green;
         }
         .allocated-cell { /* Style for allocated shifts */
-            color: #ee789f; /* Pink text */
-            background-color: inherit; /* Normal background */
+            color: #ee789f; /* Pink text, or your preferred pink */
+            /* background-color: inherit; */ /* Example if you want specific background */
+        }
+        .unavailable-cell { /* Added for clarity if you want specific styling */
+            color: red;
+        }
+        .leave-cell { /* Added for clarity */
+            color: orange; /* Or your preferred color */
+        }
+        .multi-status-cell { /* For cells with multiple statuses */
+            /* Add styling here if needed, e.g., font-weight: bold; */
+        }
+        /* Ensure tally cell alignment in CSS for thead */
+        .tally-header-row .tally-spacer-cell {
+            background: transparent;
+            border: none;
+        }
+        .tally-data-cell {
+            font-size: 0.8em;
         }
     </style>
 </head>
