@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roster Processor</title>
+    <title>Payroll Report Generator</title>
     <style>
         body {
             font-family: sans-serif;
@@ -60,7 +60,7 @@
     </style>
 </head>
 <body>
-    <h1>Roster & Payroll Processor</h1>
+    <h1>Payroll Report Generator</h1>
 
     <div class="input-section">
         <label for="payrollData">Paste Payroll Data (Name & Payroll ID):</label>
@@ -72,7 +72,7 @@
         <textarea id="rosterData" placeholder="Paste your main Excel roster data here..."></textarea>
     </div>
 
-    <button onclick="processRoster()">Generate Roster Table</button>
+    <button onclick="processRoster()">Generate Shifts Table</button>
     <button onclick="copyTableToClipboard()" id="copyBtn">Copy Table</button>
     <h2 id="rosterTitle"></h2>
     <div class="roster-container">
