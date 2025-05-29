@@ -1,793 +1,771 @@
 document.addEventListener('DOMContentLoaded', () => {
-const jsonDataElement = document.getElementById('jsonData');
-const statusElement = document.getElementById('status');
-const bearerTokenInput = document.getElementById('bearerTokenInput');
-const useLocalFileCheckbox = document.getElementById('useLocalFileCheckbox');
+    const jsonDataElement = document.getElementById('jsonData');
+    const statusElement = document.getElementById('status');
+    const bearerTokenInput = document.getElementById('bearerTokenInput');
+    const useLocalFileCheckbox = document.getElementById('useLocalFileCheckbox');
 
-const fetchLeavesButton = document.getElementById('fetchLeavesButton');
-const fetchUsersButton = document.getElementById('fetchUsersButton');
-const fetchUnallocatedButton = document.getElementById('fetchUnallocatedButton');
-const generateUsersTableButton = document.getElementById('generateUsersTableButton');
+    const fetchLeavesButton = document.getElementById('fetchLeavesButton');
+    const fetchUsersButton = document.getElementById('fetchUsersButton');
+    const fetchShiftTemplatesButton = document.getElementById('fetchShiftTemplatesButton');
+    const generateUsersTableButton = document.getElementById('generateUsersTableButton');
 
-const usersTableContainer = document.getElementById('usersTableContainer');
-const roleFilterDropdown = document.getElementById('roleFilter');
-const teamFilterDropdown = document.getElementById('teamFilter');
-const rosterGroupFilterDropdown = document.getElementById('rosterGroupFilter'); // RESTORED
+    const usersTableContainer = document.getElementById('usersTableContainer');
+    const roleFilterDropdown = document.getElementById('roleFilter');
+    const teamFilterDropdown = document.getElementById('teamFilter');
+    const rosterGroupFilterDropdown = document.getElementById('rosterGroupFilter');
+    const showUnallocatedCheckbox = document.getElementById('showUnallocatedCheckbox');
+    const showAllocatedCheckbox = document.getElementById('showAllocatedCheckbox'); // NEW
 
-const fromDateInput = document.getElementById('fromDate');
-const toDateInput = document.getElementById('toDate');
+    const fromDateInput = document.getElementById('fromDate');
+    const toDateInput = document.getElementById('toDate');
 
-let lastFetchedUsersData = null;
-let lastFetchedLeavesData = null;
-let lastFetchedUnallocatedData = null;
+    let lastFetchedUsersData = null;
+    let lastFetchedLeavesData = null;
+    let lastFetchedShiftTemplatesData = null;
 
-let rolesMap = new Map();
-let teamsMap = new Map();
-let leaveTypesMap = new Map();
+    let rolesMap = new Map();
+    let teamsMap = new Map();
+    let leaveTypesMap = new Map();
 
-// --- Configuration ---
-const LEAVES_LOCAL_FILE_PATH = 'testleave.json';
-const USERS_LOCAL_FILE_PATH = 'testusers.json';
-const UNALLOCATED_LOCAL_FILE_PATH = 'testunalloc.json';
+    // --- Configuration ---
+    const LEAVES_LOCAL_FILE_PATH = 'testleave.json';
+    const USERS_LOCAL_FILE_PATH = 'testusers.json';
+    const SHIFT_TEMPLATES_LOCAL_FILE_PATH = 'testshifts.json';
 
-const LEAVES_API_ENDPOINT = "https://api.hosportal.com/get-leaves-and-leave-requests";
-const USERS_API_ENDPOINT = "https://api.hosportal.com/get-site-users";
-const UNALLOCATED_API_ENDPOINT = "https://api.hosportal.com/get-unallocated-available-role-instances";
+    const LEAVES_API_ENDPOINT = "https://api.hosportal.com/get-leaves-and-leave-requests";
+    const USERS_API_ENDPOINT = "https://api.hosportal.com/get-site-users";
+    const SHIFT_TEMPLATES_API_ENDPOINT = "https://api.hosportal.com/get-user-shift-templates";
 
-const SITE_ID = "a14c0405-4fb0-432b-9ce3-a5c460dffdf5";
-const ROSTER_GROUPS_CONFIG = [
-    { id: "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f", name: "RLH Allocations" },
-    { id: "a40e918a-af4d-4cb9-bce6-99b5de1a0352", name: "PA Allocations" }
-];
-// ---------------------
+    const SITE_ID = "a14c0405-4fb0-432b-9ce3-a5c460dffdf5";
+    const ROSTER_GROUPS_CONFIG = [
+        { id: "75d5cc8d-4b0a-4392-88e1-c3b6bb37056f", name: "RLH Allocations" },
+        { id: "a40e918a-af4d-4cb9-bce6-99b5de1a0352", name: "PA Allocations" }
+        // { id: "b856d0ca-fc49-48f8-be65-b2418b804875", name: "Example RG 3 (from testshifts)"} // This ID is now in EXCLUDED_ROSTER_GROUP_IDS
+    ];
+    const EXCLUDED_ROSTER_GROUP_IDS = ["b856d0ca-fc49-48f8-be65-b2418b804875"];
+    const DEFAULT_ROSTER_GROUP_ID = "a40e918a-af4d-4cb9-bce6-99b5de1a0352"; // PA Allocations ID
+    // ---------------------
 
-function updateButtonTexts() {
-    const useLocal = useLocalFileCheckbox.checked;
-    if (fetchLeavesButton) {
-        fetchLeavesButton.textContent = useLocal ? `Fetch Leaves from ${LEAVES_LOCAL_FILE_PATH} (JSON)` : 'Fetch Leaves from API (JSON)';
-    }
-    if (fetchUsersButton) {
-        fetchUsersButton.textContent = useLocal ? `Fetch Users from ${USERS_LOCAL_FILE_PATH} (JSON)` : 'Fetch Users from API (JSON)';
-    }
-    if (fetchUnallocatedButton) {
-        fetchUnallocatedButton.textContent = useLocal ? `Fetch Unallocated from ${UNALLOCATED_LOCAL_FILE_PATH} (JSON)` : 'Fetch Unallocated from API (Combined)';
-    }
-    if (generateUsersTableButton) {
-        generateUsersTableButton.textContent = useLocal ? `Table from Local Files` : 'Table from API Data';
-    }
-    statusElement.textContent = useLocal ?
-        'Ready. Click a button to load from local file.' :
-        'Enter token (if needed) and click a button to load from API.';
-}
-
-function getSelectedValues(selectElement) {
-    const selectedOptions = Array.from(selectElement.selectedOptions).map(opt => opt.value);
-    if (selectedOptions.length === 0 || selectedOptions.includes("All")) {
-        return ["All"];
-    }
-    return selectedOptions;
-}
-
-async function performFetch(url, requestOptions = {}, isLocalFile = false, localFilePath = '', dataType = 'other') {
-    const dataSource = isLocalFile ? localFilePath : `API (${url ? url.substring(url.lastIndexOf('/') + 1) : 'N/A'})`;
-    statusElement.textContent = `Fetching ${dataType} data from ${dataSource}...`;
-    statusElement.className = '';
-
-    try {
-        let response;
-        if (isLocalFile) {
-            response = await fetch(localFilePath);
-        } else {
-            const token = bearerTokenInput.value.trim();
-            if (!token) throw new Error('Bearer token is required for API calls.');
-            const headers = new Headers(requestOptions.headers || {});
-            if (!headers.has("Authorization")) {
-                headers.set("Authorization", `Bearer ${token}`);
-            }
-            if (!headers.has("Content-Type") && requestOptions.method === 'POST' && requestOptions.body) {
-                headers.set("Content-Type", "application/json");
-            }
-            requestOptions.headers = headers;
-            response = await fetch(url, requestOptions);
+    function updateButtonTexts() {
+        const useLocal = useLocalFileCheckbox.checked;
+        if (fetchLeavesButton) {
+            fetchLeavesButton.textContent = useLocal ? `Leaves from ${LEAVES_LOCAL_FILE_PATH}` : 'Leaves from API';
         }
-
-        if (!response.ok) {
-            let errorMsg = `HTTP error! Status: ${response.status} ${response.statusText}`;
-            let errorBodyText = 'Could not read error body.';
-            try { errorBodyText = await response.text(); errorMsg += ` - Body: ${errorBodyText}`; } catch (e) { /* ignore */ }
-            throw new Error(errorMsg);
+        if (fetchUsersButton) {
+            fetchUsersButton.textContent = useLocal ? `Users from ${USERS_LOCAL_FILE_PATH}` : 'Users from API';
         }
-
-        const result = await response.json();
-
-        if (dataType === 'users') {
-            lastFetchedUsersData = result;
-            rolesMap = new Map((lastFetchedUsersData.roles || []).map(role => [role.id, role.name]));
-            teamsMap = new Map((lastFetchedUsersData.teams || []).map(team => [team.id, team.name]));
-            populateFilterDropdowns(lastFetchedUsersData);
-            jsonDataElement.textContent = JSON.stringify(result, null, 2);
-            statusElement.textContent = `Users data loaded successfully from ${dataSource}!`;
-        } else if (dataType === 'leaves') {
-            lastFetchedLeavesData = result;
-            leaveTypesMap = new Map((lastFetchedLeavesData.leaveTypes || []).map(lt => [lt.id, lt.name]));
-            jsonDataElement.textContent = JSON.stringify(result, null, 2);
-            statusElement.textContent = `Leaves data loaded successfully from ${dataSource}!`;
-        } else if (dataType === 'unallocated' && isLocalFile) {
-            lastFetchedUnallocatedData = result;
-            jsonDataElement.textContent = JSON.stringify(result, null, 2);
-            statusElement.textContent = `Unallocated data loaded successfully from ${dataSource}!`;
+        if (fetchShiftTemplatesButton) {
+            fetchShiftTemplatesButton.textContent = useLocal ? `Shift Templates from ${SHIFT_TEMPLATES_LOCAL_FILE_PATH}` : 'Shift Templates from API';
         }
-        return result;
-
-    } catch (error) {
-        console.error(`Error fetching ${dataType} data from ${dataSource}:`, error);
-        jsonDataElement.textContent = `An error occurred fetching ${dataType} data:\n${error.message}`;
-        statusElement.textContent = `Failed to load ${dataType} data from ${dataSource}.`;
-        statusElement.className = 'error';
-        if (dataType === 'users') lastFetchedUsersData = null;
-        if (dataType === 'leaves') lastFetchedLeavesData = null;
-        if (dataType === 'unallocated') lastFetchedUnallocatedData = null;
-        throw error;
+        if (generateUsersTableButton) {
+            generateUsersTableButton.textContent = `Table from ${useLocal ? 'Local Files' : 'API Data'}`;
+        }
+        statusElement.textContent = useLocal ?
+            'Ready. Click a button to load from local file.' :
+            'Enter token (if needed) and click a button to load from API.';
     }
-}
 
-async function fetchLeavesDataAndDisplayJson() {
-    try {
-        await performFetch(LEAVES_API_ENDPOINT, {
-            method: 'POST',
-            body: JSON.stringify({ "siteId": SITE_ID, "statuses": ["waiting", "denied", "approved"], "associations": ["LeaveType", "RoleInstance"] }),
-            redirect: 'follow'
-        }, useLocalFileCheckbox.checked, LEAVES_LOCAL_FILE_PATH, 'leaves');
-    } catch (e) { /* Handled by performFetch */ }
-}
+    function getSelectedValues(selectElement) {
+        const selectedOptions = Array.from(selectElement.selectedOptions).map(opt => opt.value);
+        if (selectedOptions.length === 0 || selectedOptions.includes("All")) {
+            return ["All"];
+        }
+        return selectedOptions;
+    }
 
-async function fetchUsersDataAndDisplayJson() {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    const raw = JSON.stringify({
-        "siteId": SITE_ID,
-        "associations": [
-            "Role", "Skill", "Team", "SiteUserProfile",
-            "RoleInstanceInformation", "RoleInstanceFte"
-        ]
-    });
-    const requestOptions = {
-        method: 'POST', headers: myHeaders, body: raw, redirect: 'follow'
-    };
-    try {
-        await performFetch(
-            USERS_API_ENDPOINT, requestOptions,
-            useLocalFileCheckbox.checked, USERS_LOCAL_FILE_PATH, 'users'
-        );
-    } catch (e) { /* Handled by performFetch */ }
-}
-
-
-async function fetchCombinedUnallocatedDataForApi(apiStart, apiEnd) {
-    const token = bearerTokenInput.value.trim();
-    if (!token) throw new Error('Bearer token is required for API calls when fetching unallocated data.');
-
-    let combinedUnallocatedUsersArray = []; // For type: "unallocated"
-    let combinedUnavailableUsersArray = []; // For type: "unavailable"
-    let firstResponseStructure = null; 
-
-    statusElement.textContent = `Fetching unallocated data. Please wait...`;
-    statusElement.className = '';
-
-    for (const rosterGroup of ROSTER_GROUPS_CONFIG) {
-        const rosterGroupId = rosterGroup.id;
-        const rawBody = JSON.stringify({
-            "siteId": SITE_ID,
-            "start": apiStart,
-            "end": apiEnd,
-            "roleIds": [],
-            "rosterGroupId": rosterGroupId
-        });
-
-        const headers = new Headers();
-        headers.set("Authorization", `Bearer ${token}`);
-        headers.set("Content-Type", "application/json");
-
-        const requestOptions = {
-            method: 'POST', headers: headers, body: rawBody, redirect: 'follow'
-        };
-        
-        statusElement.textContent = `Fetching unallocated data for ${rosterGroup.name}...`;
+    async function performFetch(url, requestOptions = {}, isLocalFile = false, localFilePath = '', dataType = 'other') {
+        const dataSource = isLocalFile ? localFilePath : `API (${url ? url.substring(url.lastIndexOf('/') + 1) : 'N/A'})`;
+        statusElement.textContent = `Fetching ${dataType} data from ${dataSource}...`;
+        statusElement.className = '';
 
         try {
-            const response = await fetch(UNALLOCATED_API_ENDPOINT, requestOptions);
+            let response;
+            if (isLocalFile) {
+                response = await fetch(localFilePath);
+            } else {
+                const token = bearerTokenInput.value.trim();
+                if (!token && dataType !== 'local-only-type') { // Allow some types to not require token if local
+                     throw new Error('Bearer token is required for API calls.');
+                }
+                const headers = new Headers(requestOptions.headers || {});
+                if (token && !headers.has("Authorization")) { // Add token if provided and not already set
+                    headers.set("Authorization", `Bearer ${token}`);
+                }
+                if (!headers.has("Content-Type") && requestOptions.method === 'POST' && requestOptions.body) {
+                    headers.set("Content-Type", "application/json");
+                }
+                requestOptions.headers = headers;
+                response = await fetch(url, requestOptions);
+            }
 
             if (!response.ok) {
-                let errorMsg = `HTTP error for unallocated data (${rosterGroup.name})! Status: ${response.status} ${response.statusText}`;
+                let errorMsg = `HTTP error! Status: ${response.status} ${response.statusText}`;
                 let errorBodyText = 'Could not read error body.';
                 try { errorBodyText = await response.text(); errorMsg += ` - Body: ${errorBodyText}`; } catch (e) { /* ignore */ }
-                console.error(errorMsg);
-                statusElement.textContent = `Error fetching for ${rosterGroup.name}. Trying next...`;
-                statusElement.className = 'error'; 
-                continue; 
+                throw new Error(errorMsg);
             }
+
             const result = await response.json();
 
-            console.log(`Data fetched for ${rosterGroup.name} (ID: ${rosterGroupId}):`, JSON.parse(JSON.stringify(result)));
-
-            if (firstResponseStructure === null && result) {
-                const { unallocatedUsers, unavailableUsers, ...rest } = result; // Exclude both arrays
-                firstResponseStructure = rest;
+            if (dataType === 'users') {
+                lastFetchedUsersData = result;
+                rolesMap = new Map((lastFetchedUsersData.roles || []).map(role => [role.id, role.name]));
+                teamsMap = new Map((lastFetchedUsersData.teams || []).map(team => [team.id, team.name]));
+                populateFilterDropdowns(lastFetchedUsersData);
+            } else if (dataType === 'leaves') {
+                lastFetchedLeavesData = result;
+                leaveTypesMap = new Map((lastFetchedLeavesData.leaveTypes || []).map(lt => [lt.id, lt.name]));
+            } else if (dataType === 'shift_templates') {
+                lastFetchedShiftTemplatesData = result;
             }
 
-            if (result && result.unallocatedUsers && Array.isArray(result.unallocatedUsers)) {
-                combinedUnallocatedUsersArray.push(...result.unallocatedUsers);
-            }
-            if (result && result.unavailableUsers && Array.isArray(result.unavailableUsers)) {
-                combinedUnavailableUsersArray.push(...result.unavailableUsers);
-            }
+            jsonDataElement.textContent = JSON.stringify(result, null, 2);
+            statusElement.textContent = `${dataType.charAt(0).toUpperCase() + dataType.slice(1)} data loaded successfully from ${dataSource}!`;
+            return result;
 
-        } catch (fetchError) {
-            console.error(`Fetch error for ${rosterGroup.name}:`, fetchError);
-            statusElement.textContent = `Network error fetching for ${rosterGroup.name}. Trying next...`;
+        } catch (error) {
+            console.error(`Error fetching ${dataType} data from ${dataSource}:`, error);
+            jsonDataElement.textContent = `An error occurred fetching ${dataType} data:\n${error.message}`;
+            statusElement.textContent = `Failed to load ${dataType} data from ${dataSource}.`;
             statusElement.className = 'error';
-            continue;
+            if (dataType === 'users') lastFetchedUsersData = null;
+            if (dataType === 'leaves') lastFetchedLeavesData = null;
+            if (dataType === 'shift_templates') lastFetchedShiftTemplatesData = null;
+            throw error;
         }
     }
 
-    if (firstResponseStructure === null && combinedUnallocatedUsersArray.length === 0 && combinedUnavailableUsersArray.length === 0) {
-        throw new Error("Failed to fetch unallocated data for all roster groups or no data returned.");
-    }
-    
-    const finalCombinedResult = {
-        ...(firstResponseStructure || {}),
-        unallocatedUsers: combinedUnallocatedUsersArray, // For GREEN "Unalloc."
-        unavailableUsers: combinedUnavailableUsersArray  // For RED "Unavail." (actual shifts)
-    };
-    return finalCombinedResult;
-}
-
-async function fetchUnallocatedDataAndDisplayJson() {
-    const useLocal = useLocalFileCheckbox.checked;
-
-    if (useLocal) {
+    async function fetchLeavesDataAndDisplayJson() {
         try {
-            await performFetch(null, {}, true, UNALLOCATED_LOCAL_FILE_PATH, 'unallocated');
+            await performFetch(LEAVES_API_ENDPOINT, {
+                method: 'POST',
+                body: JSON.stringify({ "siteId": SITE_ID, "statuses": ["waiting", "denied", "approved"], "associations": ["LeaveType", "RoleInstance"] }),
+                redirect: 'follow'
+            }, useLocalFileCheckbox.checked, LEAVES_LOCAL_FILE_PATH, 'leaves');
         } catch (e) { /* Handled by performFetch */ }
-    } else {
+    }
+
+    async function fetchUsersDataAndDisplayJson() {
+        const raw = JSON.stringify({
+            "siteId": SITE_ID,
+            "associations": [
+                "Role", "Skill", "Team", "SiteUserProfile",
+                "RoleInstanceInformation", "RoleInstanceFte"
+            ]
+        });
+        const requestOptions = {
+            method: 'POST', body: raw, redirect: 'follow'
+        };
+        try {
+            await performFetch(
+                USERS_API_ENDPOINT, requestOptions,
+                useLocalFileCheckbox.checked, USERS_LOCAL_FILE_PATH, 'users'
+            );
+        } catch (e) { /* Handled by performFetch */ }
+    }
+
+    async function fetchShiftTemplatesDataAndDisplayJson() {
+        const raw = JSON.stringify({
+          "siteId": SITE_ID
+        });
+        const requestOptions = {
+          method: 'POST',
+          body: raw,
+          redirect: 'follow'
+        };
+        try {
+            await performFetch(
+                SHIFT_TEMPLATES_API_ENDPOINT, requestOptions,
+                useLocalFileCheckbox.checked, SHIFT_TEMPLATES_LOCAL_FILE_PATH, 'shift_templates'
+            );
+        } catch (e) { /* Handled by performFetch */ }
+    }
+
+    async function triggerGenerateUsersTable() {
+        usersTableContainer.innerHTML = 'Generating table, fetching data if needed...';
+        try {
+            if (!lastFetchedUsersData) await fetchUsersDataAndDisplayJson();
+            if (!lastFetchedLeavesData) await fetchLeavesDataAndDisplayJson();
+            if (!lastFetchedShiftTemplatesData) await fetchShiftTemplatesDataAndDisplayJson();
+
+            // Ensure all data is actually loaded before proceeding
+            if (!lastFetchedUsersData || !lastFetchedLeavesData || !lastFetchedShiftTemplatesData) {
+                throw new Error("One or more required data sources failed to load. Cannot generate table.");
+            }
+            
+            const selectedRoleIds = getSelectedValues(roleFilterDropdown);
+            const selectedTeamIds = getSelectedValues(teamFilterDropdown);
+            // The main generateUsersTable will now use these and shiftTemplatesData
+            generateUsersTable(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedShiftTemplatesData, selectedRoleIds, selectedTeamIds);
+        } catch (error) {
+            console.error("Error in triggerGenerateUsersTable:", error);
+            usersTableContainer.innerHTML = `<span class='error'>Error generating table: ${error.message}</span>`;
+            statusElement.textContent = `Error generating table: ${error.message}`;
+            statusElement.className = 'error';
+        }
+    }
+
+    // Helper function to determine if a shift template applies to a given date
+    // Treats date strings as UTC dates for comparison.
+    function templateAppliesToDate(template, dateStr, dateRange) {
+        if (!template.interval || !template.startDate) return false;
+
+        const currentDateObj = new Date(dateStr + 'T00:00:00Z'); // Treat dateStr as UTC
+        const templateStartDateObj = new Date(template.startDate + 'T00:00:00Z'); // Treat template.startDate as UTC
+
+        if (currentDateObj < templateStartDateObj) return false;
+
+        if (template.endDate) {
+            const templateEndDateObj = new Date(template.endDate + 'T00:00:00Z'); // Treat template.endDate as UTC
+            if (currentDateObj > templateEndDateObj) return false;
+        }
+
+        // TODO: Implement "notIntervals" logic if needed.
+        // For now, we assume no "notIntervals" block the application.
+
+        if (template.interval.type === 'none') {
+            // For 'none', if endDate is present, it's a range. Otherwise, it's just startDate.
+            // The initial date range check (currentDateObj vs templateStart/EndDateObj) handles this.
+            return true;
+        }
+
+        if (template.interval.type === 'weekly') {
+            const currentDayOfWeek = currentDateObj.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+            const apiDayOfWeek = currentDayOfWeek === 0 ? 7 : currentDayOfWeek; // Convert to 1=Mon, ..., 7=Sun
+
+            if (!template.interval.daysOfWeek || !template.interval.daysOfWeek.includes(apiDayOfWeek)) {
+                return false;
+            }
+
+            const spacing = template.interval.spacing || 1;
+            const offset = template.interval.offset || 0; // offset is 0-indexed week offset
+
+            // Calculate weeks since the start of the template's recurrence pattern.
+            // This needs to be relative to a consistent "start of week" if the API implies one,
+            // or more simply, the number of weeks passed since templateStartDateObj on the same day of week.
+
+            // Difference in days between currentDateObj and templateStartDateObj
+            const diffTime = currentDateObj.getTime() - templateStartDateObj.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            const weeksSinceStart = Math.floor(diffDays / 7);
+
+            if ((weeksSinceStart - offset) % spacing !== 0) {
+                 return false;
+            }
+            return true;
+        }
+        // TODO: Implement other interval types if necessary (daily, monthly, yearly, holidays)
+        // console.warn(`Unhandled interval type: ${template.interval.type} for template ${template.id}`);
+        return false; // Default to false for unhandled types
+    }
+
+
+    function getDayOfWeek(dateObj) { // Assumes dateObj is UTC
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return days[dateObj.getUTCDay()];
+    }
+
+    function normalizeDate(dateObj) { // Assumes dateObj is UTC
+        const year = dateObj.getUTCFullYear();
+        const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getUTCDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    // Main table generation function, refactored for stricter filtering and slotting
+    function generateUsersTable(usersData, leavesData, shiftTemplatesData, selectedRoleIds, selectedTeamIds) {
+        usersTableContainer.innerHTML = '';
+        if (!usersData?.siteUsers?.length) { usersTableContainer.innerHTML = '<p class="error">No siteUsers data.</p>'; return; }
+        if (leavesData && !leavesData.leaves && !Array.isArray(leavesData.leaveTypes)) {
+             usersTableContainer.innerHTML = '<p class="error">Leave data structure invalid.</p>'; return;
+        }
+        if (!shiftTemplatesData || !Array.isArray(shiftTemplatesData.userShiftTemplates)) {
+            usersTableContainer.innerHTML = '<p class="error">Shift templates data missing or invalid.</p>'; return;
+        }
+
+        const shouldShowUnallocated = showUnallocatedCheckbox.checked;
+        const shouldShowAllocated = showAllocatedCheckbox.checked;
+        const selectedRosterGroupIdFromDropdown = rosterGroupFilterDropdown.value;
+
         const fromDateStr = fromDateInput.value;
         const toDateStr = toDateInput.value;
+        if (!fromDateStr || !toDateStr) { usersTableContainer.innerHTML = '<p class="error">Please select both "From" and "To" dates.</p>'; return; }
+        const fromDate = new Date(fromDateStr + "T00:00:00Z");
+        const toDate = new Date(toDateStr + "T23:59:59Z");
+        if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime()) || fromDate > toDate) {
+            usersTableContainer.innerHTML = '<p class="error">Invalid date range selected.</p>'; return;
+        }
 
-        if (!fromDateStr || !toDateStr) {
-            statusElement.textContent = 'Please select "From" and "To" dates for the Unallocated API call.';
-            statusElement.className = 'error';
-            jsonDataElement.textContent = '';
-            lastFetchedUnallocatedData = null;
+        const dateRange = [];
+        let currentDateIter = new Date(Date.UTC(fromDate.getUTCFullYear(), fromDate.getUTCMonth(), fromDate.getUTCDate()));
+        const toDateLimit = new Date(Date.UTC(toDate.getUTCFullYear(), toDate.getUTCMonth(), toDate.getUTCDate()));
+        while (currentDateIter <= toDateLimit) {
+            dateRange.push(new Date(currentDateIter));
+            currentDateIter.setUTCDate(currentDateIter.getUTCDate() + 1);
+        }
+        if (dateRange.length === 0) {
+            usersTableContainer.innerHTML = '<p>Date range is empty or invalid.</p>'; return;
+        }
+
+        const userDailySlotInfo = new Map();
+        function getOrCreateDailySlotEntry(roleInstanceId, dateKey) {
+            if (!userDailySlotInfo.has(roleInstanceId)) {
+                userDailySlotInfo.set(roleInstanceId, new Map());
+            }
+            const userDateMap = userDailySlotInfo.get(roleInstanceId);
+            if (!userDateMap.has(dateKey)) {
+                userDateMap.set(dateKey, {
+                    leaveTypes: new Set(),
+                    amStatuses: [],
+                    pmStatuses: []
+                });
+            }
+            return userDateMap.get(dateKey);
+        }
+
+        // 1. Process Leaves
+        (leavesData.leaves || []).forEach(leave => {
+            const leaveStart = new Date(leave.start.includes('T') ? leave.start : leave.start + 'T00:00:00Z');
+            const leaveEnd = new Date(leave.end.includes('T') ? leave.end : leave.end + 'T23:59:59Z');
+            let currentLeaveDate = new Date(Date.UTC(leaveStart.getUTCFullYear(), leaveStart.getUTCMonth(), leaveStart.getUTCDate()));
+            const leaveEndDateOnly = new Date(Date.UTC(leaveEnd.getUTCFullYear(), leaveEnd.getUTCMonth(), leaveEnd.getUTCDate()));
+
+            while(currentLeaveDate <= leaveEndDateOnly) {
+                const dateKey = normalizeDate(currentLeaveDate);
+                if (dateRange.find(drDate => normalizeDate(drDate) === dateKey)) {
+                    const entry = getOrCreateDailySlotEntry(leave.roleInstanceId, dateKey);
+                    entry.leaveTypes.add(leaveTypesMap.get(leave.leaveTypeId) || 'Leave');
+                }
+                currentLeaveDate.setUTCDate(currentLeaveDate.getUTCDate() + 1);
+            }
+        });
+
+        // 2. Process Shift Templates
+        const amSlotStartMinutes = 7 * 60 + 30;
+        const amSlotEndMinutes = 12 * 60 + 30;
+        const pmSlotStartMinutes = 13 * 60;
+        const pmSlotEndMinutes = 17 * 60 + 30;
+
+        (shiftTemplatesData.userShiftTemplates || []).forEach(template => {
+            if (EXCLUDED_ROSTER_GROUP_IDS.includes(template.rosterGroupId)) {
+                return;
+            }
+            if (template.rosterGroupId !== selectedRosterGroupIdFromDropdown) {
+                return;
+            }
+            dateRange.forEach(currentDayInDateRange => {
+                const dateKey = normalizeDate(currentDayInDateRange);
+                if (templateAppliesToDate(template, dateKey, dateRange)) {
+                    const entry = getOrCreateDailySlotEntry(template.roleInstanceId, dateKey);
+                    let itemStartHour = template.startTime.hour;
+                    let itemStartMinute = template.startTime.minute;
+                    let itemEndHour = template.endTime.hour;
+                    let itemEndMinute = template.endTime.minute;
+                    let effectiveStartTotalMinutes = itemStartHour * 60 + itemStartMinute;
+                    let effectiveEndTotalMinutes = itemEndHour * 60 + itemEndMinute;
+                    if (template.startTime.dayOffset && template.startTime.dayOffset < 0) effectiveStartTotalMinutes = 0;
+                    if (template.endTime.dayOffset && template.endTime.dayOffset > 0) {
+                        effectiveEndTotalMinutes = 24 * 60;
+                    } else if (itemEndHour === 0 && itemEndMinute === 0 &&
+                               (!template.endTime.dayOffset || template.endTime.dayOffset === 0) &&
+                               (itemStartHour !== 0 || itemStartMinute !== 0 || (template.startTime.dayOffset || 0) !== 0) ) {
+                        effectiveEndTotalMinutes = 24 * 60;
+                    }
+
+                    const detailString = `${template.type.charAt(0).toUpperCase() + template.type.slice(1)}: ${String(itemStartHour).padStart(2,'0')}:${String(itemStartMinute).padStart(2,'0')} - ${String(itemEndHour).padStart(2,'0')}:${String(itemEndMinute).padStart(2,'0')}` +
+                                         (template.startTime.dayOffset ? ` (Start DO:${template.startTime.dayOffset})` : '') +
+                                         (template.endTime.dayOffset ? ` (End DO:${template.endTime.dayOffset})` : '') +
+                                         (template.rosterGroupId ? ` (RG: ${ROSTER_GROUPS_CONFIG.find(rg => rg.id === template.rosterGroupId)?.name || template.rosterGroupId.slice(0,8)})` : '');
+                    const statusObject = { type: template.type, details: detailString, updatedAt: template.updatedAt, rosterGroupId: template.rosterGroupId };
+
+                    if (effectiveStartTotalMinutes < amSlotEndMinutes && effectiveEndTotalMinutes > amSlotStartMinutes) {
+                        entry.amStatuses.push(statusObject);
+                    }
+                    if (effectiveStartTotalMinutes < pmSlotEndMinutes && effectiveEndTotalMinutes > pmSlotStartMinutes) {
+                        entry.pmStatuses.push(statusObject);
+                    }
+                }
+            });
+        });
+
+        // 3. Filter and Sort Users
+        const filterByAllRoles = selectedRoleIds.includes("All");
+        const filterByAllTeams = selectedTeamIds.includes("All");
+        const filteredSiteUsers = (usersData.siteUsers || []).filter(siteUser => {
+            const matchesRole = filterByAllRoles ||
+                (siteUser.roleInstances && siteUser.roleInstances.some(ri => selectedRoleIds.includes(ri.roleId)));
+            const matchesTeam = filterByAllTeams ||
+                (siteUser.roleInstances && siteUser.roleInstances.some(ri =>
+                    ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId))
+                ));
+            return matchesRole && matchesTeam;
+        }).sort((a,b) => {
+            const lastNameA = (a.siteUserProfile?.lastName || '').toLowerCase();
+            const lastNameB = (b.siteUserProfile?.lastName || '').toLowerCase();
+            if (lastNameA < lastNameB) return -1;
+            if (lastNameA > lastNameB) return 1;
+            const firstNameA = (a.siteUserProfile?.firstName || '').toLowerCase();
+            const firstNameB = (b.siteUserProfile?.firstName || '').toLowerCase();
+            if (firstNameA < firstNameB) return -1;
+            if (firstNameA > firstNameB) return 1;
+            return 0;
+        });
+
+        if (filteredSiteUsers.length === 0) {
+            usersTableContainer.innerHTML = '<p>No users match the current filter criteria.</p>';
+            const selectedRosterGroupName = ROSTER_GROUPS_CONFIG.find(rg => rg.id === selectedRosterGroupIdFromDropdown)?.name || selectedRosterGroupIdFromDropdown;
+            statusElement.textContent = `Users table generated with 0 matching entries. Roster Group: ${selectedRosterGroupName}. Date range: ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}`;
+            statusElement.className = '';
             return;
         }
 
-        const apiStart = `${fromDateStr}T00:00:00.000Z`;
-        const apiEnd = `${toDateStr}T23:59:59.999Z`;
+        // 4. Calculate Daily Tallies (MODIFIED for correct "Available" count)
+        const dailyTallies = {};
+        dateRange.forEach(tableDay => {
+            const dateKey = normalizeDate(tableDay);
+            dailyTallies[dateKey] = {
+                amLeave: new Set(), amUnavailable: new Set(), amAvailable: new Set(),
+                pmLeave: new Set(), pmUnavailable: new Set(), pmAvailable: new Set()
+            };
 
-        statusElement.textContent = `Fetching and combining unallocated data from API for ${ROSTER_GROUPS_CONFIG.length} roster groups...`;
-        statusElement.className = '';
-        jsonDataElement.textContent = 'Loading...';
+            filteredSiteUsers.forEach(siteUser => {
+                let userIsOnLeaveAM = false;
+                let userIsOnLeavePM = false;
+                let userIsUnavailableAM = false;
+                let userIsUnavailablePM = false;
+                let userWouldBeAllocatedAM = false;
+                let userWouldBeAllocatedPM = false;
+                let userWouldBeUnallocatedAM = false;
+                let userWouldBeUnallocatedPM = false;
 
-        try {
-            const combinedData = await fetchCombinedUnallocatedDataForApi(apiStart, apiEnd);
-            lastFetchedUnallocatedData = combinedData;
-            jsonDataElement.textContent = JSON.stringify(combinedData, null, 2);
-            statusElement.textContent = `Unallocated data loaded and combined successfully from API!`;
-            console.log(combinedData);
-            statusElement.className = '';
-        } catch (error) {
-            console.error(`Error in fetchUnallocatedDataAndDisplayJson for API:`, error);
-            jsonDataElement.textContent = `An error occurred fetching unallocated data:\n${error.message}`;
-            statusElement.textContent = `Failed to load unallocated data from API.`;
-            statusElement.className = 'error';
-            lastFetchedUnallocatedData = null;
-        }
-    }
-}
+                (siteUser.roleInstances || []).forEach(ri => {
+                    const roleInstanceMatchesRoleFilter = filterByAllRoles || selectedRoleIds.includes(ri.roleId);
+                    const roleInstanceMatchesTeamFilter = filterByAllTeams || (ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId)));
 
-async function triggerGenerateUsersTable() {
-    usersTableContainer.innerHTML = 'Generating table, fetching data if needed...';
-    try {
-        const dataFetchPromises = [];
-        const isLocal = useLocalFileCheckbox.checked;
-        const hasToken = bearerTokenInput.value.trim() !== '';
+                    if (roleInstanceMatchesRoleFilter && roleInstanceMatchesTeamFilter) {
+                        if (userDailySlotInfo.has(ri.id) && userDailySlotInfo.get(ri.id).has(dateKey)) {
+                            const dailyInfo = userDailySlotInfo.get(ri.id).get(dateKey);
 
-        if (!lastFetchedUsersData || isLocal || (!isLocal && hasToken)) {
-            const myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-            const raw = JSON.stringify({
-                "siteId": SITE_ID,
-                "associations": ["Role", "Skill", "Team", "SiteUserProfile", "RoleInstanceInformation", "RoleInstanceFte"]
-            });
-            const requestOptions = { method: 'POST', headers: myHeaders, body: raw, redirect: 'follow' };
-            dataFetchPromises.push(
-                performFetch(USERS_API_ENDPOINT, requestOptions, isLocal, USERS_LOCAL_FILE_PATH, 'users')
-            );
-        }
-
-        if (!lastFetchedLeavesData || isLocal || (!isLocal && hasToken)) {
-            dataFetchPromises.push(
-                performFetch(LEAVES_API_ENDPOINT, {
-                    method: 'POST',
-                    body: JSON.stringify({ "siteId": SITE_ID, "statuses": ["waiting", "denied", "approved"], "associations": ["LeaveType", "RoleInstance"] }),
-                    redirect: 'follow'
-                }, isLocal, LEAVES_LOCAL_FILE_PATH, 'leaves')
-            );
-        }
-
-        if (dataFetchPromises.length > 0) {
-            await Promise.all(dataFetchPromises.map(p => p.catch(e => e)));
-        }
-
-        let unallocatedDataFetchError = null;
-        if (!lastFetchedUnallocatedData || isLocal || (!isLocal && hasToken)) {
-            const fromDateStr = fromDateInput.value;
-            const toDateStr = toDateInput.value;
-
-            if (isLocal) {
-                try {
-                    await performFetch(null, {}, true, UNALLOCATED_LOCAL_FILE_PATH, 'unallocated');
-                } catch (e) {
-                    unallocatedDataFetchError = e;
-                    console.error("Error fetching local unallocated data for table:", e);
-                }
-            } else if (hasToken && fromDateStr && toDateStr) {
-                const apiStart = `${fromDateStr}T00:00:00.000Z`;
-                const apiEnd = `${toDateStr}T23:59:59.999Z`;
-                try {
-                    statusElement.textContent = `Fetching combined unallocated data for table...`;
-                    const combinedData = await fetchCombinedUnallocatedDataForApi(apiStart, apiEnd);
-                    lastFetchedUnallocatedData = combinedData;
-                    statusElement.textContent = `Combined unallocated data fetched for table.`;
-                } catch (e) {
-                    unallocatedDataFetchError = e;
-                    console.error("Error fetching API unallocated data for table:", e);
-                    lastFetchedUnallocatedData = null;
-                    throw e; 
-                }
-            } else if (!isLocal && !hasToken) {
-                console.warn("Bearer token missing for Unallocated API data for table.");
-            } else if (!isLocal && (!fromDateStr || !toDateStr)) {
-                console.warn("Dates for Unallocated API data not set for table. Unavailability might not be accurate.");
-            }
-        }
-        
-        if (lastFetchedUsersData && lastFetchedLeavesData && lastFetchedUnallocatedData) {
-            const selectedRoleIds = getSelectedValues(roleFilterDropdown);
-            const selectedTeamIds = getSelectedValues(teamFilterDropdown);
-            generateUsersTable(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedUnallocatedData, selectedRoleIds, selectedTeamIds);
-        } else {
-            let missingData = [];
-            if (!lastFetchedUsersData) missingData.push("user");
-            if (!lastFetchedLeavesData) missingData.push("leave");
-            
-            const unallocatedExpected = isLocal || (hasToken && fromDateInput.value && toDateInput.value);
-            if (!lastFetchedUnallocatedData && unallocatedExpected) {
-                 missingData.push("unallocated availability");
-            }
-
-            if (!isLocal && !hasToken && (missingData.includes("user") || missingData.includes("leave") || (missingData.includes("unallocated availability") && unallocatedExpected))) {
-                statusElement.textContent = `Cannot generate table: Bearer token missing for API call to fetch ${missingData.join(', ')} data.`;
-            } else if (missingData.length > 0) {
-                statusElement.textContent = `Cannot generate table: Missing ${missingData.join(', ')} data. Fetch relevant data first.`;
-            } else if (!isLocal && unallocatedExpected && (!fromDateInput.value || !toDateInput.value) && !lastFetchedUnallocatedData) {
-                 statusElement.textContent = `Cannot generate table: Dates not set for unallocated data.`;
-            } else {
-                 statusElement.textContent = `Cannot generate table: Ensure all required data is fetched.`;
-            }
-            statusElement.className = 'error';
-            usersTableContainer.innerHTML = '';
-        }
-    } catch (error) {
-        console.error("Could not generate table due to fetch error(s):", error);
-        statusElement.textContent = 'Error fetching data or generating table. Check console.';
-        statusElement.className = 'error';
-        usersTableContainer.innerHTML = '<p class="error">Table generation failed due to data fetch errors.</p>';
-    }
-}
-
-
-function getDayOfWeek(dateObj) {
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return days[dateObj.getUTCDay()];
-}
-
-function normalizeDate(dateObj) {
-    const year = dateObj.getUTCFullYear();
-    const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(dateObj.getUTCDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
-function generateUsersTable(usersData, leavesData, unallocatedApiData, selectedRoleIds, selectedTeamIds) {
-    usersTableContainer.innerHTML = '';
-
-    if (!usersData?.siteUsers?.length) { usersTableContainer.innerHTML = '<p class="error">No siteUsers data.</p>'; return; }
-    if (!leavesData?.leaves) { usersTableContainer.innerHTML = '<p class="error">Leave data missing/invalid.</p>'; return; }
-    
-    const selectedRosterGroupId = rosterGroupFilterDropdown.value;
-
-    // Filter unallocatedApiData arrays based on selectedRosterGroupId
-    let currentUnallocatedShifts = (unallocatedApiData.unallocatedUsers || []).slice(); // Array for GREEN "Unalloc."
-    let currentUnavailableShifts = (unallocatedApiData.unavailableUsers || []).slice(); // Array for RED "Unavail." (actual shifts)
-
-    if (selectedRosterGroupId && selectedRosterGroupId !== "All") {
-        currentUnallocatedShifts = currentUnallocatedShifts.filter(entry => entry.rosterGroupId === selectedRosterGroupId);
-        currentUnavailableShifts = currentUnavailableShifts.filter(entry => entry.rosterGroupId === selectedRosterGroupId);
-    }
-    
-    // Check if the base unallocatedApiData structure is valid, even if filtered arrays are empty
-    if (!unallocatedApiData || (typeof unallocatedApiData.unallocatedUsers === 'undefined' && typeof unallocatedApiData.unavailableUsers === 'undefined')) {
-         usersTableContainer.innerHTML = `<p class="error">Unallocated/Unavailable data structure missing or invalid.</p>`;
-         return;
-    }
-
-    const fromDateStr = fromDateInput.value;
-    const toDateStr = toDateInput.value;
-    if (!fromDateStr || !toDateStr) { usersTableContainer.innerHTML = '<p class="error">Please select both "From" and "To" dates.</p>'; return; }
-    const fromDate = new Date(fromDateStr + "T00:00:00Z");
-    const toDate = new Date(toDateStr + "T23:59:59Z");
-    if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime()) || fromDate > toDate) { usersTableContainer.innerHTML = '<p class="error">Invalid date range selected.</p>'; return; }
-
-    const dateRange = [];
-    let currentDateIter = new Date(fromDate.toISOString().slice(0,10) + "T00:00:00Z");
-    const toDateLimit = new Date(toDate.toISOString().slice(0,10) + "T00:00:00Z");
-    while (currentDateIter <= toDateLimit) {
-        dateRange.push(new Date(currentDateIter));
-        currentDateIter.setUTCDate(currentDateIter.getUTCDate() + 1);
-    }
-
-    // Consolidated daily info map
-    const userDailySlotInfo = new Map();
-
-    function getOrCreateDailySlotEntry(roleInstanceId, dateKey) {
-        if (!userDailySlotInfo.has(roleInstanceId)) {
-            userDailySlotInfo.set(roleInstanceId, new Map());
-        }
-        const userDateMap = userDailySlotInfo.get(roleInstanceId);
-        if (!userDateMap.has(dateKey)) {
-            userDateMap.set(dateKey, {
-                leaveTypes: new Set(),
-                isUnavailableAM: false, unavailableDetailsAM: new Set(),
-                isUnavailablePM: false, unavailableDetailsPM: new Set(),
-                isUnallocatedAM: false, unallocatedDetailsAM: new Set(),
-                isUnallocatedPM: false, unallocatedDetailsPM: new Set()
-            });
-        }
-        return userDateMap.get(dateKey);
-    }
-    
-    // Process Leaves
-    (leavesData.leaves || []).forEach(leave => {
-        const leaveStart = new Date(leave.start);
-        const leaveEnd = new Date(leave.end);
-        let currentLeaveDate = new Date(Date.UTC(leaveStart.getUTCFullYear(), leaveStart.getUTCMonth(), leaveStart.getUTCDate()));
-        while(currentLeaveDate <= leaveEnd) {
-            const dateKey = normalizeDate(currentLeaveDate);
-            const entry = getOrCreateDailySlotEntry(leave.roleInstanceId, dateKey);
-            entry.leaveTypes.add(leaveTypesMap.get(leave.leaveTypeId) || 'Leave');
-            currentLeaveDate.setUTCDate(currentLeaveDate.getUTCDate() + 1);
-        }
-    });
-
-    const amSlotStartMinutes = 7 * 60 + 30; // 7:30 AM
-    const amSlotEndMinutes = 12 * 60 + 30; // 12:30 PM
-    const pmSlotStartMinutes = 13 * 60;    // 1:00 PM
-    const pmSlotEndMinutes = 17 * 60 + 30; // 5:30 PM
-
-    function processShiftArray(shiftArray, isUnallocatedType) {
-        (shiftArray || []).forEach(shift => {
-            const dateKey = shift.calculatedDate;
-            const entry = getOrCreateDailySlotEntry(shift.roleInstanceId, dateKey);
-            
-            const itemLocalStartHour = shift.startTime.hour;
-            const itemLocalStartMinute = shift.startTime.minute;
-            const itemLocalEndHour = shift.endTime.hour;
-            const itemLocalEndMinute = shift.endTime.minute;
-            
-            let itemStartTotalMinutes = itemLocalStartHour * 60 + itemLocalStartMinute;
-            let itemEndTotalMinutes = itemLocalEndHour * 60 + itemLocalEndMinute;
-
-            if (shift.startTime.dayOffset && shift.startTime.dayOffset < 0) itemStartTotalMinutes = 0;
-            if (shift.endTime.dayOffset && shift.endTime.dayOffset > 0) {
-                itemEndTotalMinutes = 24 * 60;
-            } else if (itemLocalEndHour === 0 && itemLocalEndMinute === 0 && 
-                       (itemLocalStartHour !== 0 || itemLocalStartMinute !== 0) &&
-                       (!shift.endTime.dayOffset || shift.endTime.dayOffset === 0) ) {
-                 itemEndTotalMinutes = 24 * 60;
-            }
-            
-            const detailString = `Shift: ${String(itemLocalStartHour).padStart(2,'0')}:${String(itemLocalStartMinute).padStart(2,'0')} - ${String(itemLocalEndHour).padStart(2,'0')}:${String(itemLocalEndMinute).padStart(2,'0')}` +
-                                 (shift.startTime.dayOffset ? ` (Start DO:${shift.startTime.dayOffset})` : '') +
-                                 (shift.endTime.dayOffset ? ` (End DO:${shift.endTime.dayOffset})` : '') +
-                                 (shift.rosterGroupId ? ` (RG: ${ROSTER_GROUPS_CONFIG.find(rg => rg.id === shift.rosterGroupId)?.name || shift.rosterGroupId})` : '');
-
-            if (itemStartTotalMinutes < amSlotEndMinutes && itemEndTotalMinutes > amSlotStartMinutes) { // Overlaps AM
-                if (isUnallocatedType) {
-                    entry.isUnallocatedAM = true;
-                    entry.unallocatedDetailsAM.add(detailString);
-                } else {
-                    entry.isUnavailableAM = true;
-                    entry.unavailableDetailsAM.add(detailString);
-                }
-            }
-            if (itemStartTotalMinutes < pmSlotEndMinutes && itemEndTotalMinutes > pmSlotStartMinutes) { // Overlaps PM
-                if (isUnallocatedType) {
-                    entry.isUnallocatedPM = true;
-                    entry.unallocatedDetailsPM.add(detailString);
-                } else {
-                    entry.isUnavailablePM = true;
-                    entry.unavailableDetailsPM.add(detailString);
-                }
-            }
-        });
-    }
-
-    // Process "unavailableUsers" (actual shifts, for red "Unavail.")
-    processShiftArray(currentUnavailableShifts, false);
-    
-    // Process "unallocatedUsers" (potential shifts, for green "Unalloc.")
-    processShiftArray(currentUnallocatedShifts, true);
-
-    const filterByAllRoles = selectedRoleIds.includes("All");
-    const filterByAllTeams = selectedTeamIds.includes("All");
-    const filteredSiteUsers = usersData.siteUsers.filter(siteUser => {
-        const matchesRole = filterByAllRoles ||
-            (siteUser.roleInstances && siteUser.roleInstances.some(ri => selectedRoleIds.includes(ri.roleId)));
-        const matchesTeam = filterByAllTeams ||
-            (siteUser.roleInstances && siteUser.roleInstances.some(ri =>
-                ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId))
-            ));
-        return matchesRole && matchesTeam;
-    });
-
-    if (filteredSiteUsers.length === 0) {
-        usersTableContainer.innerHTML = '<p>No users match the current filter criteria.</p>';
-        statusElement.textContent = `Users table generated with 0 matching entries.`;
-        statusElement.className = '';
-        return;
-    }
-
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const tbody = document.createElement('tbody');
-    const baseHeaders = ['First Name', 'Last Name', 'Role & Teams']; // Removed 'Site User ID' from visible headers
-    const headerRow1 = document.createElement('tr');
-    baseHeaders.forEach(headerText => {
-        const th = document.createElement('th');
-        th.rowSpan = 2;
-        th.textContent = headerText;
-        headerRow1.appendChild(th);
-    });
-    dateRange.forEach(date => {
-        const th = document.createElement('th');
-        th.colSpan = 2;
-        th.className = 'date-header';
-        th.textContent = `${getDayOfWeek(date)} ${date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`;
-        headerRow1.appendChild(th);
-    });
-    thead.appendChild(headerRow1);
-
-    const headerRow2 = document.createElement('tr');
-    dateRange.forEach(() => {
-        const thAM = document.createElement('th');
-        thAM.textContent = 'AM';
-        thAM.className = 'sub-header';
-        headerRow2.appendChild(thAM);
-
-        const thPM = document.createElement('th');
-        thPM.textContent = 'PM';
-        thPM.className = 'sub-header';
-        headerRow2.appendChild(thPM);
-    });
-    thead.appendChild(headerRow2);
-    table.appendChild(thead);
-
-    filteredSiteUsers.forEach(siteUser => {
-        const tr = document.createElement('tr');
-        const profile = siteUser.siteUserProfile || {};
-        tr.appendChild(createCell(profile.firstName || 'N/A'));
-        tr.appendChild(createCell(profile.lastName || 'N/A'));
-        // tr.appendChild(createCell(siteUser.id || 'N/A')); // HIDE Site User ID from table
-
-        let roleInstancesHtmlContent = '';
-        if (siteUser.roleInstances && siteUser.roleInstances.length > 0) {
-            const visibleRoleInstances = siteUser.roleInstances.filter(ri =>
-                filterByAllRoles || selectedRoleIds.includes(ri.roleId)
-            );
-
-            if (visibleRoleInstances.length > 0) {
-                roleInstancesHtmlContent = '<ul>';
-                visibleRoleInstances.forEach(ri => {
-                    const roleName = rolesMap.get(ri.roleId) || `RoleID: ${ri.roleId}`;
-                    let teamsDisplayHtml = 'No relevant teams';
-
-                    if (ri.roleInstanceTeams && ri.roleInstanceTeams.length > 0) {
-                        const relevantTeamsForThisRI = ri.roleInstanceTeams
-                            .filter(rit => filterByAllTeams || selectedTeamIds.includes(rit.teamId))
-                            .map(rit => {
-                                const teamName = teamsMap.get(rit.teamId) || `TeamID: ${rit.teamId}`;
-                                return teamName;
-                            });
-
-                        if (relevantTeamsForThisRI.length > 0) {
-                            teamsDisplayHtml = relevantTeamsForThisRI.join('; ');
-                        } else if (!filterByAllTeams) {
-                            teamsDisplayHtml = 'No teams match filter for this instance.';
-                        } else {
-                            teamsDisplayHtml = 'No teams assigned to this instance.';
+                            if (dailyInfo.leaveTypes.size > 0) {
+                                userIsOnLeaveAM = true;
+                                userIsOnLeavePM = true;
+                            } else {
+                                dailyInfo.amStatuses.forEach(status => {
+                                    if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
+                                        if (status.type === 'unavailable') userIsUnavailableAM = true;
+                                        if (status.type === 'allocated') userWouldBeAllocatedAM = true;
+                                        if (status.type === 'unallocated') userWouldBeUnallocatedAM = true;
+                                    }
+                                });
+                                dailyInfo.pmStatuses.forEach(status => {
+                                    if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) {
+                                        if (status.type === 'unavailable') userIsUnavailablePM = true;
+                                        if (status.type === 'allocated') userWouldBeAllocatedPM = true;
+                                        if (status.type === 'unallocated') userWouldBeUnallocatedPM = true;
+                                    }
+                                });
+                            }
                         }
                     }
-                    // HIDE Role Inst. ID from visible table, but keep logic for processing
-                    roleInstancesHtmlContent += `<li><b>Role:</b> ${roleName}<br>
-                                                      <b>Teams:</b> ${teamsDisplayHtml}</li>`;
                 });
-                roleInstancesHtmlContent += '</ul>';
-            } else {
-                roleInstancesHtmlContent = 'No role instances match current role filter.';
-            }
-        } else {
-            roleInstancesHtmlContent = 'No role instances';
-        }
-        tr.appendChild(createCell(roleInstancesHtmlContent, true));
 
-        dateRange.forEach(tableDay => {
-            const dateKeyForLookup = normalizeDate(tableDay);
-            let amContent = '', pmContent = '';
-            let amClass = 'empty-slot-cell', pmClass = 'empty-slot-cell';
-            let amTitle = '', pmTitle = '';
+                // AM Slot Tallying
+                if (userIsOnLeaveAM) {
+                    dailyTallies[dateKey].amLeave.add(siteUser.id);
+                } else if (userIsUnavailableAM) {
+                    dailyTallies[dateKey].amUnavailable.add(siteUser.id);
+                } else {
+                    const isVisiblyAllocatedAM = userWouldBeAllocatedAM && shouldShowAllocated;
+                    const isVisiblyUnallocatedAM = userWouldBeUnallocatedAM && shouldShowUnallocated;
+                    if (isVisiblyAllocatedAM || isVisiblyUnallocatedAM) {
+                        dailyTallies[dateKey].amAvailable.add(siteUser.id);
+                    }
+                }
 
-            let combinedAmDetails = new Set();
-            let combinedPmDetails = new Set();
+                // PM Slot Tallying
+                if (userIsOnLeavePM) {
+                    dailyTallies[dateKey].pmLeave.add(siteUser.id);
+                } else if (userIsUnavailablePM) {
+                    dailyTallies[dateKey].pmUnavailable.add(siteUser.id);
+                } else {
+                    const isVisiblyAllocatedPM = userWouldBeAllocatedPM && shouldShowAllocated;
+                    const isVisiblyUnallocatedPM = userWouldBeUnallocatedPM && shouldShowUnallocated;
+                    if (isVisiblyAllocatedPM || isVisiblyUnallocatedPM) {
+                        dailyTallies[dateKey].pmAvailable.add(siteUser.id);
+                    }
+                }
+            });
+        });
 
+        // 5. Build Table HTML
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+        const baseHeaders = ['Last Name', 'First Name', 'Role & Teams'];
+
+        // Tally Header Row (MODIFIED to use amAvailable.size)
+        const tallyHeaderRow = document.createElement('tr');
+        tallyHeaderRow.className = 'tally-header-row';
+        baseHeaders.forEach(() => {
+            const th = document.createElement('th');
+            th.className = 'tally-spacer-cell';
+            tallyHeaderRow.appendChild(th);
+        });
+        dateRange.forEach(date => {
+            const dateKey = normalizeDate(date);
+            const talliesForDay = dailyTallies[dateKey];
+
+            const thAM = document.createElement('th');
+            thAM.className = 'tally-data-cell';
+            thAM.textContent = `L:${talliesForDay.amLeave.size} U:${talliesForDay.amUnavailable.size} A:${talliesForDay.amAvailable.size}`;
+            tallyHeaderRow.appendChild(thAM);
+
+            const thPM = document.createElement('th');
+            thPM.className = 'tally-data-cell';
+            thPM.textContent = `L:${talliesForDay.pmLeave.size} U:${talliesForDay.pmUnavailable.size} A:${talliesForDay.pmAvailable.size}`;
+            tallyHeaderRow.appendChild(thPM);
+        });
+        thead.appendChild(tallyHeaderRow);
+
+        // Main Header Rows
+        const headerRow1 = document.createElement('tr');
+        baseHeaders.forEach(headerText => { const th = document.createElement('th'); th.rowSpan = 2; th.textContent = headerText; headerRow1.appendChild(th); });
+        dateRange.forEach(date => {
+            const th = document.createElement('th'); th.colSpan = 2; th.className = 'date-header';
+            th.textContent = `${getDayOfWeek(date)} ${date.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}`;
+            headerRow1.appendChild(th);
+        });
+        thead.appendChild(headerRow1);
+
+        const headerRow2 = document.createElement('tr');
+        dateRange.forEach(() => {
+            const thAM = document.createElement('th'); thAM.textContent = 'AM'; thAM.className = 'sub-header'; headerRow2.appendChild(thAM);
+            const thPM = document.createElement('th'); thPM.textContent = 'PM'; thPM.className = 'sub-header'; headerRow2.appendChild(thPM);
+        });
+        thead.appendChild(headerRow2);
+        table.appendChild(thead);
+
+        // Table Body Rows
+        filteredSiteUsers.forEach(siteUser => {
+            const tr = document.createElement('tr');
+            const profile = siteUser.siteUserProfile || {};
+            tr.appendChild(createCell(profile.lastName || 'N/A'));
+            tr.appendChild(createCell(profile.firstName || 'N/A'));
+            let roleInstancesHtmlContent = '';
             if (siteUser.roleInstances && siteUser.roleInstances.length > 0) {
-                siteUser.roleInstances.forEach(ri => {
+                const roleInstanceDetails = siteUser.roleInstances
+                    .filter(ri => filterByAllRoles || selectedRoleIds.includes(ri.roleId))
+                    .map(ri => {
+                        const roleName = rolesMap.get(ri.roleId) || `RoleID: ${ri.roleId.slice(0,6)}`;
+                        const teamNames = (ri.roleInstanceTeams || [])
+                            .filter(rit => filterByAllTeams || selectedTeamIds.includes(rit.teamId))
+                            .map(rit => teamsMap.get(rit.teamId) || `TeamID: ${rit.teamId.slice(0,6)}`)
+                            .join(', ');
+                        if (!filterByAllTeams && teamNames.length === 0 && ri.roleInstanceTeams && ri.roleInstanceTeams.length > 0) return null; 
+                        return `<span>${roleName}: ${teamNames || (filterByAllTeams && (!ri.roleInstanceTeams || ri.roleInstanceTeams.length ===0) ? '(No teams)' : '(No teams match filter)')}</span>`;
+                    }).filter(detail => detail !== null);
+                roleInstancesHtmlContent = roleInstanceDetails.join('<br>') || (filterByAllRoles ? 'No role instances' : 'No role instances match filter');
+            } else {
+                roleInstancesHtmlContent = 'No role assignments';
+            }
+            tr.appendChild(createCell(roleInstancesHtmlContent, true));
+
+            dateRange.forEach(tableDay => {
+                const dateKeyForLookup = normalizeDate(tableDay);
+                let amCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 5 };
+                let pmCellData = { content: '', class: 'empty-slot-cell', title: '', sortKey: 5 };
+                let combinedAmDetailsSet = new Set();
+                let combinedPmDetailsSet = new Set();
+                let amDisplayStatuses = [];
+                let pmDisplayStatuses = [];
+
+
+                (siteUser.roleInstances || []).forEach(ri => {
                     const roleMatches = filterByAllRoles || selectedRoleIds.includes(ri.roleId);
                     const teamMatches = filterByAllTeams || (ri.roleInstanceTeams && ri.roleInstanceTeams.some(rit => selectedTeamIds.includes(rit.teamId)));
 
                     if (roleMatches && teamMatches && userDailySlotInfo.has(ri.id) && userDailySlotInfo.get(ri.id).has(dateKeyForLookup)) {
                         const dailyInfo = userDailySlotInfo.get(ri.id).get(dateKeyForLookup);
 
-                        // AM Slot
                         if (dailyInfo.leaveTypes.size > 0) {
-                            amContent = Array.from(dailyInfo.leaveTypes).join(', ');
-                            amClass = 'leave-cell';
-                            dailyInfo.leaveTypes.forEach(d => combinedAmDetails.add(d));
-                        } else if (dailyInfo.isUnavailableAM) {
-                            amContent = 'Unavail.';
-                            amClass = 'unavailable-cell';
-                            dailyInfo.unavailableDetailsAM.forEach(d => combinedAmDetails.add(d));
-                        } else if (dailyInfo.isUnallocatedAM) {
-                            amContent = 'Unalloc.';
-                            amClass = 'unallocated-cell'; // Green
-                            dailyInfo.unallocatedDetailsAM.forEach(d => combinedAmDetails.add(d));
-                        }
-
-                        // PM Slot
-                        if (dailyInfo.leaveTypes.size > 0) {
-                            pmContent = Array.from(dailyInfo.leaveTypes).join(', ');
-                            pmClass = 'leave-cell';
-                            dailyInfo.leaveTypes.forEach(d => combinedPmDetails.add(d));
-                        } else if (dailyInfo.isUnavailablePM) {
-                            pmContent = 'Unavail.';
-                            pmClass = 'unavailable-cell';
-                            dailyInfo.unavailableDetailsPM.forEach(d => combinedPmDetails.add(d));
-                        } else if (dailyInfo.isUnallocatedPM) {
-                            pmContent = 'Unalloc.';
-                            pmClass = 'unallocated-cell'; // Green
-                            dailyInfo.unallocatedDetailsPM.forEach(d => combinedPmDetails.add(d));
+                            const leaveText = Array.from(dailyInfo.leaveTypes).join(', ');
+                            amDisplayStatuses.push({ label: leaveText, class: 'leave-cell', sortKey: 0, details: leaveText });
+                            pmDisplayStatuses.push({ label: leaveText, class: 'leave-cell', sortKey: 0, details: leaveText });
+                        } else {
+                            dailyInfo.amStatuses.forEach(status => {
+                                if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) { // Redundant check, but safe
+                                    if (status.type === 'unavailable') {
+                                        amDisplayStatuses.push({ label: 'Unavail.', class: 'unavailable-cell', sortKey: 1, details: status.details, rosterGroupId: status.rosterGroupId });
+                                    } else if (status.type === 'allocated' && shouldShowAllocated) { // Check showAllocatedCheckbox
+                                        amDisplayStatuses.push({ label: 'Alloc.', class: 'allocated-cell', sortKey: 2, details: status.details, rosterGroupId: status.rosterGroupId });
+                                    } else if (status.type === 'unallocated' && shouldShowUnallocated) {
+                                        amDisplayStatuses.push({ label: 'Unalloc.', class: 'unallocated-cell', sortKey: 3, details: status.details, rosterGroupId: status.rosterGroupId });
+                                    }
+                                }
+                            });
+                            dailyInfo.pmStatuses.forEach(status => {
+                                 if (status.rosterGroupId === selectedRosterGroupIdFromDropdown) { // Redundant check
+                                    if (status.type === 'unavailable') {
+                                        pmDisplayStatuses.push({ label: 'Unavail.', class: 'unavailable-cell', sortKey: 1, details: status.details, rosterGroupId: status.rosterGroupId });
+                                    } else if (status.type === 'allocated' && shouldShowAllocated) { // Check showAllocatedCheckbox
+                                        pmDisplayStatuses.push({ label: 'Alloc.', class: 'allocated-cell', sortKey: 2, details: status.details, rosterGroupId: status.rosterGroupId });
+                                    } else if (status.type === 'unallocated' && shouldShowUnallocated) {
+                                        pmDisplayStatuses.push({ label: 'Unalloc.', class: 'unallocated-cell', sortKey: 3, details: status.details, rosterGroupId: status.rosterGroupId });
+                                    }
+                                }
+                            });
                         }
                     }
                 });
+
+                // ... (getUniqueDisplayStatuses and cell content consolidation - same) ...
+                function getUniqueDisplayStatuses(statuses) {
+                    const unique = []; const seen = new Set();
+                    statuses.forEach(s => {
+                        const key = `${s.label}|${s.class}|${s.rosterGroupId || ''}`; // Make key more specific if needed
+                        if (!seen.has(key)) { seen.add(key); unique.push(s); }
+                    });
+                    return unique;
+                }
+                amDisplayStatuses = getUniqueDisplayStatuses(amDisplayStatuses);
+                pmDisplayStatuses = getUniqueDisplayStatuses(pmDisplayStatuses);
+
+                if (amDisplayStatuses.length > 0) {
+                    amDisplayStatuses.sort((a,b) => a.sortKey - b.sortKey);
+                    amCellData.content = amDisplayStatuses.map(s => `<span class="${s.class}">${s.label}</span>`).join(', ');
+                    amCellData.class = amDisplayStatuses.length > 1 ? 'multi-status-cell' : amDisplayStatuses[0].class;
+                    amDisplayStatuses.forEach(s => combinedAmDetailsSet.add(s.details));
+                    amCellData.title = Array.from(combinedAmDetailsSet).join('\n');
+                }
+                if (pmDisplayStatuses.length > 0) {
+                    pmDisplayStatuses.sort((a,b) => a.sortKey - b.sortKey);
+                    pmCellData.content = pmDisplayStatuses.map(s => `<span class="${s.class}">${s.label}</span>`).join(', ');
+                    pmCellData.class = pmDisplayStatuses.length > 1 ? 'multi-status-cell' : pmDisplayStatuses[0].class;
+                    pmDisplayStatuses.forEach(s => combinedPmDetailsSet.add(s.details));
+                    pmCellData.title = Array.from(combinedPmDetailsSet).join('\n');
+                }
+                
+                const tdAM = createCell(amCellData.content, true); tdAM.className = amCellData.class; if (amCellData.title) tdAM.title = amCellData.title; tr.appendChild(tdAM);
+                const tdPM = createCell(pmCellData.content, true); tdPM.className = pmCellData.class; if (pmCellData.title) tdPM.title = pmCellData.title; tr.appendChild(tdPM);
+
+            });
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(tbody);
+        usersTableContainer.appendChild(table);
+        const selectedRosterGroupName = ROSTER_GROUPS_CONFIG.find(rg => rg.id === selectedRosterGroupIdFromDropdown)?.name || selectedRosterGroupIdFromDropdown;
+        statusElement.textContent = `Users table generated with ${filteredSiteUsers.length} entries. Roster Group: ${selectedRosterGroupName}. Date range: ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}`;
+        statusElement.className = '';
+    }
+
+    function handleFilterChange() {
+        if (lastFetchedUsersData && lastFetchedLeavesData && lastFetchedShiftTemplatesData) {
+            const selectedRoleIds = getSelectedValues(roleFilterDropdown);
+            const selectedTeamIds = getSelectedValues(teamFilterDropdown);
+            generateUsersTable(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedShiftTemplatesData, selectedRoleIds, selectedTeamIds);
+        } else {
+            statusElement.textContent = 'Please fetch all required data (Users, Leaves, Shift Templates) before applying filters or changing dates.';
+            statusElement.className = 'error';
+        }
+    }
+
+    function populateFilterDropdowns(data) {
+        const currentRoleSelections = getSelectedValues(roleFilterDropdown);
+        roleFilterDropdown.innerHTML = '<option value="All">All Roles</option>';
+        if (data && data.roles) {
+            const uniqueRoles = [...new Map(data.roles.map(role => [role.id, role])).values()];
+            uniqueRoles.sort((a, b) => (a.name || '').localeCompare(b.name || '')).forEach(role => {
+                const option = document.createElement('option');
+                option.value = role.id;
+                option.textContent = role.name || 'Unnamed Role';
+                if (currentRoleSelections.includes(role.id)) option.selected = true;
+                roleFilterDropdown.appendChild(option);
+            });
+        }
+        if (currentRoleSelections.includes("All") && Array.from(roleFilterDropdown.selectedOptions).length === 0) {
+           if(roleFilterDropdown.querySelector('option[value="All"]')) roleFilterDropdown.querySelector('option[value="All"]').selected = true;
+        }
+
+        const currentTeamSelections = getSelectedValues(teamFilterDropdown);
+        teamFilterDropdown.innerHTML = '<option value="All">All Teams</option>';
+        if (data && data.teams) {
+            const uniqueTeams = [...new Map(data.teams.map(team => [team.id, team])).values()];
+            uniqueTeams.sort((a, b) => (a.name || '').localeCompare(b.name || '')).forEach(team => {
+                const option = document.createElement('option');
+                option.value = team.id;
+                option.textContent = team.name || 'Unnamed Team';
+                if (currentTeamSelections.includes(team.id)) option.selected = true;
+                teamFilterDropdown.appendChild(option);
+            });
+        }
+        if (currentTeamSelections.includes("All") && Array.from(teamFilterDropdown.selectedOptions).length === 0) {
+            if(teamFilterDropdown.querySelector('option[value="All"]')) teamFilterDropdown.querySelector('option[value="All"]').selected = true;
+        }
+    }
+
+    function populateRosterGroupFilterDropdown() {
+        if (!rosterGroupFilterDropdown) return;
+        rosterGroupFilterDropdown.innerHTML = '';
+        ROSTER_GROUPS_CONFIG.forEach(rg => {
+            if (!EXCLUDED_ROSTER_GROUP_IDS.includes(rg.id)) {
+                const option = document.createElement('option');
+                option.value = rg.id;
+                option.textContent = rg.name;
+                if (rg.id === DEFAULT_ROSTER_GROUP_ID) {
+                    option.selected = true;
+                }
+                rosterGroupFilterDropdown.appendChild(option);
             }
-            
-            amTitle = combinedAmDetails.size > 0 ? Array.from(combinedAmDetails).join('\n') : '';
-            pmTitle = combinedPmDetails.size > 0 ? Array.from(combinedPmDetails).join('\n') : '';
-
-            const tdAM = createCell(amContent);
-            tdAM.className = amClass;
-            if (amTitle) tdAM.title = amTitle;
-            tr.appendChild(tdAM);
-
-            const tdPM = createCell(pmContent);
-            tdPM.className = pmClass;
-            if (pmTitle) tdPM.title = pmTitle;
-            tr.appendChild(tdPM);
         });
-        tbody.appendChild(tr);
-    });
-
-    table.appendChild(tbody);
-    usersTableContainer.appendChild(table);
-    const selectedRosterGroupName = selectedRosterGroupId === "All" ? "All" : ROSTER_GROUPS_CONFIG.find(rg => rg.id === selectedRosterGroupId)?.name || selectedRosterGroupId;
-    statusElement.textContent = `Users table generated with ${filteredSiteUsers.length} entries. Roster Group: ${selectedRosterGroupName}. Date range: ${fromDate.toLocaleDateString()} - ${toDate.toLocaleDateString()}`;
-    statusElement.className = '';
-}
-
-function handleFilterChange() {
-    if (lastFetchedUsersData && lastFetchedLeavesData && lastFetchedUnallocatedData) {
-        const selectedRoleIds = getSelectedValues(roleFilterDropdown);
-        const selectedTeamIds = getSelectedValues(teamFilterDropdown);
-        generateUsersTable(lastFetchedUsersData, lastFetchedLeavesData, lastFetchedUnallocatedData, selectedRoleIds, selectedTeamIds);
-    } else {
-        statusElement.textContent = 'Please fetch/generate all required data first (Users, Leaves, Unallocated) to apply filters or change dates.';
-         statusElement.className = 'error';
-    }
-}
-
-function populateFilterDropdowns(data) {
-    const currentRoleSelections = getSelectedValues(roleFilterDropdown);
-    roleFilterDropdown.innerHTML = '<option value="All">All Roles</option>';
-    if (data && data.roles) {
-        const uniqueRoles = [...new Map(data.roles.map(role => [role.id, role])).values()];
-        uniqueRoles.sort((a, b) => (a.name || '').localeCompare(b.name || '')).forEach(role => {
-            const option = document.createElement('option');
-            option.value = role.id;
-            option.textContent = role.name || 'Unnamed Role';
-            if (currentRoleSelections.includes(role.id)) option.selected = true;
-            roleFilterDropdown.appendChild(option);
-        });
-    }
-    if (currentRoleSelections.includes("All") && Array.from(roleFilterDropdown.selectedOptions).length === 0) {
-        roleFilterDropdown.querySelector('option[value="All"]').selected = true;
+        if (rosterGroupFilterDropdown.options.length > 0 && rosterGroupFilterDropdown.selectedIndex === -1) {
+            rosterGroupFilterDropdown.options[0].selected = true;
+        }
     }
 
-    const currentTeamSelections = getSelectedValues(teamFilterDropdown);
-    teamFilterDropdown.innerHTML = '<option value="All">All Teams</option>';
-    if (data && data.teams) {
-        const uniqueTeams = [...new Map(data.teams.map(team => [team.id, team])).values()];
-        uniqueTeams.sort((a, b) => (a.name || '').localeCompare(b.name || '')).forEach(team => {
-            const option = document.createElement('option');
-            option.value = team.id;
-            option.textContent = team.name || 'Unnamed Team';
-            if (currentTeamSelections.includes(team.id)) option.selected = true;
-            teamFilterDropdown.appendChild(option);
-        });
+    function createCell(text, isHtml = false) {
+        const td = document.createElement('td');
+        if (isHtml) {
+            td.innerHTML = text;
+        } else {
+            td.textContent = text;
+        }
+        return td;
     }
-    if (currentTeamSelections.includes("All") && Array.from(teamFilterDropdown.selectedOptions).length === 0) {
-        teamFilterDropdown.querySelector('option[value="All"]').selected = true;
-    }
-}
 
-function populateRosterGroupFilterDropdown() {
-    if (!rosterGroupFilterDropdown) return;
-    rosterGroupFilterDropdown.innerHTML = '<option value="All">All Roster Groups</option>';
-    ROSTER_GROUPS_CONFIG.forEach(rg => {
-        const option = document.createElement('option');
-        option.value = rg.id;
-        option.textContent = rg.name;
-        rosterGroupFilterDropdown.appendChild(option);
-    });
-}
+    // Event Listeners
+    if (fetchLeavesButton) fetchLeavesButton.addEventListener('click', fetchLeavesDataAndDisplayJson);
+    if (fetchUsersButton) fetchUsersButton.addEventListener('click', fetchUsersDataAndDisplayJson);
+    if (fetchShiftTemplatesButton) fetchShiftTemplatesButton.addEventListener('click', fetchShiftTemplatesDataAndDisplayJson);
+    if (generateUsersTableButton) generateUsersTableButton.addEventListener('click', triggerGenerateUsersTable);
 
-function createCell(text, isHtml = false) {
-    const td = document.createElement('td');
-    if (isHtml) {
-        td.innerHTML = text;
-    } else {
-        td.textContent = text;
-    }
-    return td;
-}
+    if (useLocalFileCheckbox) useLocalFileCheckbox.addEventListener('change', updateButtonTexts);
+    if (roleFilterDropdown) roleFilterDropdown.addEventListener('change', handleFilterChange);
+    if (teamFilterDropdown) teamFilterDropdown.addEventListener('change', handleFilterChange);
+    if (rosterGroupFilterDropdown) rosterGroupFilterDropdown.addEventListener('change', handleFilterChange);
+    if (showUnallocatedCheckbox) showUnallocatedCheckbox.addEventListener('change', handleFilterChange);
+    if (showAllocatedCheckbox) showAllocatedCheckbox.addEventListener('change', handleFilterChange); // NEW
+    if (fromDateInput) fromDateInput.addEventListener('change', handleFilterChange);
+    if (toDateInput) toDateInput.addEventListener('change', handleFilterChange);
 
-if (fetchLeavesButton) fetchLeavesButton.addEventListener('click', fetchLeavesDataAndDisplayJson);
-if (fetchUsersButton) fetchUsersButton.addEventListener('click', fetchUsersDataAndDisplayJson);
-if (fetchUnallocatedButton) fetchUnallocatedButton.addEventListener('click', fetchUnallocatedDataAndDisplayJson);
-if (generateUsersTableButton) generateUsersTableButton.addEventListener('click', triggerGenerateUsersTable);
+    // Initial Setup
+    const today = new Date();
+    const oneWeekFromToday = new Date();
+    oneWeekFromToday.setDate(today.getDate() + 7);
+    const formatDateForInput = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+    if (fromDateInput) fromDateInput.value = formatDateForInput(today);
+    if (toDateInput) toDateInput.value = formatDateForInput(oneWeekFromToday);
 
-if (useLocalFileCheckbox) useLocalFileCheckbox.addEventListener('change', updateButtonTexts);
-if (roleFilterDropdown) roleFilterDropdown.addEventListener('change', handleFilterChange);
-if (teamFilterDropdown) teamFilterDropdown.addEventListener('change', handleFilterChange);
-if (rosterGroupFilterDropdown) rosterGroupFilterDropdown.addEventListener('change', handleFilterChange);
-if (fromDateInput) fromDateInput.addEventListener('change', handleFilterChange);
-if (toDateInput) toDateInput.addEventListener('change', handleFilterChange);
+    updateButtonTexts();
+    populateRosterGroupFilterDropdown();
 
-const today = new Date();
-const oneWeekFromToday = new Date();
-oneWeekFromToday.setDate(today.getDate() + 7);
-if (fromDateInput) fromDateInput.valueAsDate = today;
-if (toDateInput) toDateInput.valueAsDate = oneWeekFromToday;
-
-updateButtonTexts();
-populateRosterGroupFilterDropdown();
+    // Hide unneeded button (already done, kept for completeness)
+    const unallocatedButtonElement = document.getElementById('fetchUnallocatedButton');
+    if (unallocatedButtonElement) unallocatedButtonElement.style.display = 'none';
 });

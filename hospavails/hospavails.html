@@ -136,14 +136,23 @@
             background-color: #3498db;
             color: white;
             position: sticky;
-            z-index: 1;
+            z-index: 1; /* Default z-index for th */
         }
-        #usersTableContainer thead tr:first-child th {
+        /* Tally Header Row - 1st row */
+        #usersTableContainer thead tr.tally-header-row th {
             top: 0;
+            z-index: 3; /* Highest z-index */
+            white-space: nowrap;
         }
-        #usersTableContainer thead tr:nth-child(2) th {
-            top: 38px; /* Adjust this value to match the height of your first header row */
+        /* Date Header Row - 2nd row */
+        #usersTableContainer thead tr:nth-child(2) th { /* This is now headerRow1 (Dates) */
+            top: 35px; /* Adjust this value to match the height of your tally-header-row */
             z-index: 2;
+        }
+        /* AM/PM Sub-Header Row - 3rd row */
+        #usersTableContainer thead tr:nth-child(3) th { /* This is now headerRow2 (AM/PM) */
+            top: 70px; /* Adjust this value to match the combined height of the first two header rows */
+            z-index: 1; /* Can be same as default or lower than row above */
         }
         #usersTableContainer th, #usersTableContainer td {
             border: 1px solid #ddd;
@@ -179,6 +188,9 @@
             margin-bottom: 0;
             padding-bottom: 0;
         }
+        #usersTableContainer td:nth-child(3) span { /* Target spans within the third column */
+            white-space: nowrap;
+        }
         .date-filters-group {
             margin-bottom: 20px;
             padding: 15px;
@@ -207,10 +219,31 @@
         .unallocated-cell {
             color: green;
         }
+        .allocated-cell { /* Style for allocated shifts */
+            color: #ee789f; /* Pink text, or your preferred pink */
+            /* background-color: inherit; */ /* Example if you want specific background */
+        }
+        .unavailable-cell { /* Added for clarity if you want specific styling */
+            color: red;
+        }
+        .leave-cell { /* Added for clarity */
+            color: orange; /* Or your preferred color */
+        }
+        .multi-status-cell { /* For cells with multiple statuses */
+            /* Add styling here if needed, e.g., font-weight: bold; */
+        }
+        /* Ensure tally cell alignment in CSS for thead */
+        .tally-header-row .tally-spacer-cell {
+            background: transparent;
+            border: none;
+        }
+        .tally-data-cell {
+            font-size: 0.8em;
+        }
     </style>
 </head>
 <body>
-    <h1>FosPortal Data Viewer</h1>
+    <h1>FosPortal Data Viewer v0.1</h1>
 
     <div class="input-group">
         <label for="bearerTokenInput">Bearer Token:</label>
@@ -223,52 +256,58 @@
     </div>
 
     <div class="controls-group">
-        <button id="fetchLeavesButton">Fetch Leaves Data (JSON)</button>
-        <button id="fetchUsersButton">Fetch Users Data (JSON)</button>
-        <button id="fetchUnallocatedButton">Fetch Unallocated (JSON)</button> <!-- New Button -->
+        <button id="fetchLeavesButton">Fetch Leaves Data</button>
+        <button id="fetchUsersButton">Fetch Users Data</button>
+        <!-- <button id="fetchUnallocatedButton">Fetch Unallocated</button> --> <!-- Hidden -->
+        <button id="fetchShiftTemplatesButton">Fetch Shift Templates</button>
         <button id="generateUsersTableButton" class="secondary">Generate/Update Users Table</button>
     </div>
 
     <div class="filters-group">
         <div class="filter-item">
-            <label for="roleFilter">Filter Table by Role(s) (Ctrl/Cmd-click for multiple):</label>
+            <label for="roleFilter">Filter by Role(s):</label>
             <select id="roleFilter" multiple>
                 <option value="All">All Roles</option>
             </select>
         </div>
         <div class="filter-item">
-            <label for="teamFilter">Filter Table by Team(s) (Ctrl/Cmd-click for multiple):</label>
+            <label for="teamFilter">Filter by Team(s):</label>
             <select id="teamFilter" multiple>
                 <option value="All">All Teams</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="rosterGroupFilter">Filter by Roster Group:</label>
+            <select id="rosterGroupFilter">
+                <!-- Options populated by JS -->
             </select>
         </div>
     </div>
 
     <div class="date-filters-group">
         <div class="filter-item">
-            <label for="fromDate">From Date (for Table & Unallocated API):</label>
+            <label for="fromDate">From Date:</label>
             <input type="date" id="fromDate">
         </div>
         <div class="filter-item">
-            <label for="toDate">To Date (for Table & Unallocated API):</label>
+            <label for="toDate">To Date:</label>
             <input type="date" id="toDate">
-        </div>
-    </div>
-
-    <!-- Roster Group Filter for filtering displayed data -->
-    <div class="roster-group-filter-container">
-        <div class="filter-item">
-            <label for="rosterGroupFilter">Filter Table by Roster Group:</label>
-            <select id="rosterGroupFilter">
-                <!-- Options will be populated by JS -->
-            </select>
         </div>
     </div>
 
     <div id="status">Enter token (if not using local files) and click a button.</div>
     <pre id="jsonData"></pre>
+
+    <div class="input-group">
+        <input type="checkbox" id="showUnallocatedCheckbox" checked> <!-- Default to checked -->
+        <label for="showUnallocatedCheckbox" style="display: inline; font-weight: normal;">Show Unalloc.</label>
+
+        <input type="checkbox" id="showAllocatedCheckbox" checked style="margin-left: 20px;"> <!-- NEW CHECKBOX, default to checked -->
+        <label for="showAllocatedCheckbox" style="display: inline; font-weight: normal;">Show Alloc.</label>
+    </div>
+
     <div id="usersTableContainer"></div>
 
-    <script src="hospavails.js"></script>
+    <script src="hospavails.js"></script> <!-- Assuming your JS is in this file -->
 </body>
 </html>
